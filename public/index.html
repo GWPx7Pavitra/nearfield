@@ -500,7 +500,44 @@
     [data-theme="dark"] .map-bezel-inner {
       box-shadow: 0 1px 0 rgba(255,255,255,.04) inset;
     }
-    #hero-map { width: 100%; height: 100%; min-height: 400px; z-index: 1; }
+    #hero-map { width: 100%; height: 100%; min-height: 400px; z-index: 1; background: var(--bg); }
+
+    /* OpenStreetMap Crisp Cartography Filters */
+    [data-theme="light"] #hero-map .leaflet-tile-pane {
+      filter: saturate(88%) contrast(98%);
+    }
+    [data-theme="dark"] #hero-map .leaflet-tile-pane {
+      filter: invert(100%) hue-rotate(180deg) brightness(82%) contrast(92%) saturate(82%);
+    }
+
+    /* Leaflet UI Theming */
+    [data-theme="dark"] .leaflet-container {
+      background: #101513;
+    }
+    [data-theme="dark"] .leaflet-bar {
+      border: 1px solid var(--line) !important;
+      box-shadow: var(--shadow-sm);
+    }
+    [data-theme="dark"] .leaflet-bar a {
+      background-color: var(--surface) !important;
+      color: var(--ink) !important;
+      border-bottom: 1px solid var(--line) !important;
+    }
+    [data-theme="dark"] .leaflet-bar a:hover {
+      background-color: var(--surface-2) !important;
+      color: var(--green) !important;
+    }
+    [data-theme="dark"] .leaflet-control-attribution {
+      background: rgba(16, 21, 19, 0.78) !important;
+      color: var(--muted) !important;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    [data-theme="dark"] .leaflet-control-attribution a {
+      color: var(--green) !important;
+    }
 
     .map-top-bar {
       position: absolute;
@@ -2061,26 +2098,10 @@
       let tileLayer = null;
 
       // ========================================
-      // 0. Dark / Light Theme Toggle & Map Tile Switch
+      // 0. Dark / Light Theme Toggle (CSS filtered OSM tiles)
       // ========================================
-      // Using free tile providers that require zero API keys:
-      // Light: OpenStreetMap Standard (free, open)
-      // Dark:  Stadia Maps Alidade Smooth Dark (free tier, OSM-based)
-      function getTileConfig(theme) {
-        if (theme === 'dark') {
-          return {
-            url: 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png',
-            attribution: '&copy; <a href="https://stadiamaps.com/" target="_blank" rel="noreferrer">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank" rel="noreferrer">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a>',
-            subdomains: ''
-          };
-        } else {
-          return {
-            url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors',
-            subdomains: ''
-          };
-        }
-      }
+      const OSM_TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+      const OSM_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors';
 
       function applyTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
@@ -2091,16 +2112,6 @@
         } else {
           sunIcon.style.display = 'none';
           moonIcon.style.display = 'block';
-        }
-
-        // Seamlessly swap tile layer when theme changes
-        if (map && tileLayer) {
-          const cfg = getTileConfig(theme);
-          map.removeLayer(tileLayer);
-          tileLayer = L.tileLayer(cfg.url, {
-            maxZoom: 19,
-            attribution: cfg.attribution
-          }).addTo(map);
         }
       }
 
@@ -2122,11 +2133,9 @@
           attributionControl: true
         }).setView([20.5937, 78.9629], 5);
 
-        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-        const cfg = getTileConfig(currentTheme);
-        tileLayer = L.tileLayer(cfg.url, {
+        tileLayer = L.tileLayer(OSM_TILE_URL, {
           maxZoom: 19,
-          attribution: cfg.attribution
+          attribution: OSM_ATTRIBUTION
         }).addTo(map);
 
         waterLayerGroup = L.layerGroup().addTo(map);
