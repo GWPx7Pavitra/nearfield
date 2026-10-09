@@ -1,0 +1,2030 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f6f7f2">
+  <meta name="description" content="Nearfield — Free, open-source hyperlocal air quality and groundwater monitoring for India. Real CPCB stations, CGWB chemical tests, OpenStreetMap, and cigarette smoke equivalency.">
+  <title>Nearfield — Your neighbourhood, in context (Free & Open Source)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="icon" type="image/svg+xml" href="/logo.svg">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f8f4;
+      --bg-alt: #f0f2ec;
+      --surface: #ffffff;
+      --surface-elevated: #ffffff;
+      --surface-glass: rgba(255, 255, 255, 0.85);
+      --ink: #18261e;
+      --ink-soft: #4a5c51;
+      --muted: #74877c;
+      --line: #dfe6dc;
+      --line-subtle: #e9efe7;
+      --green: #41684c;
+      --green-dark: #223c2a;
+      --green-light: #578a66;
+      --mint: #e7f2e6;
+      --sand: #f4efe4;
+      --amber: #b9762a;
+      --danger: #cf3a27;
+      --blue: #2f6d7a;
+      --radius-xl: 24px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --shadow-sm: 0 4px 14px rgba(24, 38, 30, .04);
+      --shadow: 0 16px 48px rgba(24, 38, 30, .08), 0 2px 7px rgba(24, 38, 30, .04);
+      --shadow-lg: 0 24px 64px rgba(24, 38, 30, .12);
+      --font-display: "Manrope", sans-serif;
+      --font-body: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "JetBrains Mono", monospace;
+    }
+
+    /* Dark Mode (Tastefully Atmospheric Midnight Deep) */
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #0e1511;
+      --bg-alt: #141e19;
+      --surface: #17231c;
+      --surface-elevated: #1d2c23;
+      --surface-glass: rgba(23, 35, 28, 0.88);
+      --ink: #f0f5f1;
+      --ink-soft: #a8bdad;
+      --muted: #748c7a;
+      --line: #26382d;
+      --line-subtle: #1c2b21;
+      --green: #5ca16e;
+      --green-dark: #84c795;
+      --green-light: #6ebd82;
+      --mint: #192c1e;
+      --sand: #262720;
+      --shadow-sm: 0 4px 14px rgba(0, 0, 0, .2);
+      --shadow: 0 16px 48px rgba(0, 0, 0, .4);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+      transition: background .3s ease, color .3s ease;
+    }
+    button, input, select { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    a { color: inherit; }
+    .shell { width: min(1200px, calc(100% - 44px)); margin-inline: auto; }
+
+    /* Top Navigation */
+    .topbar {
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface-glass);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: all .25s ease;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .brand-logo-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(24, 38, 30, .18);
+      transition: transform .2s ease;
+    }
+    .brand:hover .brand-logo-img { transform: scale(1.05) rotate(-2deg); }
+    .brand-title-wrap { display: flex; flex-direction: column; }
+    .brand-name {
+      font: 800 21px/1.1 var(--font-display);
+      letter-spacing: -.03em;
+      color: var(--ink);
+    }
+    .brand-name span { color: var(--green); }
+    .brand-tagline {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      color: var(--ink-soft);
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .nav-links a { text-decoration: none; transition: color .2s ease; }
+    .nav-links a:hover { color: var(--green); }
+
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+
+    /* GitHub Open Source Pill */
+    .github-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 13px;
+      border-radius: 100px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: var(--shadow-sm);
+      transition: all .2s ease;
+    }
+    .github-pill:hover {
+      border-color: var(--green);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(0,0,0,.08);
+    }
+    .github-pill svg { fill: currentColor; }
+    .gh-tag {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: var(--mint);
+      color: var(--green);
+      letter-spacing: .02em;
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink-soft);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+    .theme-toggle-btn:hover {
+      color: var(--ink);
+      border-color: var(--green);
+      transform: scale(1.05);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 46px 0 36px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(360px, .85fr);
+      gap: 44px;
+      align-items: stretch;
+      position: relative;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #2e7d32;
+      box-shadow: 0 0 0 3px rgba(46, 125, 50, .25);
+      animation: pulse-dot 2s infinite ease-in-out;
+    }
+    @keyframes pulse-dot { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.25); opacity: .7; } }
+
+    h1 {
+      max-width: 640px;
+      margin: 16px 0 16px;
+      font: 800 clamp(38px, 5vw, 60px)/1.06 var(--font-display);
+      letter-spacing: -.055em;
+    }
+    h1 .accent { color: var(--green); }
+    .hero-copy {
+      max-width: 520px;
+      margin-bottom: 26px;
+      color: var(--ink-soft);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    /* Search Box */
+    .search-card {
+      padding: 6px;
+      max-width: 580px;
+      display: flex;
+      gap: 6px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      transition: all .24s ease;
+    }
+    .search-card:focus-within {
+      border-color: var(--green-light);
+      box-shadow: 0 0 0 4px rgba(65, 104, 76, .14), var(--shadow);
+      transform: translateY(-1px);
+    }
+    .search-icon { width: 44px; display: grid; place-items: center; color: var(--muted); flex: none; }
+    .search-card input {
+      border: 0;
+      outline: 0;
+      min-width: 0;
+      flex: 1;
+      color: var(--ink);
+      background: transparent;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .search-card input::placeholder { color: var(--muted); }
+    .search-card button {
+      flex: none;
+      border: 0;
+      border-radius: 13px;
+      padding: 12px 22px;
+      color: #ffffff;
+      background: var(--green-dark);
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+    .search-card button:hover { background: var(--green); transform: translateY(-1px); }
+    .search-card button:disabled { opacity: .7; cursor: wait; transform: none; }
+    .search-examples {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .search-examples button {
+      border: 1px solid var(--line);
+      border-radius: 100px;
+      padding: 5px 12px;
+      background: var(--surface);
+      color: var(--ink-soft);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .18s ease;
+    }
+    .search-examples button:hover { color: var(--green); border-color: var(--green-light); background: var(--mint); }
+    .search-note { min-height: 20px; margin: 10px 0 0; color: var(--amber); font-size: 12px; line-height: 1.5; font-weight: 600; }
+
+    /* OpenStreetMap Hero Container */
+    .hero-map-wrap {
+      min-height: 380px;
+      position: relative;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      background: var(--bg-alt);
+      display: flex;
+      flex-direction: column;
+    }
+    #hero-map { width: 100%; height: 100%; min-height: 380px; z-index: 1; }
+    .map-badge-top {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      z-index: 500;
+      padding: 7px 13px;
+      border-radius: 100px;
+      background: var(--surface-glass);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 14px rgba(0,0,0,.08);
+      color: var(--ink);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid var(--line);
+    }
+    .map-legend {
+      position: absolute;
+      bottom: 14px;
+      left: 14px;
+      right: 14px;
+      z-index: 500;
+      padding: 9px 14px;
+      border-radius: 14px;
+      background: var(--surface-glass);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 14px rgba(0,0,0,.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 11px;
+      color: var(--ink-soft);
+      font-weight: 600;
+      border: 1px solid var(--line);
+    }
+    .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .legend-dot.pin { background: var(--green); box-shadow: 0 0 0 2px rgba(65, 104, 76, .3); }
+    .legend-dot.water { background: var(--blue); box-shadow: 0 0 0 2px rgba(47, 109, 122, .3); }
+
+    /* Results Notice & Office Picker */
+    .result-notice {
+      display: none;
+      margin: 10px 0 40px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      animation: card-in .35s ease both;
+    }
+    .result-notice.visible { display: block; }
+    .notice-header { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 16px; }
+    .notice-icon {
+      flex: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: var(--green);
+      background: var(--mint);
+    }
+    .notice-copy strong { display: block; margin-bottom: 4px; font: 700 17px/1.3 var(--font-display); color: var(--ink); }
+    .notice-copy p { margin: 0; color: var(--ink-soft); font-size: 13px; line-height: 1.55; }
+    .lookup-office-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 9px;
+      max-height: 280px;
+      overflow-y: auto;
+      margin-top: 14px;
+      padding-right: 4px;
+    }
+    .office-choice {
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      color: var(--ink);
+      background: var(--surface-elevated);
+      text-align: left;
+      cursor: pointer;
+      transition: all .2s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .office-choice:hover { border-color: var(--green); background: var(--mint); transform: translateY(-1px); }
+    .office-choice[aria-pressed="true"] {
+      border-color: var(--green);
+      background: var(--mint);
+      box-shadow: 0 0 0 2px rgba(65, 104, 76, .2);
+    }
+    .office-choice strong { display: block; font-size: 13px; margin-bottom: 2px; }
+    .office-choice span { display: block; color: var(--muted); font-size: 11px; }
+    .office-choice .office-pin {
+      flex: none;
+      font-weight: 800;
+      color: var(--green);
+      background: var(--bg);
+      border: 1px solid var(--line);
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 11px;
+    }
+
+    /* Observation Panels Grid */
+    .data-section-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 24px;
+    }
+    .panel-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .panel-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+    .panel-card-head h3 {
+      margin: 0;
+      font: 700 18px var(--font-display);
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .panel-source-badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: 4px 9px;
+      border-radius: 100px;
+      background: var(--mint);
+      color: var(--green);
+      border: 1px solid var(--line);
+    }
+
+    /* AQI Hero Card */
+    .aqi-hero-block {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 18px;
+      border-radius: 16px;
+      background: var(--bg-alt);
+      border: 1px solid var(--line);
+      margin-bottom: 18px;
+    }
+    .aqi-score-box {
+      min-width: 110px;
+      height: 95px;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+      flex: none;
+      box-shadow: 0 8px 20px rgba(0,0,0,.15);
+      transition: background .3s ease;
+    }
+    .aqi-score-num { font: 800 36px/1 var(--font-display); letter-spacing: -1px; }
+    .aqi-score-lbl { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-top: 4px; }
+    .aqi-desc-box strong { display: block; font: 700 16px var(--font-display); color: var(--ink); margin-bottom: 4px; }
+    .aqi-desc-box p { margin: 0; font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+
+    /* Pollutant Grid */
+    .pollutant-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .pollutant-tile {
+      background: var(--surface-elevated);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .pollutant-tile-head { display: flex; justify-content: space-between; align-items: baseline; }
+    .pollutant-name { font-size: 12px; font-weight: 700; color: var(--ink); }
+    .pollutant-unit { font-size: 10px; color: var(--muted); }
+    .pollutant-val { font: 800 20px/1.2 var(--font-display); color: var(--ink); margin-top: 6px; }
+    .pollutant-safe { font-size: 10px; color: var(--muted); margin-top: 4px; border-top: 1px solid var(--line-subtle); padding-top: 4px; }
+
+    /* Air Quality Trend Sparkline */
+    .sparkline-box {
+      background: var(--surface-elevated);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .sparkline-title { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 8px; }
+    .sparkline-svg { width: 100%; height: 75px; overflow: visible; }
+
+    /* ========================================
+       Cigarette Smoke Equivalency Section 
+       ======================================== */
+    .cigarette-section {
+      margin: 40px 0 20px;
+      animation: card-in .35s ease both;
+    }
+    .cigarette-card {
+      background: linear-gradient(135deg, #18221c 0%, #111a14 100%);
+      border: 1px solid #28392d;
+      border-radius: var(--radius-xl);
+      padding: 34px;
+      color: #f2f7f4;
+      box-shadow: 0 20px 50px rgba(10, 18, 13, .35);
+      position: relative;
+      overflow: hidden;
+      transition: all .3s ease;
+    }
+    .cigarette-card::after {
+      content: "";
+      position: absolute;
+      width: 340px;
+      height: 340px;
+      top: -120px;
+      right: -80px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(239, 108, 0, .18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cigarette-card.safe-air::after {
+      background: radial-gradient(circle, rgba(76, 175, 80, .16) 0%, transparent 70%);
+    }
+    .cigarette-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 2;
+    }
+    .cig-badge-wrap { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .cig-alert-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      background: #cf3a27;
+      color: #ffffff;
+      box-shadow: 0 0 16px rgba(207, 58, 39, .5);
+      transition: all .3s ease;
+    }
+    .cig-alert-badge.safe {
+      background: #2e7d32;
+      box-shadow: 0 0 16px rgba(46, 125, 50, .4);
+    }
+    .cig-duration-selector {
+      display: flex;
+      background: rgba(255, 255, 255, .1);
+      border: 1px solid rgba(255, 255, 255, .15);
+      border-radius: 12px;
+      padding: 3px;
+    }
+    .duration-btn {
+      border: 0;
+      background: transparent;
+      color: #b0c4b6;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+    .duration-btn:hover { color: #ffffff; }
+    .duration-btn.active {
+      background: rgba(255, 255, 255, .95);
+      color: #121f17;
+      box-shadow: 0 2px 8px rgba(0,0,0,.25);
+    }
+
+    .cigarette-main-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(320px, .75fr);
+      gap: 34px;
+      align-items: start;
+      position: relative;
+      z-index: 2;
+    }
+    .cig-subtitle {
+      font-size: 13px;
+      color: #9cb5a3;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .cig-count-row {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .cig-big-num {
+      font: 800 clamp(44px, 6vw, 70px)/1 var(--font-display);
+      letter-spacing: -2px;
+      color: #ffb74d;
+      text-shadow: 0 2px 14px rgba(255, 183, 77, .3);
+      transition: color .3s ease;
+    }
+    .cigarette-card.safe-air .cig-big-num {
+      color: #81c784;
+      text-shadow: 0 2px 14px rgba(129, 199, 132, .3);
+    }
+    .cig-count-label strong {
+      display: block;
+      font: 700 20px/1.2 var(--font-display);
+      color: #ffffff;
+    }
+    .cig-count-label span {
+      display: block;
+      font-size: 12px;
+      color: #95ab9c;
+    }
+
+    /* Cigarette Visual Rack */
+    .cig-visual-rack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      min-height: 42px;
+      margin: 16px 0 22px;
+      padding: 14px 16px;
+      background: rgba(0, 0, 0, .3);
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 14px;
+    }
+    .cig-item {
+      display: inline-flex;
+      align-items: center;
+      height: 12px;
+      border-radius: 3px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,.4);
+      animation: cig-pop .3s cubic-bezier(.2,.8,.2,1) both;
+    }
+    @keyframes cig-pop { from { transform: scale(.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .cig-ember {
+      width: 5px;
+      height: 12px;
+      background: #ff3d00;
+      box-shadow: 0 0 8px #ff5722, 0 0 12px #ffab00;
+      animation: ember-glow 1.8s infinite alternate ease-in-out;
+    }
+    @keyframes ember-glow { 0% { opacity: .7; } 100% { opacity: 1; filter: brightness(1.3); } }
+    .cig-body { width: 34px; height: 12px; background: #fdfaf6; border-right: 1px solid #ddd; }
+    .cig-filter { width: 12px; height: 12px; background: #e09953; }
+    .cig-more-tag { font-size: 11px; font-weight: 700; color: #ffb74d; margin-left: 6px; }
+
+    .cig-headline {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #c5d8cb;
+    }
+
+    /* Science Context Box */
+    .cigarette-context-box {
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid rgba(255, 255, 255, .1);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      backdrop-filter: blur(10px);
+    }
+    .cigarette-context-box h4 {
+      margin: 0 0 8px;
+      font: 700 15px var(--font-display);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cigarette-context-box p {
+      margin: 0 0 12px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #a4b8ab;
+    }
+    .cig-formula-box {
+      background: rgba(0, 0, 0, .35);
+      padding: 8px 12px;
+      border-radius: 8px;
+      border-left: 3px solid #ff9800;
+      font-size: 11px;
+      color: #ffe0b2;
+      margin-bottom: 14px;
+      font-family: var(--font-mono);
+    }
+    .cig-action-tips strong { display: block; font-size: 12px; color: #e1ede4; margin-bottom: 6px; }
+    .cig-action-tips ul { margin: 0; padding-left: 18px; font-size: 11px; color: #9bb0a2; line-height: 1.6; }
+
+    /* Projections Grid */
+    .cigarette-projections-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 24px;
+      padding-top: 22px;
+      border-top: 1px solid rgba(255, 255, 255, .1);
+      position: relative;
+      z-index: 2;
+    }
+    .proj-tile {
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 14px;
+      padding: 14px 16px;
+      text-align: center;
+      transition: background .2s ease;
+    }
+    .proj-tile:hover { background: rgba(255, 255, 255, .08); }
+    .proj-label { display: block; font-size: 11px; font-weight: 700; color: #8ba293; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+    .proj-val { font: 800 24px/1.2 var(--font-display); color: #ffb74d; }
+    .cigarette-card.safe-air .proj-val { color: #81c784; }
+    .proj-sub { display: block; font-size: 10px; color: #9fb2a5; margin-top: 2px; }
+
+    /* Groundwater Samples List */
+    .water-stations-list { display: grid; gap: 12px; max-height: 480px; overflow-y: auto; padding-right: 4px; }
+    .water-card {
+      background: var(--surface-elevated);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      transition: all .2s ease;
+    }
+    .water-card:hover { border-color: var(--green); box-shadow: var(--shadow-sm); }
+    .water-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+    .water-station-name { margin: 0; font: 700 15px var(--font-display); color: var(--ink); }
+    .water-distance-badge {
+      flex: none;
+      font-size: 11px;
+      font-weight: 700;
+      color: #2b5963;
+      background: #e5f2f5;
+      padding: 4px 8px;
+      border-radius: 8px;
+    }
+    .water-meta { color: var(--muted); font-size: 11px; margin: 4px 0 10px; }
+    .water-measurements-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 7px;
+      margin-top: 10px;
+    }
+    .meas-chip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-alt);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 11px;
+    }
+    .meas-label { color: var(--ink-soft); }
+    .meas-val { font-weight: 700; color: var(--ink); display: inline-flex; align-items: center; gap: 5px; }
+    .status-tag {
+      font-size: 9px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .status-tag.normal { background: #e8f5e9; color: #2e7d32; }
+    .status-tag.elevated { background: #fff8e1; color: #f57f17; }
+    .status-tag.danger { background: #ffebee; color: #c62828; }
+    .locate-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 10px;
+      border: 0;
+      background: transparent;
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0;
+    }
+    .locate-btn:hover { text-decoration: underline; color: var(--green-light); }
+
+    /* Interactive 5-Year History Section */
+    .history-section {
+      margin: 48px 0;
+      padding: 32px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .history-title h2 { margin: 0 0 6px; font: 800 24px var(--font-display); color: var(--ink); }
+    .history-title p { margin: 0; color: var(--ink-soft); font-size: 13px; }
+    .history-controls { display: flex; gap: 10px; flex-wrap: wrap; }
+    .history-select {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 7px 12px;
+      background: var(--surface-elevated);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink);
+      outline: 0;
+    }
+    .history-chart-wrap {
+      width: 100%;
+      height: 250px;
+      position: relative;
+      background: var(--bg-alt);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .chart-tooltip {
+      position: absolute;
+      display: none;
+      padding: 8px 12px;
+      background: rgba(24, 38, 30, .94);
+      color: #ffffff;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      pointer-events: none;
+      z-index: 10;
+      box-shadow: 0 4px 14px rgba(0,0,0,.25);
+      transform: translate(-50%, -100%);
+      margin-top: -8px;
+    }
+
+    /* Standards & Knowledge Grid */
+    .standards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 36px;
+    }
+    .standard-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      transition: all .2s ease;
+    }
+    .standard-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); border-color: var(--green); }
+    .standard-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .standard-pill { font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 4px 8px; border-radius: 6px; }
+    .standard-pill.air { background: var(--mint); color: var(--green); }
+    .standard-pill.water { background: #e3f2f5; color: #235d68; }
+    .standard-card h4 { margin: 0 0 6px; font: 700 16px var(--font-display); color: var(--ink); }
+    .standard-card p { margin: 0; font-size: 12px; color: var(--ink-soft); line-height: 1.55; }
+    .benchmark-row {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--ink-soft);
+      font-weight: 600;
+    }
+
+    /* Open Source GitHub Banner */
+    .oss-banner-strip {
+      margin: 48px 0 20px;
+      padding: 28px 32px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .oss-left { display: flex; align-items: center; gap: 16px; }
+    .oss-logo { width: 48px; height: 48px; border-radius: 14px; flex: none; }
+    .oss-info h3 { margin: 0 0 4px; font: 800 18px var(--font-display); color: var(--ink); }
+    .oss-info p { margin: 0; font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+    .oss-links-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .oss-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all .2s ease;
+    }
+    .oss-btn.primary {
+      background: var(--ink);
+      color: var(--bg);
+      border: 1px solid var(--ink);
+    }
+    .oss-btn.primary:hover {
+      background: var(--green);
+      border-color: var(--green);
+      transform: translateY(-1px);
+    }
+    .oss-btn.secondary {
+      background: var(--surface-elevated);
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+    .oss-btn.secondary:hover {
+      border-color: var(--green);
+      background: var(--mint);
+    }
+
+    /* Footer */
+    footer {
+      padding: 32px 0 44px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+    }
+    .footer-row { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+    .footer-links { display: flex; gap: 18px; flex-wrap: wrap; }
+    .footer-links a { text-decoration: none; color: var(--ink-soft); font-weight: 500; }
+    .footer-links a:hover { color: var(--green); text-decoration: underline; }
+
+    @keyframes card-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .hero { grid-template-columns: 1fr; gap: 32px; }
+      .data-section-grid { grid-template-columns: 1fr; }
+      .cigarette-main-body { grid-template-columns: 1fr; }
+      .cigarette-projections-grid { grid-template-columns: repeat(2, 1fr); }
+      .standards-grid { grid-template-columns: 1fr; }
+      .oss-banner-strip { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 600px) {
+      .pollutant-grid { grid-template-columns: repeat(2, 1fr); }
+      .cigarette-projections-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .hero-map-wrap { min-height: 300px; }
+      .cig-count-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="topbar">
+    <div class="shell" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+      <a class="brand" href="#top" aria-label="Nearfield home">
+        <img class="brand-logo-img" src="/logo.svg" alt="Nearfield Logo">
+        <div class="brand-title-wrap">
+          <span class="brand-name">near<span>field</span></span>
+          <span class="brand-tagline">Open Source · India</span>
+        </div>
+      </a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#air-water">Air & Water</a>
+        <a href="#cigarette-section">Smoke Impact</a>
+        <a href="#map-section">OpenStreetMap</a>
+        <a href="#history-section">5-Year Trends</a>
+        <a href="#standards-section">Standards</a>
+      </nav>
+      <div class="nav-right">
+        <a class="github-pill" href="https://github.com/nearfield-india/nearfield" target="_blank" rel="noreferrer" title="Free and open source on GitHub">
+          <svg width="15" height="15" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+          <span>GitHub</span>
+          <span class="gh-tag">Free · MIT</span>
+        </a>
+        <button type="button" class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle theme">
+          <svg id="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <svg id="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top" class="shell">
+    <!-- Hero Section -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy-wrap">
+        <div class="eyebrow">
+          <span class="live-dot"></span>
+          FREE & OPEN SOURCE · INDIA, PLACE BY PLACE
+        </div>
+        <h1 id="hero-title">Your neighbourhood,<br><span class="accent">in context.</span></h1>
+        <p class="hero-copy">Real-time air quality and official groundwater chemical samples, mapped directly to your locality via OpenStreetMap. Search any Indian PIN code or area to discover live monitoring data, distances, sample dates, cigarette smoke equivalents, and BIS safety thresholds.</p>
+        
+        <form class="search-card" id="place-search" role="search">
+          <span class="search-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+              <path d="m16.5 16.5 4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <label class="sr-only" for="place-input" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Search by Indian PIN code or area name</label>
+          <input id="place-input" name="place" type="search" autocomplete="postal-code" inputmode="search" placeholder="Enter PIN code (e.g. 400001) or area name" maxlength="100">
+          <button type="submit" id="search-btn">
+            Explore area
+            <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M4 10h11m-4.5-4.5L15 10l-4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </form>
+
+        <div class="search-examples" id="search-help">
+          <span>Popular queries:</span>
+          <button type="button" data-sample="400001">400001 (Mumbai)</button>
+          <button type="button" data-sample="Indiranagar, Bengaluru">Indiranagar (Bengaluru)</button>
+          <button type="button" data-sample="Kolkata">Kolkata</button>
+          <button type="button" data-sample="110001">110001 (New Delhi)</button>
+        </div>
+        <p class="search-note" id="search-status" aria-live="polite"></p>
+      </div>
+
+      <!-- OpenStreetMap Hero Map Container -->
+      <div class="hero-map-wrap" id="map-section">
+        <div class="map-badge-top" id="map-status-pill">
+          <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><circle cx="10" cy="10" r="8"/></svg>
+          <span id="map-badge-text">OpenStreetMap · Neighbourhood View</span>
+        </div>
+        <div id="hero-map"></div>
+        <div class="map-legend">
+          <span class="legend-item"><i class="legend-dot pin"></i> Chosen Locality</span>
+          <span class="legend-item"><i class="legend-dot water"></i> CGWB Groundwater Borewell</span>
+          <span style="font-size:10px; color:var(--muted);">Click well marker to view chemical data</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Search Results / Office Selection Notice -->
+    <div class="result-notice" id="result-notice" role="status" aria-live="polite">
+      <div class="notice-header">
+        <span class="notice-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2.5 17 6v4.5c0 3.3-2.9 5.8-7 7-4.1-1.2-7-3.7-7-7V6l7-3.5Z" stroke="currentColor" stroke-width="1.8"/>
+            <path d="m7 10 2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <div class="notice-copy">
+          <strong id="notice-title">Matching Post Offices</strong>
+          <p id="notice-text">Select the locality that best represents your neighborhood to load localized air quality, smoke equivalency, and nearby groundwater chemical analysis.</p>
+        </div>
+      </div>
+      <div class="lookup-office-list" id="office-list"></div>
+    </div>
+
+    <!-- Live Observation Cards Section -->
+    <section id="air-water">
+      <div class="data-section-grid">
+        
+        <!-- Air Quality Panel -->
+        <div class="panel-card" id="air-panel">
+          <div class="panel-card-head">
+            <h3>
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
+                <path d="M3 12h2.5l2-6 4 12 2.5-8 2 4H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Air Quality Index
+            </h3>
+            <span class="panel-source-badge" id="aqi-source-badge">Real-Time Observation</span>
+          </div>
+
+          <div id="aqi-content">
+            <div class="aqi-hero-block" id="aqi-hero">
+              <div class="aqi-score-box" id="aqi-score-box" style="background:#f9a825;">
+                <span class="aqi-score-num" id="aqi-num">--</span>
+                <span class="aqi-score-lbl">NAQI</span>
+              </div>
+              <div class="aqi-desc-box">
+                <strong id="aqi-category">Select a location</strong>
+                <p id="aqi-advisory">Search a PIN code or area above to fetch real-time air quality metrics and health advisories.</p>
+              </div>
+            </div>
+
+            <!-- Pollutants Grid -->
+            <div class="pollutant-grid" id="pollutant-grid">
+              <div class="pollutant-tile">
+                <div class="pollutant-tile-head"><span class="pollutant-name">PM₂.₅</span><span class="pollutant-unit">µg/m³</span></div>
+                <div class="pollutant-val" id="val-pm25">--</div>
+                <div class="pollutant-safe">Safe Limit: 60</div>
+              </div>
+              <div class="pollutant-tile">
+                <div class="pollutant-tile-head"><span class="pollutant-name">PM₁₀</span><span class="pollutant-unit">µg/m³</span></div>
+                <div class="pollutant-val" id="val-pm10">--</div>
+                <div class="pollutant-safe">Safe Limit: 100</div>
+              </div>
+              <div class="pollutant-tile">
+                <div class="pollutant-tile-head"><span class="pollutant-name">NO₂</span><span class="pollutant-unit">µg/m³</span></div>
+                <div class="pollutant-val" id="val-no2">--</div>
+                <div class="pollutant-safe">Safe Limit: 80</div>
+              </div>
+              <div class="pollutant-tile">
+                <div class="pollutant-tile-head"><span class="pollutant-name">SO₂</span><span class="pollutant-unit">µg/m³</span></div>
+                <div class="pollutant-val" id="val-so2">--</div>
+                <div class="pollutant-safe">Safe Limit: 80</div>
+              </div>
+              <div class="pollutant-tile">
+                <div class="pollutant-tile-head"><span class="pollutant-name">CO</span><span class="pollutant-unit">mg/m³</span></div>
+                <div class="pollutant-val" id="val-co">--</div>
+                <div class="pollutant-safe">Safe Limit: 2.0</div>
+              </div>
+              <div class="pollutant-tile">
+                <div class="pollutant-tile-head"><span class="pollutant-name">O₃</span><span class="pollutant-unit">µg/m³</span></div>
+                <div class="pollutant-val" id="val-o3">--</div>
+                <div class="pollutant-safe">Safe Limit: 100</div>
+              </div>
+            </div>
+
+            <!-- 48-Hour Trend Sparkline -->
+            <div class="sparkline-box">
+              <div class="sparkline-title">
+                <span>Recent Trend (PM₂.₅ & AQI)</span>
+                <span id="trend-timeframe">Last 48 Hours</span>
+              </div>
+              <svg class="sparkline-svg" id="aqi-sparkline" viewBox="0 0 400 75" preserveAspectRatio="none">
+                <text x="200" y="40" text-anchor="middle" fill="#9cb0a1" font-size="11">Search a location to display timeline</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Groundwater Quality Panel -->
+        <div class="panel-card" id="water-panel">
+          <div class="panel-card-head">
+            <h3>
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
+                <path d="M12 3.2s6 6.4 6 11a6 6 0 0 1-12 0c0-4.6 6-11 6-11Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M9 15.2a3 3 0 0 0 3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              Groundwater Borewells (CGWB)
+            </h3>
+            <span class="panel-source-badge" id="water-source-badge">NWDP / CGWB Archive</span>
+          </div>
+
+          <div id="water-content">
+            <div id="water-summary-text" style="font-size:12px; color:var(--ink-soft); margin-bottom:14px;">
+              Search a locality to query official CGWB laboratory test records. Stations are sorted by distance from your selected post office.
+            </div>
+            
+            <div class="water-stations-list" id="water-stations-list">
+              <!-- Cards injected dynamically -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==============================================
+         Cigarette Smoke Inhalation Equivalency Section
+         ============================================== -->
+    <section class="cigarette-section" id="cigarette-section" aria-labelledby="cig-heading">
+      <div class="cigarette-card" id="cigarette-card">
+        <div class="cigarette-card-head">
+          <div class="cig-badge-wrap">
+            <span class="cig-alert-badge" id="cig-alert-badge">
+              <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a8 8 0 1 0 8 8 8 8 0 0 0-8-8Zm1 12H9v-2h2Zm0-4H9V6h2Z"/></svg>
+              <span id="cig-badge-text">AQI EXCEEDS 100 · HEALTH ALERT</span>
+            </span>
+            <span style="font-size:11px; font-weight:700; color:#859489; text-transform:uppercase; letter-spacing:.08em;">SMOKE INHALATION EQUIVALENCY</span>
+          </div>
+          <div class="cig-duration-selector" role="group" aria-label="Select exposure duration">
+            <button type="button" class="duration-btn active" data-period="day">Today (24h)</button>
+            <button type="button" class="duration-btn" data-period="week">7 Days</button>
+            <button type="button" class="duration-btn" data-period="month">30 Days</button>
+            <button type="button" class="duration-btn" data-period="year">1 Year</button>
+          </div>
+        </div>
+
+        <div class="cigarette-main-body">
+          <div class="cigarette-hero-stat">
+            <span class="cig-subtitle">Living in this air is equivalent to:</span>
+            <div class="cig-count-row">
+              <span class="cig-big-num" id="cig-big-num">~0.0</span>
+              <div class="cig-count-label">
+                <strong id="cig-unit-label">cigarettes</strong>
+                <span id="cig-period-label">passively inhaled today</span>
+              </div>
+            </div>
+
+            <!-- Visual representation of cigarettes -->
+            <div class="cig-visual-rack" id="cig-visual-rack" aria-label="Visual cigarette count">
+              <!-- Dynamically populated cigarette icons -->
+            </div>
+            
+            <p class="cig-headline" id="cig-headline">
+              Breathing this air for 24 hours delivers fine particulate mass into your deep lungs comparable to smoking commercial cigarettes.
+            </p>
+          </div>
+
+          <div class="cigarette-context-box">
+            <h4>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2v20m0-10H2m20 0H12" stroke="#ffb74d" stroke-width="2" stroke-linecap="round"/></svg>
+              The Science Behind This Metric
+            </h4>
+            <p>
+              According to landmark epidemiological research by <strong>Berkeley Earth</strong> (Dr. Richard Muller & Elizabeth Muller), breathing air with an average <strong>PM₂.₅ concentration of 22 µg/m³ for 24 hours</strong> deposits roughly the same microscopic particulate mass deep into lung alveoli as smoking <strong>one cigarette</strong>.
+            </p>
+            <div class="cig-formula-box">
+              <code>Equivalent Cigarettes = Daily PM₂.₅ (µg/m³) ÷ 22</code>
+            </div>
+            <div class="cig-action-tips">
+              <strong>Actionable Health Measures:</strong>
+              <ul>
+                <li>Run indoor HEPA air purifiers in sealed living spaces.</li>
+                <li>Wear a certified N95 or FFP2 respirator for outdoor commutes.</li>
+                <li>Avoid outdoor cardio exercise during morning traffic peaks and temperature inversions.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cumulative Exposure Cards -->
+        <div class="cigarette-projections-grid">
+          <div class="proj-tile">
+            <span class="proj-label">Today (24h)</span>
+            <div class="proj-val" id="proj-today">~0.0</div>
+            <span class="proj-sub">cigarettes</span>
+          </div>
+          <div class="proj-tile">
+            <span class="proj-label">1 Week (7 Days)</span>
+            <div class="proj-val" id="proj-week">~0.0</div>
+            <span class="proj-sub">cigarettes</span>
+          </div>
+          <div class="proj-tile">
+            <span class="proj-label">1 Month (30 Days)</span>
+            <div class="proj-val" id="proj-month">~0.0</div>
+            <span class="proj-sub" id="proj-month-packs">~0.0 packs</span>
+          </div>
+          <div class="proj-tile">
+            <span class="proj-label">1 Year (365 Days)</span>
+            <div class="proj-val" id="proj-year">~0</div>
+            <span class="proj-sub" id="proj-year-packs">~0 packs</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive 5-Year / Multi-Year Trend Section -->
+    <section class="history-section" id="history-section">
+      <div class="history-header">
+        <div class="history-title">
+          <h2>Multi-Year Trend Analysis</h2>
+          <p id="history-subtitle">Track historical chemical evolution across monitoring years for verified government observation sites.</p>
+        </div>
+        <div class="history-controls">
+          <select class="history-select" id="history-station-select" aria-label="Select monitoring station">
+            <option value="">Select Station</option>
+          </select>
+          <select class="history-select" id="history-param-select" aria-label="Select chemical parameter">
+            <option value="hardness">Total Hardness (mg/L)</option>
+            <option value="tds">Total Dissolved Solids (mg/L)</option>
+            <option value="ph">pH</option>
+            <option value="ec">Conductivity (µS/cm)</option>
+            <option value="fluoride">Fluoride (mg/L)</option>
+            <option value="chloride">Chloride (mg/L)</option>
+            <option value="nitrate">Nitrate (mg/L)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="history-chart-wrap" id="history-chart-wrap">
+        <div class="chart-tooltip" id="chart-tooltip"></div>
+        <svg id="history-chart-svg" width="100%" height="100%" viewBox="0 0 800 220" preserveAspectRatio="none">
+          <text x="400" y="110" text-anchor="middle" fill="#8ca092" font-size="13">Select a locality and station to plot verified multi-year observations.</text>
+        </svg>
+      </div>
+      <p style="font-size:11px; color:var(--muted); margin:14px 0 0;">
+        <strong>Data Integrity Principle:</strong> Only un-interpolated, authentic laboratory test samples from the Central Ground Water Board (CGWB) are plotted. Years with un-sampled data remain honestly blank. Dashed red/amber guides denote BIS IS 10500:2012 maximum acceptable drinking standards.
+      </p>
+    </section>
+
+    <!-- Standards & Regulatory Benchmarks -->
+    <section id="standards-section">
+      <div style="margin-bottom:20px;">
+        <div class="eyebrow">REGULATORY BENCHMARKS</div>
+        <h2 style="font:800 24px var(--font-display); margin:8px 0 0;">Understanding Your Water & Air Values</h2>
+      </div>
+
+      <div class="standards-grid">
+        <div class="standard-card">
+          <div class="standard-card-head">
+            <span class="standard-pill water">BIS IS 10500:2012</span>
+            <span style="font-size:11px; color:var(--muted);">Water Quality</span>
+          </div>
+          <h4>Total Hardness & Minerals</h4>
+          <p>Total hardness reflects calcium and magnesium ions. While hard water poses no direct cardiovascular hazard, excessive hardness encrusts pipes, degrades heating elements, and reduces soap lather.</p>
+          <div class="benchmark-row">
+            <span>Acceptable Limit: &lt; 200 mg/L</span>
+            <span>Permissible: 600 mg/L</span>
+          </div>
+        </div>
+
+        <div class="standard-card">
+          <div class="standard-card-head">
+            <span class="standard-pill water">BIS IS 10500:2012</span>
+            <span style="font-size:11px; color:var(--muted);">Chemical Safety</span>
+          </div>
+          <h4>Fluoride, Arsenic & Nitrates</h4>
+          <p>Chemical contaminants with acute biological significance. Fluoride above 1.5 mg/L causes crippling dental or skeletal fluorosis. Arsenic above 0.01 mg/L is a confirmed carcinogen.</p>
+          <div class="benchmark-row">
+            <span>Fluoride: 1.0 — 1.5 mg/L</span>
+            <span>Arsenic: 0.01 mg/L max</span>
+          </div>
+        </div>
+
+        <div class="standard-card">
+          <div class="standard-card-head">
+            <span class="standard-pill air">CPCB NAQI</span>
+            <span style="font-size:11px; color:var(--muted);">Air Quality</span>
+          </div>
+          <h4>National Air Quality Index</h4>
+          <p>Calculated using 24-hour concentration sub-indices for PM₂.₅, PM₁₀, NO₂, and SO₂ based on official CPCB health break-point matrices. 0-50 represents Good air; &gt; 200 indicates Poor or hazardous air.</p>
+          <div class="benchmark-row">
+            <span>Good: 0 — 50</span>
+            <span>Severe: &gt; 400</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Open Source & GitHub Callout Banner -->
+    <div class="oss-banner-strip">
+      <div class="oss-left">
+        <img class="oss-logo" src="/logo.svg" alt="Nearfield Logo">
+        <div class="oss-info">
+          <h3>Nearfield is Free & Open Source</h3>
+          <p>Built for public transparency. Zero tracking, zero telemetry. Code and data schemas are open source under the MIT License.</p>
+        </div>
+      </div>
+      <div class="oss-links-row">
+        <a class="oss-btn primary" href="https://github.com/nearfield-india/nearfield" target="_blank" rel="noreferrer">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+          Star on GitHub
+        </a>
+        <a class="oss-btn secondary" href="https://github.com/nearfield-india/nearfield/blob/main/LICENSE" target="_blank" rel="noreferrer">
+          MIT License
+        </a>
+        <a class="oss-btn secondary" href="https://github.com/nearfield-india/nearfield/issues" target="_blank" rel="noreferrer">
+          Report an Issue
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="shell footer-row">
+      <div>
+        <strong style="color:var(--green);">nearfield</strong> · Free and open-source environmental observatory for India.
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nearfield-india/nearfield" target="_blank" rel="noreferrer">GitHub Repository</a>
+        <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap Contributors</a>
+        <a href="https://nwdp.nwic.gov.in/dataset/ground-water-quality-manual-chemical-parameters-cgwb-f-gfg" target="_blank" rel="noreferrer">CGWB/NWDP Portal</a>
+        <a href="https://www.data.gov.in/resource/real-time-air-quality-index-various-locations" target="_blank" rel="noreferrer">CPCB data.gov.in</a>
+        <a href="https://open-meteo.com/en/docs/air-quality-api" target="_blank" rel="noreferrer">Open-Meteo Air Quality</a>
+        <a href="https://berkeleyearth.org/air-pollution-and-cigarette-equivalence/" target="_blank" rel="noreferrer">Berkeley Earth Study</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Application Logic -->
+  <script>
+    (() => {
+      // Elements
+      const form = document.getElementById('place-search');
+      const input = document.getElementById('place-input');
+      const searchBtn = document.getElementById('search-btn');
+      const statusText = document.getElementById('search-status');
+      const notice = document.getElementById('result-notice');
+      const noticeTitle = document.getElementById('notice-title');
+      const noticeText = document.getElementById('notice-text');
+      const officeList = document.getElementById('office-list');
+
+      // Theme toggle elements
+      const themeToggle = document.getElementById('theme-toggle');
+      const sunIcon = document.getElementById('theme-icon-sun');
+      const moonIcon = document.getElementById('theme-icon-moon');
+
+      // AQI Elements
+      const aqiNum = document.getElementById('aqi-num');
+      const aqiScoreBox = document.getElementById('aqi-score-box');
+      const aqiCategory = document.getElementById('aqi-category');
+      const aqiAdvisory = document.getElementById('aqi-advisory');
+      const valPm25 = document.getElementById('val-pm25');
+      const valPm10 = document.getElementById('val-pm10');
+      const valNo2 = document.getElementById('val-no2');
+      const valSo2 = document.getElementById('val-so2');
+      const valCo = document.getElementById('val-co');
+      const valO3 = document.getElementById('val-o3');
+      const aqiSparkline = document.getElementById('aqi-sparkline');
+
+      // Cigarette Elements
+      const cigaretteCard = document.getElementById('cigarette-card');
+      const cigAlertBadge = document.getElementById('cig-alert-badge');
+      const cigBadgeText = document.getElementById('cig-badge-text');
+      const cigBigNum = document.getElementById('cig-big-num');
+      const cigUnitLabel = document.getElementById('cig-unit-label');
+      const cigPeriodLabel = document.getElementById('cig-period-label');
+      const cigVisualRack = document.getElementById('cig-visual-rack');
+      const cigHeadline = document.getElementById('cig-headline');
+      const projToday = document.getElementById('proj-today');
+      const projWeek = document.getElementById('proj-week');
+      const projMonth = document.getElementById('proj-month');
+      const projMonthPacks = document.getElementById('proj-month-packs');
+      const projYear = document.getElementById('proj-year');
+      const projYearPacks = document.getElementById('proj-year-packs');
+      const durationButtons = document.querySelectorAll('.duration-btn');
+
+      // Water Elements
+      const waterStationsList = document.getElementById('water-stations-list');
+      const waterSummaryText = document.getElementById('water-summary-text');
+      const historyStationSelect = document.getElementById('history-station-select');
+      const historyParamSelect = document.getElementById('history-param-select');
+      const historyChartSvg = document.getElementById('history-chart-svg');
+      const chartTooltip = document.getElementById('chart-tooltip');
+
+      // State
+      let map = null;
+      let userMarker = null;
+      let waterLayerGroup = null;
+      let currentStationHistory = [];
+      let currentWaterRecords = [];
+      let currentCoordinates = { lat: 20.5937, lon: 78.9629 };
+      let currentCigarettesPerDay = 0;
+      let currentAQI = 0;
+      let selectedDuration = 'day';
+
+      // ========================================
+      // 0. Dark / Light Theme Toggle
+      // ========================================
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('nf_theme', theme);
+        if (theme === 'dark') {
+          sunIcon.style.display = 'block';
+          moonIcon.style.display = 'none';
+        } else {
+          sunIcon.style.display = 'none';
+          moonIcon.style.display = 'block';
+        }
+      }
+
+      const savedTheme = localStorage.getItem('nf_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      applyTheme(savedTheme);
+
+      themeToggle.addEventListener('click', () => {
+        const active = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        applyTheme(active);
+      });
+
+      // ========================================
+      // 1. OpenStreetMap Leaflet Setup
+      // ========================================
+      function initMap() {
+        if (map) return;
+        map = L.map('hero-map', {
+          zoomControl: true,
+          attributionControl: true
+        }).setView([20.5937, 78.9629], 5);
+
+        // Standard OpenStreetMap Tile Layer
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        waterLayerGroup = L.layerGroup().addTo(map);
+      }
+
+      function updateMap(lat, lon, label, waterRecords = []) {
+        initMap();
+        currentCoordinates = { lat, lon };
+
+        map.flyTo([lat, lon], 12, { duration: 1.5 });
+
+        if (userMarker) map.removeLayer(userMarker);
+        
+        const localityIcon = L.divIcon({
+          className: 'custom-user-pin',
+          html: `<div style="width:26px;height:26px;background:#41684c;border:3px solid #ffffff;border-radius:50%;box-shadow:0 0 0 6px rgba(65,104,76,.28),0 4px 14px rgba(0,0,0,.3);animation:pulse-dot 2s infinite;"></div>`,
+          iconSize: [26, 26],
+          iconAnchor: [13, 13]
+        });
+
+        userMarker = L.marker([lat, lon], { icon: localityIcon }).addTo(map);
+        userMarker.bindPopup(`<b>${label}</b><br><span style="font-size:11px;color:#666;">Selected Locality / Post Office</span>`).openPopup();
+
+        // Render nearby CGWB water wells
+        waterLayerGroup.clearLayers();
+
+        const wellIcon = L.divIcon({
+          className: 'custom-well-pin',
+          html: `<div style="width:18px;height:18px;background:#2f6d7a;border:2px solid #ffffff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.25);"></div>`,
+          iconSize: [18, 18],
+          iconAnchor: [9, 9]
+        });
+
+        waterRecords.forEach((rec) => {
+          if (rec.latitude && rec.longitude) {
+            const m = L.marker([rec.latitude, rec.longitude], { icon: wellIcon });
+            const distText = rec.distanceKm !== null ? `<b>${rec.distanceKm} km</b> away` : '';
+            const keyVals = rec.measurements.slice(0, 4).map(item => `${item.label}: <b>${item.value} ${item.unit}</b>`).join('<br>');
+
+            m.bindPopup(`
+              <div style="font-family:'DM Sans',sans-serif;font-size:12px;">
+                <strong style="color:#2f6d7a;font-size:13px;">${rec.station}</strong><br>
+                <span style="color:#777;">${rec.village ? rec.village + ', ' : ''}${rec.district} · ${rec.observedAt || 'Date N/A'}</span><br>
+                ${distText ? `<span style="display:inline-block;margin:4px 0;color:#223c2a;">${distText}</span><br>` : ''}
+                <div style="margin-top:6px;padding-top:6px;border-top:1px solid #eee;">${keyVals}</div>
+              </div>
+            `);
+            m.addTo(waterLayerGroup);
+          }
+        });
+      }
+
+      // ========================================
+      // 2. Cigarette Equivalency Logic
+      // ========================================
+      function updateCigaretteDisplay() {
+        const cigPerDay = currentCigarettesPerDay;
+        const aqi = currentAQI;
+
+        const cigWeek = Math.round(cigPerDay * 7 * 10) / 10;
+        const cigMonth = Math.round(cigPerDay * 30 * 10) / 10;
+        const cigYear = Math.round(cigPerDay * 365);
+        const packsMonth = Math.round((cigMonth / 20) * 10) / 10;
+        const packsYear = Math.round(cigYear / 20);
+
+        projToday.textContent = `~${cigPerDay.toFixed(1)}`;
+        projWeek.textContent = `~${cigWeek.toFixed(1)}`;
+        projMonth.textContent = `~${cigMonth.toFixed(1)}`;
+        projMonthPacks.textContent = `~${packsMonth} packs`;
+        projYear.textContent = `~${cigYear}`;
+        projYearPacks.textContent = `~${packsYear} packs`;
+
+        let activeVal = cigPerDay;
+        let activeLabel = 'passively inhaled today';
+        let countUnits = 'cigarettes';
+
+        if (selectedDuration === 'week') {
+          activeVal = cigWeek;
+          activeLabel = 'inhaled in 1 week (7 days)';
+        } else if (selectedDuration === 'month') {
+          activeVal = cigMonth;
+          activeLabel = `inhaled in 30 days (~${packsMonth} packs)`;
+        } else if (selectedDuration === 'year') {
+          activeVal = cigYear;
+          activeLabel = `inhaled in 1 year (~${packsYear} packs)`;
+        }
+
+        cigBigNum.textContent = `~${activeVal >= 10 ? Math.round(activeVal) : activeVal.toFixed(1)}`;
+        cigUnitLabel.textContent = countUnits;
+        cigPeriodLabel.textContent = activeLabel;
+
+        // Render visual cigarette rack icons
+        cigVisualRack.replaceChildren();
+        const displayCount = Math.min(24, Math.max(1, Math.round(activeVal)));
+        
+        for (let i = 0; i < displayCount; i++) {
+          const item = document.createElement('div');
+          item.className = 'cig-item';
+          item.style.animationDelay = `${i * 0.03}s`;
+          item.innerHTML = `
+            <span class="cig-ember"></span>
+            <span class="cig-body"></span>
+            <span class="cig-filter"></span>
+          `;
+          cigVisualRack.appendChild(item);
+        }
+
+        if (activeVal > 24) {
+          const more = document.createElement('span');
+          more.className = 'cig-more-tag';
+          more.textContent = `+ ${Math.round(activeVal - 24)} more`;
+          cigVisualRack.appendChild(more);
+        }
+
+        // Whenever AQI > 100: Highlight severity alert
+        if (aqi > 100) {
+          cigaretteCard.classList.remove('safe-air');
+          cigAlertBadge.classList.remove('safe');
+          cigBadgeText.textContent = `AQI EXCEEDS 100 · HEALTH ALERT (AQI ${aqi})`;
+          cigHeadline.textContent = `Breathing this air for 24 hours delivers fine particulate (PM₂.₅) mass into your deep lungs equivalent to smoking ~${cigPerDay.toFixed(1)} commercial cigarettes today.`;
+        } else {
+          cigaretteCard.classList.add('safe-air');
+          cigAlertBadge.classList.add('safe');
+          cigBadgeText.textContent = `AQI IS ${aqi} (≤ 100) · ACCEPTABLE RANGE`;
+          cigHeadline.textContent = `Air quality in your area is below the 100 AQI threshold. Particulate exposure is within acceptable limits (less than 1 cigarette equivalent per day).`;
+        }
+      }
+
+      durationButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          durationButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          selectedDuration = btn.dataset.period;
+          updateCigaretteDisplay();
+        });
+      });
+
+      // ========================================
+      // 3. Air Quality Rendering
+      // ========================================
+      function renderAqi(data) {
+        if (!data || !data.current) return;
+        const cur = data.current;
+        const aqi = cur.naqi !== null ? cur.naqi : 0;
+        currentAQI = aqi;
+
+        aqiNum.textContent = aqi !== 0 ? aqi : '--';
+        aqiScoreBox.style.background = cur.color || '#f9a825';
+        aqiCategory.textContent = `${cur.category || 'Moderate'} (${aqi})`;
+        aqiAdvisory.textContent = cur.advisory || 'Air quality status reported for locality.';
+
+        const pols = data.pollutants || [];
+        let pm25Val = 0;
+
+        pols.forEach(p => {
+          if (p.id === 'pm25') {
+            valPm25.textContent = p.value !== null ? p.value : '--';
+            pm25Val = p.value !== null ? parseFloat(p.value) : 0;
+          }
+          if (p.id === 'pm10') valPm10.textContent = p.value !== null ? p.value : '--';
+          if (p.id === 'no2') valNo2.textContent = p.value !== null ? p.value : '--';
+          if (p.id === 'so2') valSo2.textContent = p.value !== null ? p.value : '--';
+          if (p.id === 'co') valCo.textContent = p.value !== null ? p.value : '--';
+          if (p.id === 'o3') valO3.textContent = p.value !== null ? p.value : '--';
+        });
+
+        // Calculate cigarette equivalency: Berkeley Earth benchmark (PM2.5 / 22)
+        currentCigarettesPerDay = cur.cigarettesPerDay !== undefined
+          ? cur.cigarettesPerDay
+          : (pm25Val > 0 ? Math.round((pm25Val / 22) * 10) / 10 : 0);
+
+        updateCigaretteDisplay();
+
+        // Render 48h Sparkline
+        const trend = data.hourlyTrend || [];
+        if (trend.length > 1) {
+          const vals = trend.map(t => t.pm25).filter(v => v !== null && !isNaN(v));
+          const maxVal = Math.max(...vals, 100);
+          const minVal = Math.min(...vals, 0);
+          const range = maxVal - minVal || 1;
+
+          const points = trend.map((t, idx) => {
+            const x = (idx / (trend.length - 1)) * 390 + 5;
+            const val = t.pm25 !== null ? t.pm25 : minVal;
+            const y = 65 - ((val - minVal) / range) * 55;
+            return `${x.toFixed(1)},${y.toFixed(1)}`;
+          });
+
+          const pathD = `M ${points.join(' L ')}`;
+          const areaD = `${pathD} L 395,70 L 5,70 Z`;
+
+          aqiSparkline.innerHTML = `
+            <defs>
+              <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="${cur.color || '#41684c'}" stop-opacity="0.35"/>
+                <stop offset="100%" stop-color="${cur.color || '#41684c'}" stop-opacity="0.0"/>
+              </linearGradient>
+            </defs>
+            <path d="${areaD}" fill="url(#sparkGrad)"/>
+            <path d="${pathD}" fill="none" stroke="${cur.color || '#41684c'}" stroke-width="2.5" stroke-linecap="round"/>
+          `;
+        }
+      }
+
+      // ========================================
+      // 4. Groundwater Rendering
+      // ========================================
+      function renderWater(data) {
+        waterStationsList.replaceChildren();
+        if (!data || !data.records || !data.records.length) {
+          waterSummaryText.textContent = `No groundwater chemistry records matched for this district in the public CGWB catalogue.`;
+          return;
+        }
+
+        currentWaterRecords = data.records;
+        currentStationHistory = data.stationHistory || [];
+        waterSummaryText.textContent = `Found ${data.total} recorded samples in ${data.requested.district}. Showing nearest official CGWB borewells:`;
+
+        data.records.slice(0, 15).forEach((rec) => {
+          const card = document.createElement('div');
+          card.className = 'water-card';
+
+          const distBadge = rec.distanceKm !== null ? `<span class="water-distance-badge">${rec.distanceKm} km away</span>` : '';
+          const placeMeta = [rec.village, rec.tehsil, rec.district, rec.observedAt ? 'Sampled: ' + rec.observedAt : 'Date N/A'].filter(Boolean).join(' · ');
+
+          let chipsHtml = '';
+          rec.measurements.slice(0, 6).forEach(m => {
+            chipsHtml += `
+              <div class="meas-chip" title="${m.desc || ''}">
+                <span class="meas-label">${m.label}</span>
+                <span class="meas-val">${m.value} <small style="font-weight:400;color:var(--muted);">${m.unit}</small> <span class="status-tag ${m.status}">${m.status}</span></span>
+              </div>
+            `;
+          });
+
+          card.innerHTML = `
+            <div class="water-card-head">
+              <div>
+                <h4 class="water-station-name">${rec.station}</h4>
+                <div class="water-meta">${placeMeta}</div>
+              </div>
+              ${distBadge}
+            </div>
+            <div class="water-measurements-grid">
+              ${chipsHtml}
+            </div>
+            ${rec.latitude && rec.longitude ? `
+              <button type="button" class="locate-btn" data-lat="${rec.latitude}" data-lon="${rec.longitude}" data-name="${rec.station}">
+                <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a8 8 0 1 0 8 8 8 8 0 0 0-8-8Zm1 12H9v-2h2Zm0-4H9V6h2Z"/></svg>
+                Focus on OpenStreetMap (${rec.latitude.toFixed(3)}, ${rec.longitude.toFixed(3)})
+              </button>
+            ` : ''}
+          `;
+
+          const locateBtn = card.querySelector('.locate-btn');
+          if (locateBtn) {
+            locateBtn.addEventListener('click', () => {
+              const lat = parseFloat(locateBtn.dataset.lat);
+              const lon = parseFloat(locateBtn.dataset.lon);
+              map.flyTo([lat, lon], 14);
+            });
+          }
+
+          waterStationsList.appendChild(card);
+        });
+
+        // Populate 5-Year History selector
+        historyStationSelect.replaceChildren();
+        if (currentStationHistory.length > 0) {
+          currentStationHistory.forEach(st => {
+            const opt = document.createElement('option');
+            opt.value = st.station;
+            opt.textContent = `${st.station} (${st.testCount} annual records)`;
+            historyStationSelect.appendChild(opt);
+          });
+          drawHistoryChart();
+        } else {
+          const opt = document.createElement('option');
+          opt.value = "";
+          opt.textContent = "No multi-year records in this district";
+          historyStationSelect.appendChild(opt);
+        }
+      }
+
+      // ========================================
+      // 5. Multi-Year Historical Chart
+      // ========================================
+      function drawHistoryChart() {
+        const selectedStation = historyStationSelect.value;
+        const selectedParam = historyParamSelect.value;
+        const stationObj = currentStationHistory.find(s => s.station === selectedStation) || currentStationHistory[0];
+
+        if (!stationObj || !stationObj.tests || !stationObj.tests.length) {
+          historyChartSvg.innerHTML = `<text x="400" y="110" text-anchor="middle" fill="#8ca092" font-size="13">No multi-year test series found for selected station.</text>`;
+          return;
+        }
+
+        const points = [];
+        stationObj.tests.forEach(t => {
+          const m = t.measurements.find(item => item.id === selectedParam);
+          if (m && m.numericValue !== null) {
+            points.push({ year: t.year, date: t.date, val: m.numericValue, unit: m.unit, label: m.label });
+          }
+        });
+
+        if (points.length < 2) {
+          historyChartSvg.innerHTML = `<text x="400" y="110" text-anchor="middle" fill="#8ca092" font-size="13">Fewer than 2 annual samples for parameter "${selectedParam}". Select another parameter above.</text>`;
+          return;
+        }
+
+        points.sort((a, b) => a.year - b.year);
+        const maxVal = Math.max(...points.map(p => p.val));
+        const minVal = Math.min(0, Math.min(...points.map(p => p.val)));
+        const valRange = (maxVal - minVal) * 1.2 || 1;
+
+        const W = 760;
+        const H = 160;
+        const padX = 50;
+        const padY = 25;
+
+        const coords = points.map((p, idx) => {
+          const x = padX + (idx / (points.length - 1)) * (W - padX * 2);
+          const y = H - padY - ((p.val - minVal) / valRange) * (H - padY * 2);
+          return { x, y, p };
+        });
+
+        const linePath = coords.map((c, i) => `${i === 0 ? 'M' : 'L'} ${c.x.toFixed(1)} ${c.y.toFixed(1)}`).join(' ');
+        const areaPath = `${linePath} L ${coords[coords.length - 1].x.toFixed(1)} ${H - padY} L ${coords[0].x.toFixed(1)} ${H - padY} Z`;
+
+        let circlesHtml = '';
+        let xLabelsHtml = '';
+        coords.forEach(c => {
+          circlesHtml += `
+            <circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="6" fill="#41684c" stroke="#ffffff" stroke-width="2" class="chart-point" data-year="${c.p.year}" data-val="${c.p.val}" data-unit="${c.p.unit}" style="cursor:pointer;transition:transform .2s;"/>
+          `;
+          xLabelsHtml += `
+            <text x="${c.x.toFixed(1)}" y="${H - 5}" text-anchor="middle" fill="var(--ink-soft)" font-size="11" font-weight="600">${c.p.year}</text>
+          `;
+        });
+
+        historyChartSvg.innerHTML = `
+          <defs>
+            <linearGradient id="historyGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#41684c" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#41684c" stop-opacity="0.02"/>
+            </linearGradient>
+          </defs>
+          <line x1="${padX}" y1="${H - padY}" x2="${W - padX}" y2="${H - padY}" stroke="var(--line)" stroke-width="1.5"/>
+          <path d="${areaPath}" fill="url(#historyGrad)"/>
+          <path d="${linePath}" fill="none" stroke="#41684c" stroke-width="3" stroke-linecap="round"/>
+          ${circlesHtml}
+          ${xLabelsHtml}
+          <text x="${padX}" y="15" fill="var(--green)" font-size="11" font-weight="700">${points[0].label} (${points[0].unit})</text>
+        `;
+
+        const chartWrap = document.getElementById('history-chart-wrap');
+        historyChartSvg.querySelectorAll('.chart-point').forEach(circle => {
+          circle.addEventListener('mouseenter', () => {
+            const rect = circle.getBoundingClientRect();
+            const wrapRect = chartWrap.getBoundingClientRect();
+            chartTooltip.style.display = 'block';
+            chartTooltip.style.left = `${rect.left - wrapRect.left + rect.width / 2}px`;
+            chartTooltip.style.top = `${rect.top - wrapRect.top}px`;
+            chartTooltip.innerHTML = `<strong>${circle.dataset.year}</strong>: ${circle.dataset.val} ${circle.dataset.unit}`;
+          });
+          circle.addEventListener('mouseleave', () => {
+            chartTooltip.style.display = 'none';
+          });
+        });
+      }
+
+      historyStationSelect.addEventListener('change', drawHistoryChart);
+      historyParamSelect.addEventListener('change', drawHistoryChart);
+
+      // ========================================
+      // 6. Office Selection & Exploration
+      // ========================================
+      async function selectOffice(office, button, coords = null) {
+        document.querySelectorAll('.office-choice').forEach(btn => btn.setAttribute('aria-pressed', String(btn === button)));
+        const pin = office.PINCode || office.Pincode || 'Local';
+        const officeName = office.Name || 'Selected Area';
+        const district = office.District || '';
+        const stateName = office.State || '';
+
+        noticeTitle.textContent = `${officeName} · ${pin}`;
+        noticeText.textContent = `${district}, ${stateName} · Fetching live observations, OpenStreetMap coordinates, and nearby borewell locations...`;
+        statusText.textContent = `Connecting to official datasets for ${officeName}...`;
+
+        let lat = coords?.lat || currentCoordinates.lat;
+        let lon = coords?.lon || currentCoordinates.lon;
+
+        try {
+          const aqiQuery = new URLSearchParams({ state: stateName, city: district, lat, lon });
+          const waterQuery = new URLSearchParams({ state: stateName, district, lat, lon });
+
+          const [aqiRes, waterRes] = await Promise.all([
+            fetch(`/api/aqi?${aqiQuery.toString()}`).then(r => r.json()).catch(() => null),
+            fetch(`/api/water?${waterQuery.toString()}`).then(r => r.json()).catch(() => null)
+          ]);
+
+          statusText.textContent = `Live data loaded for ${officeName}, ${district}.`;
+
+          if (aqiRes) renderAqi(aqiRes);
+          if (waterRes) {
+            renderWater(waterRes);
+            updateMap(lat, lon, `${officeName} (${pin})`, waterRes.records || []);
+          } else {
+            updateMap(lat, lon, `${officeName} (${pin})`, []);
+          }
+
+          document.getElementById('air-water').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } catch (err) {
+          statusText.textContent = `Error loading observations: ${err.message}`;
+        }
+      }
+
+      // ========================================
+      // 7. Search Execution
+      // ========================================
+      async function doSearch(query) {
+        const q = query.trim();
+        if (!q) {
+          statusText.textContent = 'Enter a 6-digit PIN code or area name.';
+          input.focus();
+          return;
+        }
+
+        searchBtn.disabled = true;
+        searchBtn.textContent = 'Searching...';
+        statusText.textContent = `Looking up postal records and OpenStreetMap coordinates for "${q}"...`;
+        officeList.replaceChildren();
+
+        try {
+          const res = await fetch(`/api/lookup?q=${encodeURIComponent(q)}`);
+          const data = await res.json();
+
+          if (!res.ok || !data.postOffices || !data.postOffices.length) {
+            statusText.textContent = `No post offices found for "${q}". Please check spelling.`;
+            notice.classList.remove('visible');
+            searchBtn.disabled = false;
+            searchBtn.textContent = 'Explore area';
+            return;
+          }
+
+          notice.classList.add('visible');
+          noticeTitle.textContent = `${data.postOffices.length} Matching Post Office${data.postOffices.length === 1 ? '' : 's'}`;
+          noticeText.textContent = `Choose your exact locality below to load live environmental measurements and OpenStreetMap view:`;
+
+          data.postOffices.forEach((office, index) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'office-choice';
+            btn.setAttribute('aria-pressed', 'false');
+
+            const name = office.Name || 'Unnamed post office';
+            const pin = office.PINCode || office.Pincode || q;
+            const meta = [office.District, office.State, office.BranchType].filter(Boolean).join(' · ');
+
+            btn.innerHTML = `
+              <div>
+                <strong>${name}</strong>
+                <span>${meta}</span>
+              </div>
+              <span class="office-pin">${pin}</span>
+            `;
+
+            btn.addEventListener('click', () => selectOffice(office, btn, data.coordinates));
+            officeList.appendChild(btn);
+
+            if (index === 0) {
+              selectOffice(office, btn, data.coordinates);
+            }
+          });
+
+          statusText.textContent = `Found ${data.postOffices.length} location(s).`;
+        } catch (err) {
+          statusText.textContent = `Lookup service error: ${err.message}`;
+        } finally {
+          searchBtn.disabled = false;
+          searchBtn.textContent = 'Explore area';
+        }
+      }
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        doSearch(input.value);
+      });
+
+      document.querySelectorAll('[data-sample]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          input.value = btn.dataset.sample;
+          doSearch(input.value);
+        });
+      });
+
+      // Initialize OpenStreetMap and load Mumbai sample default
+      initMap();
+      setTimeout(() => {
+        doSearch('400001');
+      }, 300);
+
+    })();
+  </script>
+</body>
+</html>

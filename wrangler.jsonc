@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "nearfield-preview",
+  "compatibility_date": "2026-06-24",
+  "main": "worker.js",
+  "observability": {
+    "enabled": false
+  },
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
+}
