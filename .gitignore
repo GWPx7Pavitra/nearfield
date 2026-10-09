@@ -1,3 +1,9 @@
 node_modules/
 .wrangler/
 .DS_Store
+
+# Agent skills & local configurations (never commit or upload to GitHub)
+.agents/
+skills/
+skills-lock.json
+data/
