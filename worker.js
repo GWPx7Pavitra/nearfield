@@ -690,6 +690,14 @@ export default {
       }, 200, 0);
     }
 
+    if (url.pathname === "/clean") {
+      if (env.ASSETS) return env.ASSETS.fetch(new Request(new URL("/clean.html", request.url), request));
+    }
+
+    if (env.ASSETS) {
+      return env.ASSETS.fetch(request);
+    }
+
     return new Response("Not found", { status: 404, headers: { "X-Content-Type-Options": "nosniff" } });
   },
 };
