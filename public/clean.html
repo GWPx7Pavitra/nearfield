@@ -835,6 +835,12 @@
       gap: 8px;
       letter-spacing: -0.02em;
     }
+    .panel-head-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
     .panel-badge {
       font-size: 10px;
       font-weight: 700;
@@ -845,6 +851,74 @@
       background: var(--mint);
       color: var(--green);
       border: 1px solid var(--line);
+    }
+    .aqi-std-switch {
+      display: inline-flex;
+      background: var(--surface-3);
+      border: 1px solid var(--line);
+      border-radius: var(--r-pill);
+      padding: 2px;
+      gap: 2px;
+    }
+    .aqi-std-btn {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: var(--r-pill);
+      cursor: pointer;
+      transition: all var(--dur-fast) ease;
+    }
+    .aqi-std-btn:hover {
+      color: var(--ink);
+    }
+    .aqi-std-btn.active {
+      background: var(--surface);
+      color: var(--green);
+      box-shadow: var(--shadow-xs);
+    }
+    .aqi-dual-standards {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin: 8px 0 8px;
+    }
+    .dual-std-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--ink-soft);
+      font-size: 11px;
+      cursor: pointer;
+      transition: all var(--dur-fast) ease;
+    }
+    .dual-std-chip:hover {
+      border-color: var(--green);
+    }
+    .dual-std-chip strong {
+      color: var(--ink);
+      font-family: var(--font-mono);
+    }
+    .dual-std-chip.active-std {
+      border-color: var(--green);
+      background: var(--mint);
+      color: var(--green);
+    }
+    .dual-std-chip.active-std strong {
+      color: var(--green);
+    }
+    .aqi-std-explainer {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.45;
+      margin-top: 6px;
     }
 
     /* AQI Radial Gauge */
@@ -1660,7 +1734,13 @@
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M3 12h2.5l2-6 4 12 2.5-8 2 4H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 Air Quality Index
               </h3>
-              <span class="panel-badge" id="aqi-source-badge">Real-Time</span>
+              <div class="panel-head-actions">
+                <div class="aqi-std-switch" id="aqi-std-switch" role="group" aria-label="AQI Standard">
+                  <button type="button" class="aqi-std-btn active" id="btn-std-cpcb" data-std="cpcb" title="Official Indian CPCB National AQI">CPCB (India)</button>
+                  <button type="button" class="aqi-std-btn" id="btn-std-us" data-std="us" title="US EPA Standard (used by AQI.in, Apple Weather, Google)">US EPA</button>
+                </div>
+                <span class="panel-badge" id="aqi-source-badge">Real-Time</span>
+              </div>
             </div>
 
             <div id="aqi-content">
@@ -1690,8 +1770,12 @@
                     <span class="aqi-beacon" id="aqi-dot-beacon"></span>
                     <span id="aqi-category">Awaiting Locality</span>
                   </div>
+                  <div class="aqi-dual-standards" id="aqi-dual-standards" style="display:none;">
+                    <span class="dual-std-chip active-std" id="chip-cpcb" title="Click to view Indian CPCB scale">🇮🇳 CPCB: <strong id="val-chip-cpcb">--</strong></span>
+                    <span class="dual-std-chip" id="chip-us" title="Click to view US EPA scale (matches AQI.in)">🇺🇸 US EPA: <strong id="val-chip-us">--</strong></span>
+                  </div>
                   <p id="aqi-advisory">Search an Indian PIN code or area to load live CPCB air quality data and health recommendations.</p>
-                  <div class="aqi-scale-strip" title="CPCB NAQI Health Categories">
+                  <div class="aqi-scale-strip" title="AQI Health Categories">
                     <span class="scale-step step-good"  title="Good (0–50)">0–50</span>
                     <span class="scale-step step-sat"   title="Satisfactory (51–100)">100</span>
                     <span class="scale-step step-mod"   title="Moderate (101–200)">200</span>
@@ -1699,6 +1783,7 @@
                     <span class="scale-step step-vpoor" title="Very Poor (301–400)">400</span>
                     <span class="scale-step step-sev"   title="Severe (401–500)">500+</span>
                   </div>
+                  <div class="aqi-std-explainer" id="aqi-std-explainer"></div>
                 </div>
               </div>
 
@@ -2346,19 +2431,96 @@
       }
 
       // ========================================
-      // 4. Air Quality Rendering
+      // 4. Air Quality Rendering & Standard Switcher
       // ========================================
+      let currentAqiStandard = 'cpcb'; // 'cpcb' | 'us'
+      let lastAqiData = null;
+
+      function getUsCategory(val) {
+        if (val <= 50) return { category: 'Good', color: '#16a34a', advisory: 'Air quality is satisfactory and poses little or no risk.' };
+        if (val <= 100) return { category: 'Moderate', color: '#f59e0b', advisory: 'Air quality is acceptable. Moderate concern for individuals unusually sensitive to Ozone or PM₂.₅.' };
+        if (val <= 150) return { category: 'Unhealthy (Sensitive)', color: '#ea580c', advisory: 'Members of sensitive groups may experience health effects; general public less likely affected.' };
+        if (val <= 200) return { category: 'Unhealthy', color: '#dc2626', advisory: 'Some members of the general public may experience health effects; sensitive groups more serious.' };
+        if (val <= 300) return { category: 'Very Unhealthy', color: '#9333ea', advisory: 'Health alert: The risk of health effects is increased for everyone on prolonged exposure.' };
+        return { category: 'Hazardous', color: '#7e22ce', advisory: 'Health warning of emergency conditions: Everyone is more likely to be affected.' };
+      }
+
+      function updateAqiDisplay() {
+        if (!lastAqiData || !lastAqiData.current) return;
+        const cur = lastAqiData.current;
+        const cpcbVal = cur.naqi !== null ? cur.naqi : 0;
+        const usVal = cur.usAqi !== null && cur.usAqi !== undefined ? cur.usAqi : cpcbVal;
+
+        const dualBar = document.getElementById('aqi-dual-standards');
+        const chipCpcb = document.getElementById('chip-cpcb');
+        const chipUs = document.getElementById('chip-us');
+        const valChipCpcb = document.getElementById('val-chip-cpcb');
+        const valChipUs = document.getElementById('val-chip-us');
+        const btnCpcb = document.getElementById('btn-std-cpcb');
+        const btnUs = document.getElementById('btn-std-us');
+        const subLabel = document.querySelector('.aqi-center-sub');
+        const explainer = document.getElementById('aqi-std-explainer');
+
+        if (dualBar) dualBar.style.display = 'flex';
+        if (valChipCpcb) valChipCpcb.textContent = `${cpcbVal} (${cur.category || 'Good'})`;
+        if (valChipUs) {
+          const usCat = getUsCategory(usVal);
+          valChipUs.textContent = `${usVal} (${usCat.category})`;
+        }
+
+        let displayVal, displayCat, displayColor, displayAdv, labelText, noteText;
+
+        if (currentAqiStandard === 'us') {
+          const usInfo = getUsCategory(usVal);
+          displayVal = usVal;
+          displayCat = `${usInfo.category} (${usVal})`;
+          displayColor = usInfo.color;
+          displayAdv = usInfo.advisory;
+          labelText = 'US EPA AQI';
+          noteText = '🇺🇸 Showing US EPA Standard (used by AQI.in, Apple Weather & Google). Uses stricter 12 µg/m³ PM₂.₅ threshold & includes ground-level Ozone (O₃).';
+          if (btnUs) btnUs.classList.add('active');
+          if (btnCpcb) btnCpcb.classList.remove('active');
+          if (chipUs) chipUs.classList.add('active-std');
+          if (chipCpcb) chipCpcb.classList.remove('active-std');
+        } else {
+          displayVal = cpcbVal;
+          displayCat = `${cur.category || 'Good'} (${cpcbVal})`;
+          displayColor = cur.color || '#16a34a';
+          displayAdv = cur.advisory || 'Air quality status reported for locality.';
+          labelText = 'CPCB NAQI';
+          noteText = '🇮🇳 Showing Indian National AQI (CPCB NAQI). Evaluates official Indian health breakpoints (Good up to 30 µg/m³ PM₂.₅; Satisfactory up to 60 µg/m³).';
+          if (btnCpcb) btnCpcb.classList.add('active');
+          if (btnUs) btnUs.classList.remove('active');
+          if (chipCpcb) chipCpcb.classList.add('active-std');
+          if (chipUs) chipUs.classList.remove('active-std');
+        }
+
+        currentAQI = displayVal;
+        aqiNum.textContent = displayVal !== 0 ? displayVal : '--';
+        if (subLabel) subLabel.textContent = labelText;
+        aqiCategory.textContent = displayCat;
+        aqiAdvisory.textContent = displayAdv;
+        if (explainer) explainer.textContent = noteText;
+
+        updateRadialGauge(displayVal, displayCat, displayColor);
+      }
+
+      const btnCpcbEl = document.getElementById('btn-std-cpcb');
+      const btnUsEl = document.getElementById('btn-std-us');
+      const chipCpcbEl = document.getElementById('chip-cpcb');
+      const chipUsEl = document.getElementById('chip-us');
+
+      if (btnCpcbEl) btnCpcbEl.addEventListener('click', () => { currentAqiStandard = 'cpcb'; updateAqiDisplay(); });
+      if (btnUsEl) btnUsEl.addEventListener('click', () => { currentAqiStandard = 'us'; updateAqiDisplay(); });
+      if (chipCpcbEl) chipCpcbEl.addEventListener('click', () => { currentAqiStandard = 'cpcb'; updateAqiDisplay(); });
+      if (chipUsEl) chipUsEl.addEventListener('click', () => { currentAqiStandard = 'us'; updateAqiDisplay(); });
+
       function renderAqi(data) {
         if (!data || !data.current) return;
+        lastAqiData = data;
         const cur = data.current;
-        const aqi = cur.naqi !== null ? cur.naqi : 0;
-        currentAQI = aqi;
 
-        aqiNum.textContent = aqi !== 0 ? aqi : '--';
-        aqiCategory.textContent = `${cur.category || 'Moderate'} (${aqi})`;
-        aqiAdvisory.textContent = cur.advisory || 'Air quality status reported for locality.';
-
-        updateRadialGauge(aqi, cur.category, cur.color);
+        updateAqiDisplay();
 
         const pols = data.pollutants || [];
         let pm25Val = 0;
@@ -2511,8 +2673,9 @@
         }
 
         currentWaterRecords = data.records;
-        currentStationHistory = data.stationHistory || [];
-        waterSummaryText.textContent = `Found ${data.total} recorded samples in ${data.requested.district}. Showing nearest official CGWB borewells:`;
+        waterSummaryText.textContent = data.isRegionalFallback
+          ? `No direct borewells found inside ${data.requested?.district || 'district'} boundary in CGWB release. Showing nearest regional CGWB stations in ${data.requested?.state || 'state'}:`
+          : `Found ${data.total} recorded samples in ${data.requested?.district || 'district'}. Showing nearest official CGWB borewells:`;
 
         const filtered = filterWaterRecords(currentWaterRecords, currentWaterFilter);
         renderWaterStationsList(filtered);

@@ -585,6 +585,7 @@ async function handleWater(url) {
     } catch {}
   }
 
+  let isRegionalFallback = false;
   // Fallback: If full-text query returned no rows, query without q filter and match in memory
   if (rawRows.length === 0) {
     try {
@@ -593,7 +594,13 @@ async function handleWater(url) {
       queryUrl.searchParams.set("limit", "1000");
       const qResult = await readJson(queryUrl.toString(), 25000);
       if (qResult.response.ok && Array.isArray(qResult.payload?.result?.records)) {
-        rawRows = qResult.payload.result.records.filter((r) => matchesDistrict(r.District, district));
+        const filtered = qResult.payload.result.records.filter((r) => matchesDistrict(r.District, district));
+        if (filtered.length > 0) {
+          rawRows = filtered;
+        } else if (qResult.payload.result.records.length > 0) {
+          rawRows = qResult.payload.result.records;
+          isRegionalFallback = true;
+        }
       }
     } catch {}
   }
@@ -653,7 +660,10 @@ async function handleWater(url) {
     records: records.slice(0, 50),
     stationHistory: history.slice(0, 5),
     attribution: "Central Ground Water Board (CGWB), served by National Water Informatics Centre / National Water Data Portal (NWIC/NWDP).",
-    note: "Manual groundwater samples from CGWB monitoring wells. Coordinates identify exact observation borewells. Distance is calculated from the selected post office.",
+    isRegionalFallback,
+    note: isRegionalFallback
+      ? `No digitized test borewells found directly inside ${district} in CGWB datastore; displaying nearest regional CGWB monitoring stations in ${state}.`
+      : "Manual groundwater samples from CGWB monitoring wells. Coordinates identify exact observation borewells. Distance is calculated from the selected post office.",
   }, 200, WATER_CACHE_SECONDS);
 
   await putCached(cacheKey, response, WATER_CACHE_SECONDS);
