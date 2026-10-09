@@ -674,7 +674,7 @@ export default {
       });
     }
 
-    if (url.pathname.startsWith("/api/") && request.method !== "GET") {
+    if (url.pathname.startsWith("/api/") && request.method !== "GET" && request.method !== "HEAD") {
       return json({ error: "Use GET for this endpoint." }, 405);
     }
 
@@ -690,9 +690,6 @@ export default {
       }, 200, 0);
     }
 
-    if (url.pathname === "/clean") {
-      if (env.ASSETS) return env.ASSETS.fetch(new Request(new URL("/clean.html", request.url), request));
-    }
 
     if (env.ASSETS) {
       return env.ASSETS.fetch(request);
