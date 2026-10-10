@@ -1648,24 +1648,27 @@
     .wqi-card-head {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       flex-wrap: wrap;
-      gap: 14px;
-      margin-bottom: 24px;
+      gap: 16px;
+      margin-bottom: 22px;
     }
-    .wqi-title-stack h3 {
-      font: 800 22px var(--font-display);
+    .wqi-title-stack {
+      flex: 1;
+      min-width: 280px;
+    }
+    .wqi-title-top {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 4px;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
     }
-    .wqi-title-stack p { font-size: 13px; color: var(--ink-soft); margin: 0; }
     .wqi-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 5px 12px;
+      padding: 4px 11px;
       border-radius: var(--r-pill);
       font-size: 11px;
       font-weight: 700;
@@ -1673,13 +1676,152 @@
       color: var(--blue);
       border: 1px solid rgba(30,100,120,.2);
     }
+    .wqi-title-stack h3 {
+      font: 800 24px var(--font-display);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      color: var(--ink);
+      flex-wrap: wrap;
+    }
+    .wqi-city-highlight {
+      color: var(--blue);
+      text-decoration: underline;
+      text-decoration-color: rgba(30,100,120,.35);
+      text-underline-offset: 4px;
+    }
+    .wqi-title-stack p {
+      font-size: 13px;
+      color: var(--ink-soft);
+      margin: 0;
+      line-height: 1.5;
+    }
+    .wqi-eco-tags {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .wqi-eco-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: var(--r-pill);
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      transition: all var(--dur-fast) ease;
+    }
+    .wqi-eco-tag.tag-river {
+      background: rgba(14,165,233,.12);
+      border-color: rgba(14,165,233,.3);
+      color: #0284c7;
+    }
+    .wqi-eco-tag.tag-ocean {
+      background: rgba(99,102,241,.12);
+      border-color: rgba(99,102,241,.3);
+      color: #6366f1;
+    }
+    .wqi-eco-tag.tag-aquifer {
+      background: rgba(34,197,94,.12);
+      border-color: rgba(34,197,94,.3);
+      color: #16a34a;
+    }
+    [data-theme="dark"] .wqi-eco-tag.tag-river { color: #38bdf8; }
+    [data-theme="dark"] .wqi-eco-tag.tag-ocean { color: #818cf8; }
+    [data-theme="dark"] .wqi-eco-tag.tag-aquifer { color: #4ade80; }
+
+    /* Source switcher tabs */
+    .wqi-source-switcher {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+      background: var(--surface-2);
+      padding: 6px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+    }
+    @media (max-width: 820px) {
+      .wqi-source-switcher {
+        grid-template-columns: 1fr;
+      }
+    }
+    .wqi-source-tab {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: transparent;
+      border: 1.5px solid transparent;
+      border-radius: 12px;
+      cursor: pointer;
+      text-align: left;
+      transition: all var(--dur-fast) ease;
+      color: var(--ink);
+      position: relative;
+    }
+    .wqi-source-tab:hover {
+      background: var(--surface);
+      border-color: var(--line-subtle);
+    }
+    .wqi-source-tab.active {
+      background: var(--surface);
+      border-color: var(--blue);
+      box-shadow: 0 4px 16px rgba(0,0,0,.06);
+    }
+    [data-theme="dark"] .wqi-source-tab.active {
+      box-shadow: 0 4px 16px rgba(0,0,0,.4);
+    }
+    .wqi-tab-icon {
+      font-size: 24px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .wqi-tab-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+    .wqi-tab-text strong {
+      font: 700 13.5px var(--font-display);
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .wqi-tab-text small {
+      font-size: 11px;
+      color: var(--ink-soft);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .wqi-tab-coastal-badge {
+      margin-left: auto;
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      padding: 2px 7px;
+      border-radius: var(--r-pill);
+      background: rgba(99,102,241,.18);
+      color: #6366f1;
+      border: 1px solid rgba(99,102,241,.3);
+    }
 
     .wqi-presets-row {
       display: flex;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
       padding: 12px 16px;
       background: var(--surface-2);
       border: 1px solid var(--line);
@@ -1701,6 +1843,7 @@
       padding: 5px 12px;
       border-radius: 10px;
       transition: all var(--dur-fast) ease;
+      cursor: pointer;
     }
     .wqi-preset-btn:hover, .wqi-preset-btn.active {
       border-color: var(--blue);
@@ -1708,12 +1851,27 @@
       color: var(--blue);
       font-weight: 700;
     }
+    .wqi-preset-btn.btn-city-sync {
+      border-color: rgba(30,100,120,.4);
+      background: rgba(30,100,120,.08);
+      color: var(--blue);
+      font-weight: 700;
+    }
+    .wqi-preset-btn.btn-city-sync:hover {
+      background: var(--blue);
+      color: #fff;
+    }
 
     .wqi-body-grid {
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
       gap: 28px;
       align-items: start;
+    }
+    @media (max-width: 900px) {
+      .wqi-body-grid {
+        grid-template-columns: 1fr;
+      }
     }
     .wqi-inputs-card {
       background: var(--surface-2);
@@ -1726,18 +1884,32 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 8px;
     }
     .wqi-inputs-head h4 {
       font: 700 14px var(--font-display);
       text-transform: uppercase;
       letter-spacing: .05em;
       color: var(--ink);
+      margin: 0;
+    }
+    .wqi-inputs-panel {
+      display: none;
+    }
+    .wqi-inputs-panel.active {
+      display: block;
     }
     .wqi-inputs-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
       margin-bottom: 18px;
+    }
+    @media (max-width: 540px) {
+      .wqi-inputs-grid {
+        grid-template-columns: 1fr;
+      }
     }
     .wqi-field {
       display: flex;
@@ -1800,6 +1972,7 @@
       font-weight: 700;
       border: none;
       border-radius: 11px;
+      cursor: pointer;
       transition: all var(--dur-fast) ease;
     }
     .wqi-calc-btn:hover {
@@ -1815,6 +1988,7 @@
       font-size: 12px;
       font-weight: 600;
       color: var(--ink-soft);
+      cursor: pointer;
       transition: all var(--dur-fast) ease;
     }
     .wqi-reset-btn:hover { color: var(--ink); border-color: var(--ink-soft); }
@@ -1905,7 +2079,7 @@
 
     .wqi-recs-box { font-size: 12px; }
     .wqi-recs-box strong { display: block; margin-bottom: 5px; color: var(--ink); }
-    .wqi-recs-box ul { padding-left: 16px; color: var(--ink-soft); line-height: 1.65; }
+    .wqi-recs-box ul { padding-left: 16px; color: var(--ink-soft); line-height: 1.65; margin: 0; }
 
     .wqi-scale-box {
       margin-top: 24px;
@@ -1923,6 +2097,11 @@
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 8px;
+    }
+    @media (max-width: 640px) {
+      .wqi-scale-grid {
+        grid-template-columns: 1fr;
+      }
     }
     .wqi-scale-step {
       padding: 8px;
@@ -2419,96 +2598,278 @@
         <div class="wqi-card">
           <div class="wqi-card-head">
             <div class="wqi-title-stack">
-              <span class="wqi-badge">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 3.2s6 6.4 6 11a6 6 0 0 1-12 0c0-4.6 6-11 6-11Z" stroke="currentColor" stroke-width="2"/><path d="M9 15.2a3 3 0 0 0 3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                BIS IS 10500:2012 Standard
-              </span>
-              <h3 id="wqi-heading">Water Quality Index (WQI) Checker</h3>
-              <p>Compute comprehensive potability ratings and chemical safety metrics using the official Weighted Arithmetic Index (WAWQI) method.</p>
+              <div class="wqi-title-top">
+                <span class="wqi-badge" id="wqi-active-std-badge">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 3.2s6 6.4 6 11a6 6 0 0 1-12 0c0-4.6 6-11 6-11Z" stroke="currentColor" stroke-width="2"/><path d="M9 15.2a3 3 0 0 0 3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                  BIS IS 10500:2012 Standard
+                </span>
+                <span class="wqi-eco-tag" id="wqi-city-tag">📍 India National Baseline</span>
+              </div>
+              <h3 id="wqi-heading">Water Quality Index: <span id="wqi-location-name" class="wqi-city-highlight">National Tap / Ground</span></h3>
+              <p id="wqi-location-sub">Evaluate potability, river basin health, or coastal seawater quality according to official Bureau of Indian Standards (BIS), Central Pollution Control Board (CPCB), and Ministry of Environment (MoEFCC) benchmarks.</p>
+              <div class="wqi-eco-tags" id="wqi-eco-tags">
+                <span class="wqi-eco-tag tag-river" id="wqi-river-tag">🏞️ Ganga Basin Tributaries</span>
+                <span class="wqi-eco-tag tag-ocean" id="wqi-ocean-tag">🌊 Indian Marine Waters</span>
+                <span class="wqi-eco-tag tag-aquifer" id="wqi-aquifer-tag">🚰 CGWB National Groundwater Network</span>
+              </div>
             </div>
-            <button type="button" class="wqi-calc-btn" id="wqi-load-borewell-btn" style="width:auto;padding:8px 16px;font-size:12px;">
-              📍 Load Nearest Borewell Data
+            <button type="button" class="wqi-calc-btn" id="wqi-load-city-btn" style="width:auto;padding:8px 16px;font-size:12px;">
+              📍 Load City Water Baseline
             </button>
           </div>
 
-          <!-- Quick presets bar -->
-          <div class="wqi-presets-row" role="group" aria-label="Quick Water Presets">
-            <span class="wqi-presets-lbl">Quick Presets:</span>
+          <!-- 3-Way Source Switcher: City Tap / River / Ocean -->
+          <div class="wqi-source-switcher" role="tablist" aria-label="Water Source Category">
+            <button type="button" class="wqi-source-tab active" id="wqi-tab-city" data-source="city" role="tab" aria-selected="true">
+              <span class="wqi-tab-icon">🏙️</span>
+              <span class="wqi-tab-text">
+                <strong>City Tap & Groundwater</strong>
+                <small>BIS IS 10500:2012 Potability</small>
+              </span>
+            </button>
+            <button type="button" class="wqi-source-tab" id="wqi-tab-river" data-source="river" role="tab" aria-selected="false">
+              <span class="wqi-tab-icon">🏞️</span>
+              <span class="wqi-tab-text">
+                <strong id="wqi-river-tab-label">River Water Quality</strong>
+                <small id="wqi-river-tab-sub">CPCB NWMP Criteria (A–E)</small>
+              </span>
+            </button>
+            <button type="button" class="wqi-source-tab" id="wqi-tab-ocean" data-source="ocean" role="tab" aria-selected="false">
+              <span class="wqi-tab-icon">🌊</span>
+              <span class="wqi-tab-text">
+                <strong id="wqi-ocean-tab-label">Ocean & Coastal Water</strong>
+                <small id="wqi-ocean-tab-sub">MoEFCC Coastal SWQI (SW-I to V)</small>
+              </span>
+              <span class="wqi-tab-coastal-badge" id="wqi-coastal-badge" style="display:none;">Coastal</span>
+            </button>
+          </div>
+
+          <!-- Quick Presets Rows per Source Mode -->
+          <div class="wqi-presets-row" id="wqi-presets-city" role="group" aria-label="Quick Water Presets">
+            <span class="wqi-presets-lbl">City Presets:</span>
             <button type="button" class="wqi-preset-btn" data-preset="ro">RO Filtered (Pure)</button>
             <button type="button" class="wqi-preset-btn active" data-preset="tap">Tap / Municipal</button>
             <button type="button" class="wqi-preset-btn" data-preset="borewell">Standard Borewell</button>
             <button type="button" class="wqi-preset-btn" data-preset="hard">Hard Groundwater</button>
+            <button type="button" class="wqi-preset-btn btn-city-sync" id="wqi-preset-city-sync">📍 Load <span class="wqi-btn-city-name">City</span> Borewell</button>
+          </div>
+
+          <div class="wqi-presets-row" id="wqi-presets-river" role="group" aria-label="Quick River Presets" style="display:none;">
+            <span class="wqi-presets-lbl">River Stretches:</span>
+            <button type="button" class="wqi-preset-btn" data-preset="ganga">Ganga (Varanasi / Holy Dip)</button>
+            <button type="button" class="wqi-preset-btn" data-preset="yamuna">Yamuna (Delhi - Okhla)</button>
+            <button type="button" class="wqi-preset-btn" data-preset="godavari">Godavari (Nashik)</button>
+            <button type="button" class="wqi-preset-btn" data-preset="cauvery">Cauvery (Tiruchirappalli)</button>
+            <button type="button" class="wqi-preset-btn" data-preset="narmada">Narmada (Jabalpur)</button>
+            <button type="button" class="wqi-preset-btn" data-preset="pristine_river">Pristine Mountain Stream</button>
+            <button type="button" class="wqi-preset-btn btn-city-sync" id="wqi-preset-river-sync">📍 Load <span class="wqi-btn-city-name">City</span> River Stretch</button>
+          </div>
+
+          <div class="wqi-presets-row" id="wqi-presets-ocean" role="group" aria-label="Quick Ocean Presets" style="display:none;">
+            <span class="wqi-presets-lbl">Marine Waters:</span>
+            <button type="button" class="wqi-preset-btn" data-preset="arabian">Arabian Sea (Mumbai Offshore)</button>
+            <button type="button" class="wqi-preset-btn" data-preset="bengal">Bay of Bengal (Chennai Marina)</button>
+            <button type="button" class="wqi-preset-btn" data-preset="goa">Goa Beach Waters</button>
+            <button type="button" class="wqi-preset-btn" data-preset="puri">Puri Beach Waters</button>
+            <button type="button" class="wqi-preset-btn" data-preset="coral">Pristine Coral Lagoon</button>
+            <button type="button" class="wqi-preset-btn btn-city-sync" id="wqi-preset-ocean-sync">📍 Load <span class="wqi-btn-city-name">City</span> Coastal Waters</button>
           </div>
 
           <!-- Body Grid: Input parameters vs Analysis -->
           <div class="wqi-body-grid">
             <div class="wqi-inputs-card">
               <div class="wqi-inputs-head">
-                <h4>Water Test Measurements</h4>
-                <span style="font-size:11px;color:var(--muted);">All units in mg/L unless stated</span>
+                <h4 id="wqi-inputs-heading">Water Test Measurements</h4>
+                <span id="wqi-inputs-unit-hint" style="font-size:11px;color:var(--muted);">All units in mg/L unless stated</span>
               </div>
-              <div class="wqi-inputs-grid">
-                <div class="wqi-field">
-                  <label for="wqi-tds">TDS (Total Solids) <span class="wqi-std-hint">Std: &lt; 500</span></label>
-                  <div class="wqi-input-box">
-                    <input type="number" id="wqi-tds" class="wqi-num-input" placeholder="260" min="0" max="10000" step="1">
-                    <span class="wqi-unit-tag">mg/L</span>
+
+              <!-- 1. City Groundwater & Tap Inputs Panel -->
+              <div class="wqi-inputs-panel active" id="wqi-panel-city">
+                <div class="wqi-inputs-grid">
+                  <div class="wqi-field">
+                    <label for="wqi-tds">TDS (Total Solids) <span class="wqi-std-hint">Std: &lt; 500</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-tds" class="wqi-num-input" placeholder="260" min="0" max="10000" step="1">
+                      <span class="wqi-unit-tag">mg/L</span>
+                    </div>
+                  </div>
+
+                  <div class="wqi-field">
+                    <label for="wqi-ph">pH Value <span class="wqi-std-hint">Std: 6.5–8.5</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-ph" class="wqi-num-input" placeholder="7.4" min="0" max="14" step="0.1">
+                      <span class="wqi-unit-tag">pH</span>
+                    </div>
+                  </div>
+
+                  <div class="wqi-field">
+                    <label for="wqi-hardness">Total Hardness <span class="wqi-std-hint">Std: &lt; 200</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-hardness" class="wqi-num-input" placeholder="140" min="0" max="5000" step="1">
+                      <span class="wqi-unit-tag">mg/L</span>
+                    </div>
+                  </div>
+
+                  <div class="wqi-field">
+                    <label for="wqi-fluoride">Fluoride (F⁻) <span class="wqi-std-hint">Std: &lt; 1.0</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-fluoride" class="wqi-num-input" placeholder="0.6" min="0" max="50" step="0.05">
+                      <span class="wqi-unit-tag">mg/L</span>
+                    </div>
+                  </div>
+
+                  <div class="wqi-field">
+                    <label for="wqi-nitrate">Nitrate (NO₃⁻) <span class="wqi-std-hint">Std: &lt; 45</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-nitrate" class="wqi-num-input" placeholder="18" min="0" max="500" step="1">
+                      <span class="wqi-unit-tag">mg/L</span>
+                    </div>
+                  </div>
+
+                  <div class="wqi-field">
+                    <label for="wqi-chloride">Chloride (Cl⁻) <span class="wqi-std-hint">Std: &lt; 250</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-chloride" class="wqi-num-input" placeholder="90" min="0" max="5000" step="1">
+                      <span class="wqi-unit-tag">mg/L</span>
+                    </div>
+                  </div>
+
+                  <div class="wqi-field">
+                    <label for="wqi-ec">Conductivity (EC) <span class="wqi-std-hint">Std: &lt; 1000</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-ec" class="wqi-num-input" placeholder="420" min="0" max="15000" step="1">
+                      <span class="wqi-unit-tag">µS/cm</span>
+                    </div>
+                  </div>
+
+                  <div class="wqi-field">
+                    <label for="wqi-arsenic">Arsenic (As) <span class="wqi-std-hint">Std: &lt; 0.01</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-arsenic" class="wqi-num-input" placeholder="0.000" min="0" max="10" step="0.001">
+                      <span class="wqi-unit-tag">mg/L</span>
+                    </div>
                   </div>
                 </div>
+              </div>
 
-                <div class="wqi-field">
-                  <label for="wqi-ph">pH Value <span class="wqi-std-hint">Std: 6.5–8.5</span></label>
-                  <div class="wqi-input-box">
-                    <input type="number" id="wqi-ph" class="wqi-num-input" placeholder="7.4" min="0" max="14" step="0.1">
-                    <span class="wqi-unit-tag">pH</span>
+              <!-- 2. River Water Inputs Panel -->
+              <div class="wqi-inputs-panel" id="wqi-panel-river">
+                <div class="wqi-inputs-grid">
+                  <div class="wqi-field">
+                    <label for="wqi-river-do">Dissolved Oxygen (DO) <span class="wqi-std-hint">Std: &gt; 5.0</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-river-do" class="wqi-num-input" placeholder="6.5" min="0" max="20" step="0.1">
+                      <span class="wqi-unit-tag">mg/L</span>
+                    </div>
+                  </div>
+
+                  <div class="wqi-field">
+                    <label for="wqi-river-bod">BOD (Organic Load) <span class="wqi-std-hint">Std: &lt; 3.0</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-river-bod" class="wqi-num-input" placeholder="2.8" min="0" max="100" step="0.1">
+                      <span class="wqi-unit-tag">mg/L</span>
+                    </div>
+                  </div>
+
+                  <div class="wqi-field">
+                    <label for="wqi-river-coliform">Fecal Coliform <span class="wqi-std-hint">Std: &lt; 500</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-river-coliform" class="wqi-num-input" placeholder="450" min="0" max="500000" step="10">
+                      <span class="wqi-unit-tag">MPN/100ml</span>
+                    </div>
+                  </div>
+
+                  <div class="wqi-field">
+                    <label for="wqi-river-ph">River pH Value <span class="wqi-std-hint">Std: 6.5–8.5</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-river-ph" class="wqi-num-input" placeholder="7.5" min="0" max="14" step="0.1">
+                      <span class="wqi-unit-tag">pH</span>
+                    </div>
+                  </div>
+
+                  <div class="wqi-field">
+                    <label for="wqi-river-turbidity">Turbidity <span class="wqi-std-hint">Std: &lt; 10</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-river-turbidity" class="wqi-num-input" placeholder="8" min="0" max="500" step="1">
+                      <span class="wqi-unit-tag">NTU</span>
+                    </div>
+                  </div>
+
+                  <div class="wqi-field">
+                    <label for="wqi-river-tds">Total Dissolved Solids <span class="wqi-std-hint">Std: &lt; 500</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-river-tds" class="wqi-num-input" placeholder="320" min="0" max="10000" step="1">
+                      <span class="wqi-unit-tag">mg/L</span>
+                    </div>
+                  </div>
+
+                  <div class="wqi-field">
+                    <label for="wqi-river-ec">Conductivity (EC) <span class="wqi-std-hint">Std: &lt; 750</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-river-ec" class="wqi-num-input" placeholder="520" min="0" max="10000" step="1">
+                      <span class="wqi-unit-tag">µS/cm</span>
+                    </div>
+                  </div>
+
+                  <div class="wqi-field">
+                    <label for="wqi-river-temp">Water Temperature <span class="wqi-std-hint">Ambient</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-river-temp" class="wqi-num-input" placeholder="25" min="0" max="50" step="0.5">
+                      <span class="wqi-unit-tag">°C</span>
+                    </div>
                   </div>
                 </div>
+              </div>
 
-                <div class="wqi-field">
-                  <label for="wqi-hardness">Total Hardness <span class="wqi-std-hint">Std: &lt; 200</span></label>
-                  <div class="wqi-input-box">
-                    <input type="number" id="wqi-hardness" class="wqi-num-input" placeholder="140" min="0" max="5000" step="1">
-                    <span class="wqi-unit-tag">mg/L</span>
+              <!-- 3. Ocean & Coastal Seawater Inputs Panel -->
+              <div class="wqi-inputs-panel" id="wqi-panel-ocean">
+                <div class="wqi-inputs-grid">
+                  <div class="wqi-field">
+                    <label for="wqi-ocean-salinity">Salinity <span class="wqi-std-hint">Std: 32–36</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-ocean-salinity" class="wqi-num-input" placeholder="34.5" min="0" max="50" step="0.1">
+                      <span class="wqi-unit-tag">PSU (ppt)</span>
+                    </div>
                   </div>
-                </div>
 
-                <div class="wqi-field">
-                  <label for="wqi-fluoride">Fluoride (F⁻) <span class="wqi-std-hint">Std: &lt; 1.0</span></label>
-                  <div class="wqi-input-box">
-                    <input type="number" id="wqi-fluoride" class="wqi-num-input" placeholder="0.6" min="0" max="50" step="0.05">
-                    <span class="wqi-unit-tag">mg/L</span>
+                  <div class="wqi-field">
+                    <label for="wqi-ocean-do">Marine Dissolved O₂ <span class="wqi-std-hint">Std: &gt; 5.0</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-ocean-do" class="wqi-num-input" placeholder="5.8" min="0" max="20" step="0.1">
+                      <span class="wqi-unit-tag">mg/L</span>
+                    </div>
                   </div>
-                </div>
 
-                <div class="wqi-field">
-                  <label for="wqi-nitrate">Nitrate (NO₃⁻) <span class="wqi-std-hint">Std: &lt; 45</span></label>
-                  <div class="wqi-input-box">
-                    <input type="number" id="wqi-nitrate" class="wqi-num-input" placeholder="18" min="0" max="500" step="1">
-                    <span class="wqi-unit-tag">mg/L</span>
+                  <div class="wqi-field">
+                    <label for="wqi-ocean-ph">Marine pH <span class="wqi-std-hint">Std: 7.5–8.4</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-ocean-ph" class="wqi-num-input" placeholder="8.1" min="0" max="14" step="0.1">
+                      <span class="wqi-unit-tag">pH</span>
+                    </div>
                   </div>
-                </div>
 
-                <div class="wqi-field">
-                  <label for="wqi-chloride">Chloride (Cl⁻) <span class="wqi-std-hint">Std: &lt; 250</span></label>
-                  <div class="wqi-input-box">
-                    <input type="number" id="wqi-chloride" class="wqi-num-input" placeholder="90" min="0" max="5000" step="1">
-                    <span class="wqi-unit-tag">mg/L</span>
+                  <div class="wqi-field">
+                    <label for="wqi-ocean-turbidity">Turbidity <span class="wqi-std-hint">Std: &lt; 15</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-ocean-turbidity" class="wqi-num-input" placeholder="10" min="0" max="200" step="1">
+                      <span class="wqi-unit-tag">NTU</span>
+                    </div>
                   </div>
-                </div>
 
-                <div class="wqi-field">
-                  <label for="wqi-ec">Conductivity (EC) <span class="wqi-std-hint">Std: &lt; 1000</span></label>
-                  <div class="wqi-input-box">
-                    <input type="number" id="wqi-ec" class="wqi-num-input" placeholder="420" min="0" max="15000" step="1">
-                    <span class="wqi-unit-tag">µS/cm</span>
+                  <div class="wqi-field">
+                    <label for="wqi-ocean-coliform">Coliform / Pathogens <span class="wqi-std-hint">Std: &lt; 100</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-ocean-coliform" class="wqi-num-input" placeholder="35" min="0" max="50000" step="5">
+                      <span class="wqi-unit-tag">MPN/100ml</span>
+                    </div>
                   </div>
-                </div>
 
-                <div class="wqi-field">
-                  <label for="wqi-arsenic">Arsenic (As) <span class="wqi-std-hint">Std: &lt; 0.01</span></label>
-                  <div class="wqi-input-box">
-                    <input type="number" id="wqi-arsenic" class="wqi-num-input" placeholder="0.000" min="0" max="10" step="0.001">
-                    <span class="wqi-unit-tag">mg/L</span>
+                  <div class="wqi-field">
+                    <label for="wqi-ocean-temp">Sea Surface Temp (SST) <span class="wqi-std-hint">24–30 °C</span></label>
+                    <div class="wqi-input-box">
+                      <input type="number" id="wqi-ocean-temp" class="wqi-num-input" placeholder="28.0" min="0" max="45" step="0.5">
+                      <span class="wqi-unit-tag">°C</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2538,7 +2899,7 @@
 
               <!-- Recommendations list -->
               <div class="wqi-recs-box">
-                <strong>Recommended Treatment Protocols:</strong>
+                <strong id="wqi-recs-title">Recommended Treatment Protocols:</strong>
                 <ul id="wqi-recs-list">
                   <li>Safe for domestic supply and drinking.</li>
                   <li>Basic sediment and activated carbon filtration recommended.</li>
@@ -2549,8 +2910,8 @@
 
           <!-- WQI Scale Reference Table -->
           <div class="wqi-scale-box">
-            <h5>Official BIS / WAWQI Safety Classification Matrix</h5>
-            <div class="wqi-scale-grid">
+            <h5 id="wqi-scale-heading">Official BIS / WAWQI Safety Classification Matrix</h5>
+            <div class="wqi-scale-grid" id="wqi-scale-grid">
               <div class="wqi-scale-step" style="border-top:3px solid #16a34a;">
                 <strong style="color:#16a34a;">0 – 25</strong>
                 <span>Grade A · Excellent</span>
@@ -2965,6 +3326,41 @@
       const historyChartSvg = document.getElementById('history-chart-svg');
       const chartTooltip = document.getElementById('chart-tooltip');
 
+      // WQI Checker Elements
+      const wqiHeading = document.getElementById('wqi-heading');
+      const wqiLocationName = document.getElementById('wqi-location-name');
+      const wqiLocationSub = document.getElementById('wqi-location-sub');
+      const wqiActiveStdBadge = document.getElementById('wqi-active-std-badge');
+      const wqiCityTag = document.getElementById('wqi-city-tag');
+      const wqiEcoTags = document.getElementById('wqi-eco-tags');
+      const wqiRiverTag = document.getElementById('wqi-river-tag');
+      const wqiOceanTag = document.getElementById('wqi-ocean-tag');
+      const wqiAquiferTag = document.getElementById('wqi-aquifer-tag');
+      const wqiLoadCityBtn = document.getElementById('wqi-load-city-btn');
+
+      const wqiTabCity = document.getElementById('wqi-tab-city');
+      const wqiTabRiver = document.getElementById('wqi-tab-river');
+      const wqiTabOcean = document.getElementById('wqi-tab-ocean');
+      const wqiRiverTabLabel = document.getElementById('wqi-river-tab-label');
+      const wqiRiverTabSub = document.getElementById('wqi-river-tab-sub');
+      const wqiOceanTabLabel = document.getElementById('wqi-ocean-tab-label');
+      const wqiOceanTabSub = document.getElementById('wqi-ocean-tab-sub');
+      const wqiCoastalBadge = document.getElementById('wqi-coastal-badge');
+
+      const wqiPresetsCity = document.getElementById('wqi-presets-city');
+      const wqiPresetsRiver = document.getElementById('wqi-presets-river');
+      const wqiPresetsOcean = document.getElementById('wqi-presets-ocean');
+      const wqiPresetCitySync = document.getElementById('wqi-preset-city-sync');
+      const wqiPresetRiverSync = document.getElementById('wqi-preset-river-sync');
+      const wqiPresetOceanSync = document.getElementById('wqi-preset-ocean-sync');
+
+      const wqiInputsHeading = document.getElementById('wqi-inputs-heading');
+      const wqiInputsUnitHint = document.getElementById('wqi-inputs-unit-hint');
+      const wqiPanelCity = document.getElementById('wqi-panel-city');
+      const wqiPanelRiver = document.getElementById('wqi-panel-river');
+      const wqiPanelOcean = document.getElementById('wqi-panel-ocean');
+
+      // City inputs
       const wqiTdsInput = document.getElementById('wqi-tds');
       const wqiPhInput = document.getElementById('wqi-ph');
       const wqiHardnessInput = document.getElementById('wqi-hardness');
@@ -2973,16 +3369,36 @@
       const wqiChlorideInput = document.getElementById('wqi-chloride');
       const wqiEcInput = document.getElementById('wqi-ec');
       const wqiArsenicInput = document.getElementById('wqi-arsenic');
+
+      // River inputs
+      const wqiRiverDoInput = document.getElementById('wqi-river-do');
+      const wqiRiverBodInput = document.getElementById('wqi-river-bod');
+      const wqiRiverColiformInput = document.getElementById('wqi-river-coliform');
+      const wqiRiverPhInput = document.getElementById('wqi-river-ph');
+      const wqiRiverTurbidityInput = document.getElementById('wqi-river-turbidity');
+      const wqiRiverTdsInput = document.getElementById('wqi-river-tds');
+      const wqiRiverEcInput = document.getElementById('wqi-river-ec');
+      const wqiRiverTempInput = document.getElementById('wqi-river-temp');
+
+      // Ocean inputs
+      const wqiOceanSalinityInput = document.getElementById('wqi-ocean-salinity');
+      const wqiOceanDoInput = document.getElementById('wqi-ocean-do');
+      const wqiOceanPhInput = document.getElementById('wqi-ocean-ph');
+      const wqiOceanTurbidityInput = document.getElementById('wqi-ocean-turbidity');
+      const wqiOceanColiformInput = document.getElementById('wqi-ocean-coliform');
+      const wqiOceanTempInput = document.getElementById('wqi-ocean-temp');
+
       const wqiCalcBtn = document.getElementById('wqi-calc-btn');
       const wqiResetBtn = document.getElementById('wqi-reset-btn');
-      const wqiPresetBtns = document.querySelectorAll('.wqi-preset-btn');
-      const wqiLoadBorewellBtn = document.getElementById('wqi-load-borewell-btn');
       const wqiBigScore = document.getElementById('wqi-big-score');
       const wqiGradePill = document.getElementById('wqi-grade-pill');
       const wqiStatusTitle = document.getElementById('wqi-status-title');
       const wqiStatusDesc = document.getElementById('wqi-status-desc');
       const wqiParamBars = document.getElementById('wqi-param-bars');
+      const wqiRecsTitle = document.getElementById('wqi-recs-title');
       const wqiRecsList = document.getElementById('wqi-recs-list');
+      const wqiScaleHeading = document.getElementById('wqi-scale-heading');
+      const wqiScaleGrid = document.getElementById('wqi-scale-grid');
 
       // State
       let map = null;
@@ -3358,8 +3774,20 @@
       });
 
       // ========================================
-      // 3b. Water Quality Index (WQI) Checker Logic
+      // 3b. Water Quality Index (WQI) Checker Logic (City / River / Ocean)
       // ========================================
+      let currentWqiMode = 'city';
+      try {
+        const savedMode = localStorage.getItem('nf_wqi_mode');
+        if (savedMode === 'river' || savedMode === 'ocean' || savedMode === 'city') {
+          currentWqiMode = savedMode;
+        }
+      } catch {}
+
+      let currentCityName = 'India National Baseline';
+      let currentCityEcosystem = null;
+
+      // 1. City / Groundwater Standards (BIS IS 10500:2012)
       const WQI_STANDARDS = {
         ph: { desirable: 8.5, ideal: 7.0, range: 1.5, weight: 0.20, label: 'pH Value', unit: '', minSafe: 6.5, maxSafe: 8.5 },
         tds: { desirable: 500, ideal: 0, weight: 0.18, label: 'Total Dissolved Solids', unit: 'mg/L', maxSafe: 500, maxPerm: 2000 },
@@ -3378,7 +3806,61 @@
         hard: { tds: 1450, ph: 8.2, hardness: 580, fluoride: 1.8, nitrate: 68, chloride: 450, ec: 2300, arsenic: 0.015 }
       };
 
-      function getWqiInputs() {
+      // 2. River Surface Water Presets (CPCB NWMP Standards)
+      const RIVER_PRESETS = {
+        ganga: { do: 6.8, bod: 2.8, fecalColiform: 450, ph: 7.6, turbidity: 8, tds: 340, ec: 540, temp: 24.5 },
+        yamuna: { do: 2.1, bod: 18.0, fecalColiform: 24000, ph: 7.3, turbidity: 24, tds: 680, ec: 1100, temp: 26.0 },
+        godavari: { do: 6.2, bod: 3.2, fecalColiform: 900, ph: 7.8, turbidity: 9, tds: 390, ec: 620, temp: 25.5 },
+        cauvery: { do: 6.5, bod: 2.6, fecalColiform: 380, ph: 7.7, turbidity: 7, tds: 310, ec: 510, temp: 27.0 },
+        narmada: { do: 7.4, bod: 1.8, fecalColiform: 180, ph: 7.9, turbidity: 5, tds: 260, ec: 420, temp: 23.0 },
+        pristine_river: { do: 8.2, bod: 1.1, fecalColiform: 30, ph: 7.4, turbidity: 2, tds: 120, ec: 190, temp: 18.0 }
+      };
+
+      // 3. Ocean & Coastal Seawater Presets (MoEFCC Coastal SW Standards)
+      const OCEAN_PRESETS = {
+        arabian: { salinity: 34.8, do: 5.6, ph: 8.1, turbidity: 10, coliform: 35, temp: 28.0 },
+        bengal: { salinity: 33.9, do: 5.9, ph: 8.2, turbidity: 9, coliform: 25, temp: 28.5 },
+        goa: { salinity: 34.4, do: 6.0, ph: 8.1, turbidity: 7, coliform: 20, temp: 28.0 },
+        puri: { salinity: 34.1, do: 5.7, ph: 8.2, turbidity: 11, coliform: 40, temp: 28.5 },
+        coral: { salinity: 35.2, do: 6.6, ph: 8.3, turbidity: 3, coliform: 8, temp: 27.5 }
+      };
+
+      // Scale matrix data for each mode
+      const SCALE_MATRICES = {
+        city: {
+          heading: "Official BIS IS 10500:2012 Drinking Water Safety Classification Matrix",
+          steps: [
+            { border: "#16a34a", range: "0 – 25", name: "Grade A · Excellent", desc: "Pristine / Direct Consumption" },
+            { border: "#2563eb", range: "26 – 50", name: "Grade B · Good", desc: "Potable / Basic Filtration" },
+            { border: "#d97706", range: "51 – 75", name: "Grade C · Poor", desc: "RO Filtration Recommended" },
+            { border: "#ea580c", range: "76 – 100", name: "Grade D · Very Poor", desc: "Heavy Minerals / Softener" },
+            { border: "#c5302a", range: "> 100", name: "Grade E · Unfit", desc: "Severe Contamination Hazard" }
+          ]
+        },
+        river: {
+          heading: "Official CPCB NWMP River Designated Best Use Classes Matrix",
+          steps: [
+            { border: "#16a34a", range: "Class A", name: "Pristine Drinking", desc: "DO ≥ 6, BOD ≤ 2 · Disinfection Only" },
+            { border: "#2563eb", range: "Class B", name: "Outdoor Bathing", desc: "DO ≥ 5, BOD ≤ 3 · Holy Dip & Bathing" },
+            { border: "#d97706", range: "Class C", name: "Treated Drinking", desc: "DO ≥ 4, BOD ≤ 6 · Full Treatment" },
+            { border: "#ea580c", range: "Class D", name: "Wildlife & Fish", desc: "DO ≥ 4 · Fisheries Propagation" },
+            { border: "#c5302a", range: "Class E", name: "Irrigation / Polluted", desc: "DO < 4 · Unfit for Bathing" }
+          ]
+        },
+        ocean: {
+          heading: "Official MoEFCC Coastal Seawater Quality Criteria (SW Classes) Matrix",
+          steps: [
+            { border: "#16a34a", range: "Class SW-I", name: "Salt Pans & Mariculture", desc: "DO ≥ 5.0 · Marine Reserves & Shellfish" },
+            { border: "#2563eb", range: "Class SW-II", name: "Bathing & Water Sports", desc: "DO ≥ 4.0 · Recreational Swimming" },
+            { border: "#d97706", range: "Class SW-III", name: "Commercial Fishing", desc: "DO ≥ 3.5 · Fisheries & Aquaculture" },
+            { border: "#ea580c", range: "Class SW-IV", name: "Harbours & Cooling", desc: "DO ≥ 3.0 · Dockyards & Intake" },
+            { border: "#c5302a", range: "Class SW-V", name: "Navigation Zone", desc: "Controlled Port Waters" }
+          ]
+        }
+      };
+
+      // Input Getters and Setters
+      function getCityInputs() {
         return {
           tds: wqiTdsInput?.value ? parseFloat(wqiTdsInput.value) : NaN,
           ph: wqiPhInput?.value ? parseFloat(wqiPhInput.value) : NaN,
@@ -3391,7 +3873,7 @@
         };
       }
 
-      function setWqiInputs(vals) {
+      function setCityInputs(vals) {
         if (!vals) return;
         if (wqiTdsInput) wqiTdsInput.value = vals.tds !== undefined && !isNaN(vals.tds) ? vals.tds : '';
         if (wqiPhInput) wqiPhInput.value = vals.ph !== undefined && !isNaN(vals.ph) ? vals.ph : '';
@@ -3403,6 +3885,53 @@
         if (wqiArsenicInput) wqiArsenicInput.value = vals.arsenic !== undefined && !isNaN(vals.arsenic) ? vals.arsenic : '';
       }
 
+      function getRiverInputs() {
+        return {
+          do: wqiRiverDoInput?.value ? parseFloat(wqiRiverDoInput.value) : NaN,
+          bod: wqiRiverBodInput?.value ? parseFloat(wqiRiverBodInput.value) : NaN,
+          fecalColiform: wqiRiverColiformInput?.value ? parseFloat(wqiRiverColiformInput.value) : NaN,
+          ph: wqiRiverPhInput?.value ? parseFloat(wqiRiverPhInput.value) : NaN,
+          turbidity: wqiRiverTurbidityInput?.value ? parseFloat(wqiRiverTurbidityInput.value) : NaN,
+          tds: wqiRiverTdsInput?.value ? parseFloat(wqiRiverTdsInput.value) : NaN,
+          ec: wqiRiverEcInput?.value ? parseFloat(wqiRiverEcInput.value) : NaN,
+          temp: wqiRiverTempInput?.value ? parseFloat(wqiRiverTempInput.value) : NaN,
+        };
+      }
+
+      function setRiverInputs(vals) {
+        if (!vals) return;
+        if (wqiRiverDoInput) wqiRiverDoInput.value = vals.do !== undefined && !isNaN(vals.do) ? vals.do : '';
+        if (wqiRiverBodInput) wqiRiverBodInput.value = vals.bod !== undefined && !isNaN(vals.bod) ? vals.bod : '';
+        if (wqiRiverColiformInput) wqiRiverColiformInput.value = vals.fecalColiform !== undefined && !isNaN(vals.fecalColiform) ? vals.fecalColiform : '';
+        if (wqiRiverPhInput) wqiRiverPhInput.value = vals.ph !== undefined && !isNaN(vals.ph) ? vals.ph : '';
+        if (wqiRiverTurbidityInput) wqiRiverTurbidityInput.value = vals.turbidity !== undefined && !isNaN(vals.turbidity) ? vals.turbidity : '';
+        if (wqiRiverTdsInput) wqiRiverTdsInput.value = vals.tds !== undefined && !isNaN(vals.tds) ? vals.tds : '';
+        if (wqiRiverEcInput) wqiRiverEcInput.value = vals.ec !== undefined && !isNaN(vals.ec) ? vals.ec : '';
+        if (wqiRiverTempInput) wqiRiverTempInput.value = vals.temp !== undefined && !isNaN(vals.temp) ? vals.temp : '';
+      }
+
+      function getOceanInputs() {
+        return {
+          salinity: wqiOceanSalinityInput?.value ? parseFloat(wqiOceanSalinityInput.value) : NaN,
+          do: wqiOceanDoInput?.value ? parseFloat(wqiOceanDoInput.value) : NaN,
+          ph: wqiOceanPhInput?.value ? parseFloat(wqiOceanPhInput.value) : NaN,
+          turbidity: wqiOceanTurbidityInput?.value ? parseFloat(wqiOceanTurbidityInput.value) : NaN,
+          coliform: wqiOceanColiformInput?.value ? parseFloat(wqiOceanColiformInput.value) : NaN,
+          temp: wqiOceanTempInput?.value ? parseFloat(wqiOceanTempInput.value) : NaN,
+        };
+      }
+
+      function setOceanInputs(vals) {
+        if (!vals) return;
+        if (wqiOceanSalinityInput) wqiOceanSalinityInput.value = vals.salinity !== undefined && !isNaN(vals.salinity) ? vals.salinity : '';
+        if (wqiOceanDoInput) wqiOceanDoInput.value = vals.do !== undefined && !isNaN(vals.do) ? vals.do : '';
+        if (wqiOceanPhInput) wqiOceanPhInput.value = vals.ph !== undefined && !isNaN(vals.ph) ? vals.ph : '';
+        if (wqiOceanTurbidityInput) wqiOceanTurbidityInput.value = vals.turbidity !== undefined && !isNaN(vals.turbidity) ? vals.turbidity : '';
+        if (wqiOceanColiformInput) wqiOceanColiformInput.value = vals.coliform !== undefined && !isNaN(vals.coliform) ? vals.coliform : '';
+        if (wqiOceanTempInput) wqiOceanTempInput.value = vals.temp !== undefined && !isNaN(vals.temp) ? vals.temp : '';
+      }
+
+      // Calculation Engine 1: City Tap & Groundwater WAWQI (BIS IS 10500:2012)
       function calculateWQIClient(params) {
         let sumWq = 0;
         let sumW = 0;
@@ -3449,7 +3978,7 @@
         let color = '#16a34a';
         let gradeClass = 'grade-a';
         let statusTitle = 'Pristine Drinking Water';
-        let statusDesc = 'Chemical parameters are well within Bureau of Indian Standards (BIS IS 10500:2012) desirable limits. Safe for direct consumption.';
+        let statusDesc = `Chemical parameters for ${currentCityName} are well within Bureau of Indian Standards (BIS IS 10500:2012) desirable limits. Safe for direct consumption.`;
         let recommendations = [
           'Safe for drinking, cooking, and infant preparation without special treatment.',
           'Preserves essential calcium, magnesium, and natural mineral electrolytes.'
@@ -3461,7 +3990,7 @@
           color = '#c5302a';
           gradeClass = 'grade-e';
           statusTitle = 'Severe Chemical Hazard';
-          statusDesc = 'Water exceeds maximum permissible contamination limits (high Fluoride, Nitrate, Arsenic, or extreme TDS). Toxic for human consumption.';
+          statusDesc = `Water exceeds maximum permissible contamination limits in ${currentCityName} (high Fluoride, Nitrate, Arsenic, or extreme TDS). Toxic for human consumption.`;
           recommendations = [
             'DO NOT DRINK untreated — high cardiovascular and skeletal health risks.',
             'Requires multi-stage RO (Reverse Osmosis) + activated alumina / ion exchange.',
@@ -3473,10 +4002,10 @@
           color = '#ea580c';
           gradeClass = 'grade-d';
           statusTitle = 'Heavily Contaminated Water';
-          statusDesc = 'Parameters exceed permissible thresholds. High mineral hardness and dissolved solids cause kidney strain and digestive irritation.';
+          statusDesc = `Parameters exceed permissible thresholds in ${currentCityName}. High mineral hardness and dissolved solids cause kidney strain and pipe scaling.`;
           recommendations = [
             'Multi-stage RO purification mandatory before drinking.',
-            'Install whole-house water softening to prevent scaling in pipes.'
+            'Install whole-house water softening to prevent pipe scaling.'
           ];
         } else if (score > 50) {
           grade = 'C';
@@ -3484,7 +4013,7 @@
           color = '#d97706';
           gradeClass = 'grade-c';
           statusTitle = 'Moderate Contamination';
-          statusDesc = 'Exceeds desirable baseline. High mineral content or elevated hardness requires active filtration.';
+          statusDesc = `Exceeds desirable baseline in ${currentCityName}. High mineral content or elevated hardness requires active filtration.`;
           recommendations = [
             'Domestic RO filtration or high-density carbon block recommended.',
             'Boiling and sediment filtration advised before drinking.'
@@ -3495,7 +4024,7 @@
           color = '#2563eb';
           gradeClass = 'grade-b';
           statusTitle = 'Safe Potable Water';
-          statusDesc = 'Acceptable drinking quality meeting standard municipal safety criteria. Safe for household use.';
+          statusDesc = `Acceptable drinking quality meeting standard municipal safety criteria in ${currentCityName}. Safe for household use.`;
           recommendations = [
             'Safe for domestic supply and drinking.',
             'Basic activated carbon or sediment cartridge recommended for clarity and taste.'
@@ -3505,9 +4034,246 @@
         return { score, grade, gradeClass, category, color, statusTitle, statusDesc, recommendations, paramReports };
       }
 
+      // Calculation Engine 2: River Surface Water Quality (CPCB NWMP Standards)
+      function calculateRiverWQIClient(params) {
+        const doVal = !isNaN(params.do) ? params.do : 6.0;
+        const bodVal = !isNaN(params.bod) ? params.bod : 3.0;
+        const fcVal = !isNaN(params.fecalColiform) ? params.fecalColiform : 500;
+        const phVal = !isNaN(params.ph) ? params.ph : 7.4;
+        const turbVal = !isNaN(params.turbidity) ? params.turbidity : 8;
+        const tdsVal = !isNaN(params.tds) ? params.tds : 300;
+        const tempVal = !isNaN(params.temp) ? params.temp : 25;
+
+        let qDo = doVal >= 7.0 ? 100 : doVal >= 6.0 ? 85 : doVal >= 5.0 ? 70 : doVal >= 4.0 ? 50 : Math.max(0, doVal * 10);
+        let qBod = bodVal <= 2.0 ? 100 : bodVal <= 3.0 ? 80 : bodVal <= 5.0 ? 60 : bodVal <= 10.0 ? 35 : Math.max(0, 100 - bodVal * 6);
+        let qFc = fcVal <= 50 ? 100 : fcVal <= 500 ? 80 : fcVal <= 2500 ? 60 : fcVal <= 5000 ? 40 : Math.max(10, 100 - Math.log10(Math.max(1, fcVal)) * 20);
+        let qPh = (phVal >= 6.8 && phVal <= 7.8) ? 100 : (phVal >= 6.5 && phVal <= 8.5) ? 80 : Math.max(20, 100 - Math.abs(phVal - 7.3) * 35);
+        let qTurb = turbVal <= 5 ? 100 : turbVal <= 10 ? 80 : turbVal <= 25 ? 60 : Math.max(20, 100 - turbVal * 1.5);
+
+        const score = Math.round((qDo * 0.32 + qBod * 0.28 + qFc * 0.22 + qPh * 0.10 + qTurb * 0.08) * 10) / 10;
+        const riverName = currentCityEcosystem?.river?.name || `${currentCityName} River Stretch`;
+
+        let cpcbClass = 'Class B';
+        let category = 'Outdoor Bathing & Holy Dip';
+        let color = '#2563eb';
+        let gradeClass = 'grade-b';
+        let statusTitle = `CPCB Class B · Safe for Bathing & Holy Dip`;
+        let statusDesc = `The river stretch at ${riverName} satisfies official CPCB criteria for organized outdoor bathing, religious immersion, and recreation.`;
+        let recommendations = [
+          'Safe for organized outdoor bathing, ritual holy dip, and swimming.',
+          'Must undergo conventional municipal coagulation, filtration, and chlorination before tap drinking.',
+          'Adequate dissolved oxygen to support local fish populations and riverine ecology.'
+        ];
+
+        if (doVal >= 6.0 && bodVal <= 2.0 && fcVal <= 100 && phVal >= 6.5 && phVal <= 8.5) {
+          cpcbClass = 'Class A';
+          category = 'Drinking Without Conventional Treatment';
+          color = '#16a34a';
+          gradeClass = 'grade-a';
+          statusTitle = `CPCB Class A · Pristine Drinking Source`;
+          statusDesc = `Pristine water stretch along ${riverName}. Meets CPCB highest benchmark for drinking water source after simple disinfection.`;
+          recommendations = [
+            'Pristine river stretch safe for drinking with simple disinfection (chlorination / UV).',
+            'Superior habitat for sensitive freshwater species and river biodiversity.'
+          ];
+        } else if (doVal >= 5.0 && bodVal <= 3.0 && fcVal <= 500 && phVal >= 6.5 && phVal <= 8.5) {
+          cpcbClass = 'Class B';
+          category = 'Outdoor Bathing & Ritual Dip';
+          color = '#2563eb';
+          gradeClass = 'grade-b';
+          statusTitle = `CPCB Class B · Suitable for Outdoor Bathing`;
+          statusDesc = `Meets CPCB criteria for organized outdoor bathing and religious immersion at ${riverName}.`;
+          recommendations = [
+            'Approved for organized bathing, religious holy dip, and water sports.',
+            'Requires conventional municipal water treatment before household supply.'
+          ];
+        } else if (doVal >= 4.0 && bodVal <= 6.0 && fcVal <= 5000) {
+          cpcbClass = 'Class C';
+          category = 'Drinking After Conventional Treatment';
+          color = '#d97706';
+          gradeClass = 'grade-c';
+          statusTitle = `CPCB Class C · Treated Drinking Water Source`;
+          statusDesc = `River stretch carries agricultural/municipal runoff. Suitable as raw municipal intake after coagulation and rapid sand filtration.`;
+          recommendations = [
+            'Suitable for raw municipal intake after conventional coagulation, filtration, and post-chlorination.',
+            'Direct facial immersion or unboiled drinking discouraged.'
+          ];
+        } else if (doVal >= 4.0 && phVal >= 6.5 && phVal <= 8.5) {
+          cpcbClass = 'Class D';
+          category = 'Propagation of Wildlife & Fisheries';
+          color = '#ea580c';
+          gradeClass = 'grade-d';
+          statusTitle = `CPCB Class D · Wildlife & Fisheries Only`;
+          statusDesc = `High organic pollution load. Adequate dissolved oxygen for commercial fish propagation, but unsuited for bather immersion.`;
+          recommendations = [
+            'Supports fish life and wildlife watering, but unsuitable for bathing or raw drinking intake.',
+            'Requires sewage interception and effluent diversion under National River Conservation Plan (NRCP).'
+          ];
+        } else {
+          cpcbClass = 'Class E';
+          category = 'Polluted / Irrigation & Industrial Use Only';
+          color = '#c5302a';
+          gradeClass = 'grade-e';
+          statusTitle = `CPCB Class E · Critically Polluted River Stretch`;
+          statusDesc = `Severe oxygen depletion and high BOD at ${riverName}. Unfit for human bathing or aquatic life.`;
+          recommendations = [
+            'UNFIT for bathing or holy dips — high risk of dermal allergies and enteric infections.',
+            'Controlled use for irrigation and industrial cooling only.',
+            'Designated priority polluted river stretch under CPCB monitoring.'
+          ];
+        }
+
+        const paramReports = [
+          { label: 'Dissolved Oxygen (DO)', value: doVal, unit: 'mg/L', limitText: '> 5.0 mg/L (Min 4.0)', status: doVal >= 5 ? 'normal' : doVal >= 4 ? 'elevated' : 'danger', pct: Math.min(100, (doVal / 7) * 100) },
+          { label: 'Biochemical Oxygen Demand (BOD)', value: bodVal, unit: 'mg/L', limitText: '< 3.0 mg/L', status: bodVal <= 3 ? 'normal' : bodVal <= 6 ? 'elevated' : 'danger', pct: Math.min(100, (bodVal / 10) * 100) },
+          { label: 'Fecal Coliform', value: fcVal, unit: 'MPN/100ml', limitText: '< 500 MPN/100ml', status: fcVal <= 500 ? 'normal' : fcVal <= 2500 ? 'elevated' : 'danger', pct: Math.min(100, (fcVal / 2500) * 100) },
+          { label: 'pH Value', value: phVal, unit: 'pH', limitText: '6.5 – 8.5', status: (phVal >= 6.5 && phVal <= 8.5) ? 'normal' : 'danger', pct: Math.min(100, ((phVal - 6.5) / 2.0) * 100) },
+          { label: 'Turbidity', value: turbVal, unit: 'NTU', limitText: '< 10 NTU', status: turbVal <= 10 ? 'normal' : turbVal <= 25 ? 'elevated' : 'danger', pct: Math.min(100, (turbVal / 30) * 100) },
+          { label: 'Total Dissolved Solids (TDS)', value: tdsVal, unit: 'mg/L', limitText: '< 500 mg/L', status: tdsVal <= 500 ? 'normal' : tdsVal <= 1000 ? 'elevated' : 'danger', pct: Math.min(100, (tdsVal / 1000) * 100) },
+          { label: 'Water Temperature', value: tempVal, unit: '°C', limitText: 'Ambient (20–30°C)', status: 'normal', pct: Math.min(100, (tempVal / 35) * 100) }
+        ];
+
+        return { score, grade: cpcbClass.replace('Class ', ''), gradeClass, category, color, statusTitle, statusDesc, recommendations, paramReports };
+      }
+
+      // Calculation Engine 3: Ocean & Coastal Seawater Quality (MoEFCC Coastal SWQI)
+      function calculateMarineSWQIClient(params) {
+        const sal = !isNaN(params.salinity) ? params.salinity : 34.5;
+        const doVal = !isNaN(params.do) ? params.do : 5.8;
+        const phVal = !isNaN(params.ph) ? params.ph : 8.1;
+        const turbVal = !isNaN(params.turbidity) ? params.turbidity : 10;
+        const coliVal = !isNaN(params.coliform) ? params.coliform : 30;
+        const tempVal = !isNaN(params.temp) ? params.temp : 28.0;
+
+        let qSal = (sal >= 32 && sal <= 36) ? 100 : (sal >= 28 && sal <= 38) ? 80 : Math.max(20, 100 - Math.abs(sal - 34) * 8);
+        let qDo = doVal >= 6.0 ? 100 : doVal >= 5.0 ? 85 : doVal >= 4.0 ? 65 : doVal >= 3.0 ? 40 : 15;
+        let qPh = (phVal >= 7.8 && phVal <= 8.3) ? 100 : (phVal >= 7.5 && phVal <= 8.4) ? 85 : Math.max(20, 100 - Math.abs(phVal - 8.1) * 45);
+        let qTurb = turbVal <= 8 ? 100 : turbVal <= 15 ? 80 : turbVal <= 25 ? 60 : Math.max(20, 100 - turbVal * 2);
+        let qColi = coliVal <= 30 ? 100 : coliVal <= 100 ? 80 : coliVal <= 500 ? 60 : Math.max(15, 100 - Math.log10(Math.max(1, coliVal)) * 20);
+
+        const score = Math.round((qDo * 0.28 + qSal * 0.20 + qPh * 0.16 + qTurb * 0.16 + qColi * 0.20) * 10) / 10;
+        const oceanName = currentCityEcosystem?.ocean?.name || `${currentCityName} Marine Waters`;
+
+        let swqiClass = 'Class SW-II';
+        let category = 'Coastal Bathing & Water Sports';
+        let color = '#2563eb';
+        let gradeClass = 'grade-b';
+        let statusTitle = `MoEFCC Class SW-II · Safe for Coastal Bathing`;
+        let statusDesc = `Coastal waters along ${oceanName} meet official MoEFCC benchmarks for beach swimming, surfing, and marine water sports.`;
+        let recommendations = [
+          'Clean coastal waters safe for swimming, surfing, and beach recreation.',
+          'Dissolved oxygen levels support thriving nearshore marine biodiversity.',
+          'Low pathogen density indicates minimal sewage outfall contamination.'
+        ];
+
+        if (doVal >= 5.0 && (sal >= 31 && sal <= 37) && (phVal >= 7.8 && phVal <= 8.4) && turbVal <= 10 && coliVal <= 50) {
+          swqiClass = 'Class SW-I';
+          category = 'Mariculture & Ecologically Sensitive';
+          color = '#16a34a';
+          gradeClass = 'grade-a';
+          statusTitle = `MoEFCC Class SW-I · Pristine Marine Reserve`;
+          statusDesc = `Pristine marine baseline along ${oceanName}. Meets rigorous criteria for salt pans, shellfish mariculture, and coral reef conservation.`;
+          recommendations = [
+            'Pristine coastal ecosystem suitable for coral reefs, salt pans, and oyster farming.',
+            'Zero coastal outfall impact detected; superior optical clarity and dissolved oxygen.'
+          ];
+        } else if (doVal >= 4.0 && coliVal <= 150 && (phVal >= 7.0 && phVal <= 8.5)) {
+          swqiClass = 'Class SW-II';
+          category = 'Bathing & Contact Sports';
+          color = '#2563eb';
+          gradeClass = 'grade-b';
+          statusTitle = `MoEFCC Class SW-II · Coastal Bathing`;
+          statusDesc = `Meets official standards for public beach bathing, water sports, and seaside recreation along ${oceanName}.`;
+          recommendations = [
+            'Safe for beach swimming and recreational water contact sports.',
+            'Maintains acceptable microbiological thresholds for bather safety.'
+          ];
+        } else if (doVal >= 3.5 && (phVal >= 6.5 && phVal <= 8.5)) {
+          swqiClass = 'Class SW-III';
+          category = 'Commercial Fisheries';
+          color = '#d97706';
+          gradeClass = 'grade-c';
+          statusTitle = `MoEFCC Class SW-III · Commercial Fishing`;
+          statusDesc = `Coastal waters support commercial fisheries, but elevated turbidity or coliform make it sub-optimal for primary contact.`;
+          recommendations = [
+            'Suitable for deep-sea and coastal commercial fisheries and aquaculture.',
+            'Bathing and swimming discouraged near estuary or port drainage zones.'
+          ];
+        } else if (doVal >= 3.0) {
+          swqiClass = 'Class SW-IV';
+          category = 'Harbour Waters & Cooling';
+          color = '#ea580c';
+          gradeClass = 'grade-d';
+          statusTitle = `MoEFCC Class SW-IV · Harbour & Port Waters`;
+          statusDesc = `Port/harbour basin with elevated suspended solids and industrial cooling intake activity.`;
+          recommendations = [
+            'Designated for dockyards, port navigation, and industrial thermal cooling intake.',
+            'Unfit for recreational bathing or seafood harvesting.'
+          ];
+        } else {
+          swqiClass = 'Class SW-V';
+          category = 'Navigation & Controlled Port Zone';
+          color = '#c5302a';
+          gradeClass = 'grade-e';
+          statusTitle = `MoEFCC Class SW-V · Navigation Zone`;
+          statusDesc = `Heavily impacted marine zone with low dissolved oxygen. Suitable for ship navigation only.`;
+          recommendations = [
+            'Unfit for human contact or fisheries.',
+            'Strict environmental compliance required for ship ballast and effluent discharge.'
+          ];
+        }
+
+        const paramReports = [
+          { label: 'Salinity', value: sal, unit: 'PSU (ppt)', limitText: '32 – 36 PSU', status: (sal >= 32 && sal <= 36) ? 'normal' : 'elevated', pct: Math.min(100, (sal / 40) * 100) },
+          { label: 'Marine Dissolved Oxygen (DO)', value: doVal, unit: 'mg/L', limitText: '> 5.0 mg/L', status: doVal >= 5.0 ? 'normal' : doVal >= 3.5 ? 'elevated' : 'danger', pct: Math.min(100, (doVal / 7.0) * 100) },
+          { label: 'Marine pH Value', value: phVal, unit: 'pH', limitText: '7.5 – 8.4', status: (phVal >= 7.5 && phVal <= 8.4) ? 'normal' : 'danger', pct: Math.min(100, ((phVal - 7.0) / 2.0) * 100) },
+          { label: 'Turbidity', value: turbVal, unit: 'NTU', limitText: '< 15 NTU', status: turbVal <= 15 ? 'normal' : turbVal <= 30 ? 'elevated' : 'danger', pct: Math.min(100, (turbVal / 35) * 100) },
+          { label: 'Pathogens / Coliform', value: coliVal, unit: 'MPN/100ml', limitText: '< 100 MPN/100ml', status: coliVal <= 100 ? 'normal' : coliVal <= 500 ? 'elevated' : 'danger', pct: Math.min(100, (coliVal / 500) * 100) },
+          { label: 'Sea Surface Temperature', value: tempVal, unit: '°C', limitText: '24 – 30 °C', status: 'normal', pct: Math.min(100, (tempVal / 35) * 100) }
+        ];
+
+        return { score, grade: swqiClass.replace('Class ', ''), gradeClass, category, color, statusTitle, statusDesc, recommendations, paramReports };
+      }
+
+      // Render Dynamic Scale Matrix
+      function renderScaleMatrix(mode) {
+        const mat = SCALE_MATRICES[mode] || SCALE_MATRICES.city;
+        if (wqiScaleHeading) wqiScaleHeading.textContent = mat.heading;
+        if (wqiScaleGrid) {
+          wqiScaleGrid.replaceChildren();
+          mat.steps.forEach(s => {
+            const el = document.createElement('div');
+            el.className = 'wqi-scale-step';
+            el.style.borderTop = `3px solid ${s.border}`;
+            el.innerHTML = `
+              <strong style="color:${s.border};">${s.range}</strong>
+              <span>${s.name}</span>
+              <small style="color:var(--muted);font-size:9.5px;">${s.desc}</small>
+            `;
+            wqiScaleGrid.appendChild(el);
+          });
+        }
+      }
+
+      // Master Display Update Function
       function updateWqiDisplay() {
-        const inputs = getWqiInputs();
-        const res = calculateWQIClient(inputs);
+        let res = null;
+        let inputs = null;
+
+        if (currentWqiMode === 'river') {
+          inputs = getRiverInputs();
+          res = calculateRiverWQIClient(inputs);
+          try { localStorage.setItem('nf_wqi_river_inputs', JSON.stringify(inputs)); } catch {}
+        } else if (currentWqiMode === 'ocean') {
+          inputs = getOceanInputs();
+          res = calculateMarineSWQIClient(inputs);
+          try { localStorage.setItem('nf_wqi_ocean_inputs', JSON.stringify(inputs)); } catch {}
+        } else {
+          inputs = getCityInputs();
+          res = calculateWQIClient(inputs);
+          try { localStorage.setItem('nf_wqi_inputs', JSON.stringify(inputs)); } catch {}
+        }
+
         if (!res) return;
 
         if (wqiBigScore) {
@@ -3516,7 +4282,7 @@
         }
         if (wqiGradePill) {
           wqiGradePill.className = `wqi-grade-pill ${res.gradeClass}`;
-          wqiGradePill.textContent = `Grade ${res.grade} · ${res.category}`;
+          wqiGradePill.textContent = `${currentWqiMode === 'city' ? 'Grade ' : 'Class '}${res.grade} · ${res.category}`;
         }
         if (wqiStatusTitle) wqiStatusTitle.textContent = res.statusTitle;
         if (wqiStatusDesc) wqiStatusDesc.textContent = res.statusDesc;
@@ -3533,7 +4299,7 @@
                 <strong>${p.value} ${p.unit}</strong>
               </div>
               <div class="wqi-bar-track">
-                <div class="wqi-bar-fill ${p.status}" style="width: ${Math.min(100, p.pct)}%"></div>
+                <div class="wqi-bar-fill ${p.status}" style="width: ${Math.min(100, Math.max(0, p.pct))}%"></div>
               </div>
             `;
             wqiParamBars.appendChild(item);
@@ -3549,52 +4315,264 @@
             wqiRecsList.appendChild(li);
           });
         }
-
-        // Save inputs to localStorage
-        try {
-          localStorage.setItem('nf_wqi_inputs', JSON.stringify(inputs));
-        } catch {}
       }
 
-      if (wqiCalcBtn) {
-        wqiCalcBtn.addEventListener('click', updateWqiDisplay);
-      }
+      // Mode Switcher Function (City / River / Ocean)
+      function switchWqiMode(mode) {
+        currentWqiMode = mode;
+        try { localStorage.setItem('nf_wqi_mode', mode); } catch {}
 
-      [wqiTdsInput, wqiPhInput, wqiHardnessInput, wqiFluorideInput, wqiNitrateInput, wqiChlorideInput, wqiEcInput, wqiArsenicInput].forEach(inp => {
-        if (inp) {
-          inp.addEventListener('input', updateWqiDisplay);
+        // 1. Update Tabs
+        if (wqiTabCity) {
+          wqiTabCity.classList.toggle('active', mode === 'city');
+          wqiTabCity.setAttribute('aria-selected', String(mode === 'city'));
         }
-      });
+        if (wqiTabRiver) {
+          wqiTabRiver.classList.toggle('active', mode === 'river');
+          wqiTabRiver.setAttribute('aria-selected', String(mode === 'river'));
+        }
+        if (wqiTabOcean) {
+          wqiTabOcean.classList.toggle('active', mode === 'ocean');
+          wqiTabOcean.setAttribute('aria-selected', String(mode === 'ocean'));
+        }
 
-      if (wqiResetBtn) {
-        wqiResetBtn.addEventListener('click', () => {
-          setWqiInputs(WQI_PRESETS.tap);
-          updateWqiDisplay();
-        });
+        // 2. Toggle Preset Bars
+        if (wqiPresetsCity) wqiPresetsCity.style.display = mode === 'city' ? 'flex' : 'none';
+        if (wqiPresetsRiver) wqiPresetsRiver.style.display = mode === 'river' ? 'flex' : 'none';
+        if (wqiPresetsOcean) wqiPresetsOcean.style.display = mode === 'ocean' ? 'flex' : 'none';
+
+        // 3. Toggle Input Panels
+        if (wqiPanelCity) wqiPanelCity.classList.toggle('active', mode === 'city');
+        if (wqiPanelRiver) wqiPanelRiver.classList.toggle('active', mode === 'river');
+        if (wqiPanelOcean) wqiPanelOcean.classList.toggle('active', mode === 'ocean');
+
+        // 4. Update Header Badge and Headings
+        if (wqiActiveStdBadge) {
+          if (mode === 'river') {
+            wqiActiveStdBadge.innerHTML = `
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M3 17c3.5-3 6.5 3 10 0s6.5 3 8 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M3 11c3.5-3 6.5 3 10 0s6.5 3 8 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              CPCB NWMP River Standard
+            `;
+          } else if (mode === 'ocean') {
+            wqiActiveStdBadge.innerHTML = `
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M2 12c4-4 8 4 12 0s6 3 8 0" stroke="currentColor" stroke-width="2"/><path d="M2 17c4-4 8 4 12 0s6 3 8 0" stroke="currentColor" stroke-width="2"/></svg>
+              MoEFCC Coastal SWQI Standard
+            `;
+          } else {
+            wqiActiveStdBadge.innerHTML = `
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 3.2s6 6.4 6 11a6 6 0 0 1-12 0c0-4.6 6-11 6-11Z" stroke="currentColor" stroke-width="2"/><path d="M9 15.2a3 3 0 0 0 3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              BIS IS 10500:2012 Standard
+            `;
+          }
+        }
+
+        if (wqiInputsHeading) {
+          wqiInputsHeading.textContent = mode === 'river'
+            ? 'River Basin Measurements'
+            : mode === 'ocean'
+            ? 'Coastal Seawater Measurements'
+            : 'City Tap & Groundwater Measurements';
+        }
+
+        if (wqiInputsUnitHint) {
+          wqiInputsUnitHint.textContent = mode === 'river'
+            ? 'CPCB NWMP Parameters (mg/L, MPN, NTU)'
+            : mode === 'ocean'
+            ? 'MoEFCC Marine Parameters (PSU, mg/L, MPN)'
+            : 'BIS IS 10500 Parameters (mg/L, µS/cm)';
+        }
+
+        if (wqiRecsTitle) {
+          wqiRecsTitle.textContent = mode === 'river'
+            ? 'CPCB Designated Best Use & Bathing Safety:'
+            : mode === 'ocean'
+            ? 'MoEFCC Marine Recreation & Ecological Status:'
+            : 'Recommended Treatment Protocols:';
+        }
+
+        renderScaleMatrix(mode);
+        updateWqiDisplay();
       }
 
-      wqiPresetBtns.forEach(btn => {
+      // City Synchronization: Ties Searched City to WQI
+      function syncCityToWqi(cityName, eco, preferredMode = null) {
+        if (!cityName) return;
+        currentCityName = cityName;
+        currentCityEcosystem = eco || currentCityEcosystem;
+
+        if (wqiLocationName) wqiLocationName.textContent = currentCityName;
+        if (wqiCityTag) wqiCityTag.textContent = `📍 ${currentCityName}`;
+
+        document.querySelectorAll('.wqi-btn-city-name').forEach(el => {
+          el.textContent = currentCityName;
+        });
+
+        if (wqiLoadCityBtn) {
+          wqiLoadCityBtn.textContent = `📍 Load ${currentCityName} Water Baseline`;
+        }
+
+        // Update Ecosystem Badges
+        if (eco) {
+          if (eco.river && wqiRiverTag) {
+            wqiRiverTag.textContent = `🏞️ ${eco.river.name} (${eco.river.stretch || eco.river.basin})`;
+            wqiRiverTag.style.display = 'inline-flex';
+            if (wqiRiverTabLabel) wqiRiverTabLabel.textContent = `${eco.river.name}`;
+            if (wqiRiverTabSub) wqiRiverTabSub.textContent = `${eco.river.stretch || 'Local Basin'} · CPCB ${eco.river.cpcbClass || 'Class A-E'}`;
+            if (eco.river.parameters) {
+              setRiverInputs(eco.river.parameters);
+            }
+          }
+
+          if (eco.ocean && wqiOceanTag) {
+            wqiOceanTag.textContent = `🌊 ${eco.ocean.name}`;
+            wqiOceanTag.style.display = 'inline-flex';
+            if (wqiOceanTabLabel) wqiOceanTabLabel.textContent = `${eco.ocean.name}`;
+            if (wqiOceanTabSub) wqiOceanTabSub.textContent = `${eco.ocean.region || 'Marine Waters'} · MoEFCC ${eco.ocean.swqiClass || 'SW'}`;
+            if (wqiCoastalBadge) wqiCoastalBadge.style.display = 'inline-block';
+            if (eco.ocean.parameters) {
+              setOceanInputs(eco.ocean.parameters);
+            }
+          } else if (wqiOceanTag) {
+            wqiOceanTag.textContent = `🏞️ Inland (India Coastal Shelf Reference)`;
+            if (wqiCoastalBadge) wqiCoastalBadge.style.display = 'none';
+          }
+
+          if (eco.groundwaterSummary && wqiAquiferTag) {
+            wqiAquiferTag.textContent = `🚰 CGWB Aquifer (${eco.groundwaterSummary.sampleCount} Wells, Avg WQI: ${eco.groundwaterSummary.averageWqi})`;
+            wqiAquiferTag.style.display = 'inline-flex';
+          }
+        }
+
+        if (preferredMode) {
+          switchWqiMode(preferredMode);
+        } else {
+          updateWqiDisplay();
+        }
+      }
+
+      // Event Listeners for Tabs
+      if (wqiTabCity) wqiTabCity.addEventListener('click', () => switchWqiMode('city'));
+      if (wqiTabRiver) wqiTabRiver.addEventListener('click', () => switchWqiMode('river'));
+      if (wqiTabOcean) wqiTabOcean.addEventListener('click', () => switchWqiMode('ocean'));
+
+      // Event Listeners for Preset Buttons
+      document.querySelectorAll('#wqi-presets-city .wqi-preset-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          wqiPresetBtns.forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('#wqi-presets-city .wqi-preset-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           const p = btn.dataset.preset;
           if (WQI_PRESETS[p]) {
-            setWqiInputs(WQI_PRESETS[p]);
+            setCityInputs(WQI_PRESETS[p]);
             updateWqiDisplay();
           }
         });
       });
 
-      if (wqiLoadBorewellBtn) {
-        wqiLoadBorewellBtn.addEventListener('click', () => {
-          if (!currentWaterRecords || !currentWaterRecords.length) {
-            alert('Please search an Indian PIN code or area first to load nearby CGWB borewell lab data.');
-            return;
+      document.querySelectorAll('#wqi-presets-river .wqi-preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#wqi-presets-river .wqi-preset-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const p = btn.dataset.preset;
+          if (RIVER_PRESETS[p]) {
+            setRiverInputs(RIVER_PRESETS[p]);
+            updateWqiDisplay();
           }
-          const nearest = currentWaterRecords[0];
-          populateWqiFromRecord(nearest);
+        });
+      });
+
+      document.querySelectorAll('#wqi-presets-ocean .wqi-preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#wqi-presets-ocean .wqi-preset-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const p = btn.dataset.preset;
+          if (OCEAN_PRESETS[p]) {
+            setOceanInputs(OCEAN_PRESETS[p]);
+            updateWqiDisplay();
+          }
+        });
+      });
+
+      // City Sync Preset Buttons
+      if (wqiPresetCitySync) {
+        wqiPresetCitySync.addEventListener('click', () => {
+          if (currentWaterRecords && currentWaterRecords.length > 0) {
+            populateWqiFromRecord(currentWaterRecords[0]);
+          } else {
+            alert(`No direct borewell tests in ${currentCityName} datastore; displaying standard regional tap baseline.`);
+            setCityInputs(WQI_PRESETS.tap);
+            updateWqiDisplay();
+          }
         });
       }
+
+      if (wqiPresetRiverSync) {
+        wqiPresetRiverSync.addEventListener('click', () => {
+          if (currentCityEcosystem?.river?.parameters) {
+            setRiverInputs(currentCityEcosystem.river.parameters);
+            updateWqiDisplay();
+          } else {
+            setRiverInputs(RIVER_PRESETS.ganga);
+            updateWqiDisplay();
+          }
+        });
+      }
+
+      if (wqiPresetOceanSync) {
+        wqiPresetOceanSync.addEventListener('click', () => {
+          if (currentCityEcosystem?.ocean?.parameters) {
+            setOceanInputs(currentCityEcosystem.ocean.parameters);
+            updateWqiDisplay();
+          } else {
+            setOceanInputs(OCEAN_PRESETS.arabian);
+            updateWqiDisplay();
+          }
+        });
+      }
+
+      // Quick "Load City Baseline" Button
+      if (wqiLoadCityBtn) {
+        wqiLoadCityBtn.addEventListener('click', () => {
+          if (currentWqiMode === 'river' && currentCityEcosystem?.river?.parameters) {
+            setRiverInputs(currentCityEcosystem.river.parameters);
+          } else if (currentWqiMode === 'ocean' && currentCityEcosystem?.ocean?.parameters) {
+            setOceanInputs(currentCityEcosystem.ocean.parameters);
+          } else if (currentWaterRecords && currentWaterRecords.length > 0) {
+            populateWqiFromRecord(currentWaterRecords[0]);
+          } else {
+            setCityInputs(WQI_PRESETS.tap);
+          }
+          updateWqiDisplay();
+          const section = document.getElementById('wqi-section');
+          if (section) section.scrollIntoView({ behavior: 'smooth' });
+        });
+      }
+
+      // Calc & Reset Buttons
+      if (wqiCalcBtn) {
+        wqiCalcBtn.addEventListener('click', updateWqiDisplay);
+      }
+
+      if (wqiResetBtn) {
+        wqiResetBtn.addEventListener('click', () => {
+          if (currentWqiMode === 'river') {
+            setRiverInputs(RIVER_PRESETS.ganga);
+          } else if (currentWqiMode === 'ocean') {
+            setOceanInputs(OCEAN_PRESETS.arabian);
+          } else {
+            setCityInputs(WQI_PRESETS.tap);
+          }
+          updateWqiDisplay();
+        });
+      }
+
+      // Live Input Event Listeners
+      [wqiTdsInput, wqiPhInput, wqiHardnessInput, wqiFluorideInput, wqiNitrateInput, wqiChlorideInput, wqiEcInput, wqiArsenicInput,
+       wqiRiverDoInput, wqiRiverBodInput, wqiRiverColiformInput, wqiRiverPhInput, wqiRiverTurbidityInput, wqiRiverTdsInput, wqiRiverEcInput, wqiRiverTempInput,
+       wqiOceanSalinityInput, wqiOceanDoInput, wqiOceanPhInput, wqiOceanTurbidityInput, wqiOceanColiformInput, wqiOceanTempInput].forEach(inp => {
+        if (inp) {
+          inp.addEventListener('input', updateWqiDisplay);
+        }
+      });
 
       function populateWqiFromRecord(rec) {
         if (!rec || !rec.measurements) return;
@@ -3611,11 +4589,32 @@
             if (m.id === 'arsenic') mapped.arsenic = m.numericValue;
           }
         });
-        setWqiInputs(mapped);
-        updateWqiDisplay();
+        setCityInputs(mapped);
+        if (currentWqiMode !== 'city') switchWqiMode('city');
+        else updateWqiDisplay();
         const section = document.getElementById('wqi-section');
         if (section) section.scrollIntoView({ behavior: 'smooth' });
       }
+
+      // Initialize WQI on page load from saved or default state
+      try {
+        const savedCityInputs = localStorage.getItem('nf_wqi_inputs');
+        if (savedCityInputs) setCityInputs(JSON.parse(savedCityInputs));
+        else setCityInputs(WQI_PRESETS.tap);
+
+        const savedRiverInputs = localStorage.getItem('nf_wqi_river_inputs');
+        if (savedRiverInputs) setRiverInputs(JSON.parse(savedRiverInputs));
+        else setRiverInputs(RIVER_PRESETS.ganga);
+
+        const savedOceanInputs = localStorage.getItem('nf_wqi_ocean_inputs');
+        if (savedOceanInputs) setOceanInputs(JSON.parse(savedOceanInputs));
+        else setOceanInputs(OCEAN_PRESETS.arabian);
+      } catch {
+        setCityInputs(WQI_PRESETS.tap);
+        setRiverInputs(RIVER_PRESETS.ganga);
+        setOceanInputs(OCEAN_PRESETS.arabian);
+      }
+      switchWqiMode(currentWqiMode);
 
       // ========================================
       // 4. Air Quality Rendering & Standard Switcher
@@ -3874,7 +4873,15 @@
       });
 
       function renderWater(data) {
-        if (!data || !data.records || !data.records.length) {
+        if (!data) return;
+
+        // Automatically synchronize the searched city / waterway ecosystem with the WQI analyzer
+        if (data.cityEcosystem) {
+          const locName = data.requested?.district || currentCityName;
+          syncCityToWqi(locName, data.cityEcosystem);
+        }
+
+        if (!data.records || !data.records.length) {
           waterSummaryText.textContent = `No groundwater chemistry records matched for this district in the public CGWB catalogue.`;
           waterStationsList.replaceChildren();
           return;
@@ -4006,6 +5013,11 @@
         const district = office.District || '';
         const stateName = office.State || '';
 
+        currentCityName = office.isWaterway ? (office.waterTarget || officeName) : (district || officeName);
+        if (office.isWaterway && office.waterType) {
+          switchWqiMode(office.waterType === 'ocean' ? 'ocean' : 'river');
+        }
+
         noticeTitle.textContent = `${officeName} · ${pin}`;
         noticeText.textContent = `${district}, ${stateName} · Fetching live observations, OpenStreetMap coordinates, and nearby borewell locations...`;
         statusText.textContent = `Connecting to official datasets for ${officeName}...`;
@@ -4073,6 +5085,11 @@
           notice.classList.add('visible');
           noticeTitle.textContent = `${data.postOffices.length} Matching Post Office${data.postOffices.length === 1 ? '' : 's'}`;
           noticeText.textContent = `Choose your exact locality below to load live environmental measurements and OpenStreetMap view:`;
+          try { localStorage.setItem('nf_last_location', q.trim()); } catch {}
+
+          if (data.cityEcosystem) {
+            syncCityToWqi(q.trim(), data.cityEcosystem);
+          }
 
           data.postOffices.forEach((office, index) => {
             const btn = document.createElement('button');
@@ -4092,7 +5109,10 @@
               <span class="office-pin">${pin}</span>
             `;
 
-            btn.addEventListener('click', () => selectOffice(office, btn, data.coordinates));
+            btn.addEventListener('click', () => {
+              try { localStorage.setItem('nf_last_location', pin); } catch {}
+              selectOffice(office, btn, data.coordinates);
+            });
             officeList.appendChild(btn);
 
             if (index === 0) {

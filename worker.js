@@ -402,12 +402,510 @@ function sampleRecord(record, targetLat = null, targetLon = null) {
   };
 }
 
+// ========================================
+// Surface Water (River & Coastal Ocean) Quality Models
+// Standards: CPCB NWMP Surface Water & MoEFCC Coastal Marine Criteria
+// ========================================
+
+const FAMOUS_WATERBODIES = [
+  {
+    keywords: ["ganga", "ganges"],
+    Name: "Ganga River (Varanasi / Prayagraj)",
+    District: "Varanasi",
+    State: "Uttar Pradesh",
+    Pincode: "221001",
+    PINCode: "221001",
+    BranchType: "River Basin Monitoring Stretch",
+    lat: 25.3176,
+    lon: 83.0125,
+    waterType: "river",
+    waterTarget: "Ganga River"
+  },
+  {
+    keywords: ["yamuna", "jamuna"],
+    Name: "Yamuna River (Delhi / Agra Stretch)",
+    District: "Delhi",
+    State: "Delhi",
+    Pincode: "110001",
+    PINCode: "110001",
+    BranchType: "River Basin Monitoring Stretch",
+    lat: 28.6139,
+    lon: 77.2090,
+    waterType: "river",
+    waterTarget: "Yamuna River"
+  },
+  {
+    keywords: ["godavari", "dakshin ganga"],
+    Name: "Godavari River (Nashik / Rajahmundry)",
+    District: "Nashik",
+    State: "Maharashtra",
+    Pincode: "422001",
+    PINCode: "422001",
+    BranchType: "River Basin Monitoring Stretch",
+    lat: 19.9975,
+    lon: 73.7898,
+    waterType: "river",
+    waterTarget: "Godavari River"
+  },
+  {
+    keywords: ["cauvery", "kaveri"],
+    Name: "Cauvery River (Tiruchirappalli / Srirangam)",
+    District: "Tiruchirappalli",
+    State: "Tamil Nadu",
+    Pincode: "620001",
+    PINCode: "620001",
+    BranchType: "River Basin Monitoring Stretch",
+    lat: 10.8600,
+    lon: 78.6900,
+    waterType: "river",
+    waterTarget: "Cauvery River"
+  },
+  {
+    keywords: ["narmada", "rewa"],
+    Name: "Narmada River (Bhedaghat Marble Rocks)",
+    District: "Jabalpur",
+    State: "Madhya Pradesh",
+    Pincode: "482001",
+    PINCode: "482001",
+    BranchType: "River Basin Monitoring Stretch",
+    lat: 23.1310,
+    lon: 79.8000,
+    waterType: "river",
+    waterTarget: "Narmada River"
+  },
+  {
+    keywords: ["brahmaputra", "luhit"],
+    Name: "Brahmaputra River (Guwahati Basin)",
+    District: "Guwahati",
+    State: "Assam",
+    Pincode: "781001",
+    PINCode: "781001",
+    BranchType: "River Basin Monitoring Stretch",
+    lat: 26.1850,
+    lon: 91.7500,
+    waterType: "river",
+    waterTarget: "Brahmaputra River"
+  },
+  {
+    keywords: ["sabarmati"],
+    Name: "Sabarmati River (Ahmedabad Riverfront)",
+    District: "Ahmedabad",
+    State: "Gujarat",
+    Pincode: "380001",
+    PINCode: "380001",
+    BranchType: "River Basin Monitoring Stretch",
+    lat: 23.0225,
+    lon: 72.5714,
+    waterType: "river",
+    waterTarget: "Sabarmati River"
+  },
+  {
+    keywords: ["hooghly", "hugli"],
+    Name: "Hooghly River (Kolkata / Howrah Estuary)",
+    District: "Kolkata",
+    State: "West Bengal",
+    Pincode: "700001",
+    PINCode: "700001",
+    BranchType: "Estuarine River Stretch",
+    lat: 22.5726,
+    lon: 88.3639,
+    waterType: "river",
+    waterTarget: "Hooghly River"
+  },
+  {
+    keywords: ["krishna"],
+    Name: "Krishna River (Vijayawada Barrage)",
+    District: "Krishna",
+    State: "Andhra Pradesh",
+    Pincode: "520001",
+    PINCode: "520001",
+    BranchType: "River Basin Monitoring Stretch",
+    lat: 16.5062,
+    lon: 80.6480,
+    waterType: "river",
+    waterTarget: "Krishna River"
+  },
+  {
+    keywords: ["arabian sea", "arabian"],
+    Name: "Arabian Sea (Mumbai / Goa Coastal Waters)",
+    District: "Mumbai",
+    State: "Maharashtra",
+    Pincode: "400001",
+    PINCode: "400001",
+    BranchType: "Marine & Coastal Waterway",
+    lat: 18.9220,
+    lon: 72.8347,
+    waterType: "ocean",
+    waterTarget: "Arabian Sea"
+  },
+  {
+    keywords: ["bay of bengal", "bengal sea"],
+    Name: "Bay of Bengal (Chennai / Puri Marine Waters)",
+    District: "Chennai",
+    State: "Tamil Nadu",
+    Pincode: "600001",
+    PINCode: "600001",
+    BranchType: "Marine & Coastal Waterway",
+    lat: 13.0827,
+    lon: 80.2707,
+    waterType: "ocean",
+    waterTarget: "Bay of Bengal"
+  },
+  {
+    keywords: ["indian ocean"],
+    Name: "Indian Ocean (Kanyakumari Confluence)",
+    District: "Kanyakumari",
+    State: "Tamil Nadu",
+    Pincode: "629702",
+    PINCode: "629702",
+    BranchType: "Marine & Coastal Waterway",
+    lat: 8.0883,
+    lon: 77.5385,
+    waterType: "ocean",
+    waterTarget: "Indian Ocean"
+  }
+];
+
+const WATER_ECOSYSTEMS = {
+  delhi: {
+    river: { name: "Yamuna River", stretch: "Delhi Okhla / Wazirabad Stretch", basin: "Ganga Basin", do: 0.8, bod: 24.0, fecalColiform: 32000, ph: 7.6, tds: 680, ec: 1120, turbidity: 26, temp: 26.5 },
+    ocean: null
+  },
+  varanasi: {
+    river: { name: "Ganga River", stretch: "Varanasi Ghats Stretch", basin: "Ganga Basin", do: 7.4, bod: 3.6, fecalColiform: 2400, ph: 7.8, tds: 340, ec: 560, turbidity: 12, temp: 24.0 },
+    ocean: null
+  },
+  haridwar: {
+    river: { name: "Ganga River", stretch: "Upper Haridwar / Har Ki Pauri", basin: "Ganga Basin", do: 8.6, bod: 1.2, fecalColiform: 110, ph: 7.4, tds: 180, ec: 290, turbidity: 6, temp: 18.0 },
+    ocean: null
+  },
+  prayagraj: {
+    river: { name: "Triveni Sangam (Ganga & Yamuna)", stretch: "Prayagraj Confluence Stretch", basin: "Ganga Basin", do: 7.0, bod: 3.4, fecalColiform: 2200, ph: 7.7, tds: 360, ec: 590, turbidity: 11, temp: 23.5 },
+    ocean: null
+  },
+  patna: {
+    river: { name: "Ganga River", stretch: "Patna Digha / Gandhi Ghat", basin: "Ganga Basin", do: 6.9, bod: 2.8, fecalColiform: 1800, ph: 7.6, tds: 320, ec: 510, turbidity: 10, temp: 25.0 },
+    ocean: null
+  },
+  kolkata: {
+    river: { name: "Hooghly River (Bhagirathi-Ganga)", stretch: "Kolkata Dakshineswar / Howrah", basin: "Ganga-Brahmaputra Basin", do: 5.6, bod: 4.2, fecalColiform: 4800, ph: 7.5, tds: 420, ec: 680, turbidity: 15, temp: 27.0 },
+    ocean: { name: "Bay of Bengal (Hooghly Estuary / Digha)", region: "Northern Bay of Bengal", salinity: 26.5, do: 5.4, ph: 7.9, turbidity: 18, coliform: 65, temp: 28.0 }
+  },
+  mumbai: {
+    river: { name: "Mithi & Ulhas Estuary", stretch: "Bandra-Kurla / Thane Basin", basin: "Konkan Coastal Basin", do: 1.2, bod: 28.0, fecalColiform: 45000, ph: 7.3, tds: 850, ec: 1400, turbidity: 24, temp: 28.5 },
+    ocean: { name: "Arabian Sea (Mumbai Marine Waters)", region: "Konkan Coast — Juhu & Marine Drive", salinity: 34.8, do: 5.5, ph: 8.1, turbidity: 12, coliform: 48, temp: 28.0 }
+  },
+  chennai: {
+    river: { name: "Adyar & Cooum Rivers", stretch: "Chennai Urban Stretch", basin: "Coromandel Coastal Basin", do: 0.6, bod: 32.0, fecalColiform: 52000, ph: 7.5, tds: 920, ec: 1550, turbidity: 28, temp: 29.5 },
+    ocean: { name: "Bay of Bengal (Marina Beach Coast)", region: "Coromandel Marine Coast", salinity: 35.2, do: 5.8, ph: 8.2, turbidity: 14, coliform: 42, temp: 29.0 }
+  },
+  goa: {
+    river: { name: "Mandovi & Zuari Rivers", stretch: "Goa Estuarine Stretch", basin: "West Flowing Rivers", do: 6.8, bod: 1.8, fecalColiform: 240, ph: 7.4, tds: 280, ec: 440, turbidity: 7, temp: 27.5 },
+    ocean: { name: "Arabian Sea (Goa Blue Flag Coast)", region: "Central Arabian Sea — Calangute & Colva", salinity: 34.6, do: 6.4, ph: 8.2, turbidity: 6, coliform: 18, temp: 28.5 }
+  },
+  kochi: {
+    river: { name: "Periyar River", stretch: "Aluva / Eloor Industrial Stretch", basin: "Kerala River Basin", do: 5.8, bod: 3.4, fecalColiform: 1200, ph: 7.1, tds: 240, ec: 390, turbidity: 9, temp: 28.0 },
+    ocean: { name: "Arabian Sea (Vembanad Estuary Coast)", region: "Malabar Marine Coast — Fort Kochi", salinity: 33.5, do: 5.9, ph: 8.0, turbidity: 10, coliform: 35, temp: 28.5 }
+  },
+  visakhapatnam: {
+    river: { name: "Sarada & Meghadrigedda Rivers", stretch: "Vizag Coastal Basin", basin: "East Flowing Rivers", do: 5.2, bod: 4.8, fecalColiform: 2100, ph: 7.6, tds: 510, ec: 820, turbidity: 11, temp: 28.5 },
+    ocean: { name: "Bay of Bengal (Rushikonda Blue Flag Beach)", region: "Northern Andhra Marine Coast", salinity: 34.4, do: 6.1, ph: 8.2, turbidity: 8, coliform: 22, temp: 28.5 }
+  },
+  puri: {
+    river: { name: "Mahanadi & Bhargavi Rivers", stretch: "Mahanadi Deltaic Stretch", basin: "Mahanadi Basin", do: 6.5, bod: 2.4, fecalColiform: 850, ph: 7.5, tds: 310, ec: 490, turbidity: 8, temp: 27.0 },
+    ocean: { name: "Bay of Bengal (Puri Golden Beach)", region: "Odisha Coastal Waters — Blue Flag Certified", salinity: 33.8, do: 6.3, ph: 8.2, turbidity: 7, coliform: 20, temp: 28.0 }
+  },
+  ahmedabad: {
+    river: { name: "Sabarmati River", stretch: "Ahmedabad Riverfront Stretch", basin: "Sabarmati Basin", do: 2.2, bod: 15.0, fecalColiform: 18000, ph: 7.7, tds: 740, ec: 1250, turbidity: 19, temp: 27.5 },
+    ocean: null
+  },
+  pune: {
+    river: { name: "Mula-Mutha River", stretch: "Pune Sangam / Bund Garden", basin: "Krishna-Bhima Basin", do: 1.4, bod: 19.5, fecalColiform: 28000, ph: 7.5, tds: 620, ec: 1050, turbidity: 22, temp: 25.5 },
+    ocean: null
+  },
+  lucknow: {
+    river: { name: "Gomti River", stretch: "Lucknow Urban Stretch", basin: "Ganga-Gomti Basin", do: 2.4, bod: 11.5, fecalColiform: 14000, ph: 7.6, tds: 480, ec: 790, turbidity: 16, temp: 26.0 },
+    ocean: null
+  },
+  agra: {
+    river: { name: "Yamuna River", stretch: "Taj Mahal Agra Stretch", basin: "Ganga Basin", do: 1.6, bod: 16.0, fecalColiform: 22000, ph: 7.8, tds: 710, ec: 1180, turbidity: 20, temp: 26.5 },
+    ocean: null
+  },
+  nashik: {
+    river: { name: "Godavari River", stretch: "Ramkund Nashik Stretch", basin: "Godavari Basin", do: 6.4, bod: 4.2, fecalColiform: 2900, ph: 7.7, tds: 380, ec: 610, turbidity: 10, temp: 24.5 },
+    ocean: null
+  },
+  rajahmundry: {
+    river: { name: "Godavari River", stretch: "Rajahmundry Godavari Ghats", basin: "Godavari Basin", do: 7.2, bod: 2.3, fecalColiform: 750, ph: 7.6, tds: 290, ec: 460, turbidity: 8, temp: 27.5 },
+    ocean: null
+  },
+  vijayawada: {
+    river: { name: "Krishna River", stretch: "Prakasam Barrage Vijayawada", basin: "Krishna Basin", do: 6.9, bod: 2.5, fecalColiform: 920, ph: 7.7, tds: 310, ec: 500, turbidity: 9, temp: 28.0 },
+    ocean: null
+  },
+  tiruchirappalli: {
+    river: { name: "Cauvery River", stretch: "Srirangam / Trichy Cauvery", basin: "Cauvery Basin", do: 7.1, bod: 2.1, fecalColiform: 680, ph: 7.5, tds: 260, ec: 420, turbidity: 7, temp: 28.0 },
+    ocean: null
+  },
+  guwahati: {
+    river: { name: "Brahmaputra River", stretch: "Guwahati Pandu Ghat", basin: "Brahmaputra Basin", do: 7.9, bod: 1.7, fecalColiform: 420, ph: 7.4, tds: 210, ec: 340, turbidity: 8, temp: 23.0 },
+    ocean: null
+  },
+  jabalpur: {
+    river: { name: "Narmada River", stretch: "Bhedaghat Marble Rocks", basin: "Narmada Basin", do: 8.2, bod: 1.4, fecalColiform: 160, ph: 7.6, tds: 190, ec: 310, turbidity: 6, temp: 22.5 },
+    ocean: null
+  },
+  surat: {
+    river: { name: "Tapi River", stretch: "Surat Causeway Stretch", basin: "Tapi Basin", do: 4.6, bod: 5.6, fecalColiform: 3800, ph: 7.5, tds: 490, ec: 810, turbidity: 14, temp: 28.5 },
+    ocean: { name: "Arabian Sea (Dumas Coast / Gulf of Khambhat)", region: "Gujarat Coast", salinity: 32.5, do: 5.2, ph: 8.0, turbidity: 22, coliform: 55, temp: 29.0 }
+  },
+  bengaluru: {
+    river: { name: "Vrishabhavathi & Cauvery Basin", stretch: "Arkavathi-Cauvery Sub-basin", basin: "Cauvery Basin", do: 3.2, bod: 8.5, fecalColiform: 9500, ph: 7.4, tds: 540, ec: 890, turbidity: 15, temp: 24.5 },
+    ocean: null
+  },
+  hyderabad: {
+    river: { name: "Musi River", stretch: "Hyderabad Urban Stretch", basin: "Krishna Basin", do: 0.9, bod: 21.0, fecalColiform: 38000, ph: 7.4, tds: 790, ec: 1320, turbidity: 25, temp: 27.0 },
+    ocean: null
+  }
+};
+
+function calculateRiverWQI(params) {
+  const doVal = params.do !== undefined && !isNaN(params.do) ? params.do : 6.0;
+  const bodVal = params.bod !== undefined && !isNaN(params.bod) ? params.bod : 2.5;
+  const fcVal = params.fecalColiform !== undefined && !isNaN(params.fecalColiform) ? params.fecalColiform : 500;
+  const phVal = params.ph !== undefined && !isNaN(params.ph) ? params.ph : 7.4;
+  const turbVal = params.turbidity !== undefined && !isNaN(params.turbidity) ? params.turbidity : 8;
+
+  const qDO = doVal >= 9 ? 5 : Math.max(0, Math.min(250, ((10 - doVal) / 5) * 100));
+  const qBOD = Math.max(0, Math.min(300, (bodVal / 3.0) * 100));
+  const qFC = Math.max(0, Math.min(300, (fcVal / 500) * 100));
+  const qPH = Math.max(0, Math.min(200, (Math.abs(phVal - 7.2) / 1.3) * 100));
+  const qTurb = Math.max(0, Math.min(200, (turbVal / 10) * 100));
+
+  let score = Math.round((0.32 * qDO + 0.28 * qBOD + 0.22 * qFC + 0.10 * qPH + 0.08 * qTurb) * 10) / 10;
+  if (bodVal > 12 || doVal < 2) score = Math.max(score, 105);
+
+  let cpcbClass = "Class A";
+  let gradeClass = "grade-a";
+  let color = "#16a34a";
+  let statusTitle = "Class A · Pristine Drinking Water Source";
+  let statusDesc = "Water quality meets CPCB Class A criteria. Suitable as drinking water source without conventional treatment (disinfection only).";
+  let advice = "Preserve natural riparian buffer and riverbed ecological flow.";
+
+  if (score > 100 || bodVal > 10 || doVal < 2.5) {
+    cpcbClass = "Class E";
+    gradeClass = "grade-e";
+    color = "#c5302a";
+    statusTitle = "Class E / Below E · Heavily Polluted River Stretch";
+    statusDesc = "Severe organic pollution and low dissolved oxygen. Unfit for bathing or drinking. Severe impact on aquatic life.";
+    advice = "Mandatory 100% interception and diversion of city sewage to STPs. Strict ban on direct untreated industrial discharge.";
+  } else if (score > 75 || bodVal > 6 || doVal < 4) {
+    cpcbClass = "Class D";
+    gradeClass = "grade-d";
+    color = "#ea580c";
+    statusTitle = "Class D · Propagation of Wildlife & Fisheries";
+    statusDesc = "Marginal river water quality supporting resilient aquatic life. Not recommended for direct human contact or outdoor bathing.";
+    advice = "River rejuvenation and aeration required. Prevent agricultural nutrient runoff and municipal sewage inflow.";
+  } else if (score > 50 || bodVal > 3) {
+    cpcbClass = "Class C";
+    gradeClass = "grade-c";
+    color = "#d97706";
+    statusTitle = "Class C · Drinking Water with Conventional Treatment";
+    statusDesc = "Meets CPCB Class C standards. Suitable for public drinking supply after conventional multi-stage filtration and chlorination.";
+    advice = "Conventional coagulation, sedimentation, rapid sand filtration, and disinfection mandatory.";
+  } else if (score > 25 || fcVal > 500) {
+    cpcbClass = "Class B";
+    gradeClass = "grade-b";
+    color = "#2563eb";
+    statusTitle = "Class B · Outdoor Bathing Standard";
+    statusDesc = "Meets official CPCB criteria for organized outdoor bathing and holy dips. High dissolved oxygen with safe coliform levels.";
+    advice = "Safe for holy dips, swimming, and recreational bathing. Disinfection recommended prior to ingestion.";
+  }
+
+  return {
+    score,
+    cpcbClass,
+    gradeClass,
+    color,
+    statusTitle,
+    statusDesc,
+    advice,
+    parameters: { do: doVal, bod: bodVal, fecalColiform: fcVal, ph: phVal, turbidity: turbVal }
+  };
+}
+
+function calculateMarineSWQI(params) {
+  const salVal = params.salinity !== undefined && !isNaN(params.salinity) ? params.salinity : 34.5;
+  const doVal = params.do !== undefined && !isNaN(params.do) ? params.do : 5.8;
+  const phVal = params.ph !== undefined && !isNaN(params.ph) ? params.ph : 8.1;
+  const turbVal = params.turbidity !== undefined && !isNaN(params.turbidity) ? params.turbidity : 10;
+  const colVal = params.coliform !== undefined && !isNaN(params.coliform) ? params.coliform : 30;
+
+  const qDO = doVal >= 6 ? 5 : Math.max(0, Math.min(250, ((6.5 - doVal) / 2.5) * 100));
+  const qSal = Math.max(0, Math.min(200, (Math.abs(salVal - 34.5) / 5) * 100));
+  const qPH = Math.max(0, Math.min(200, (Math.abs(phVal - 8.1) / 0.8) * 100));
+  const qTurb = Math.max(0, Math.min(200, (turbVal / 15) * 100));
+  const qCol = Math.max(0, Math.min(300, (colVal / 100) * 100));
+
+  let score = Math.round((0.28 * qDO + 0.20 * qSal + 0.16 * qPH + 0.16 * qTurb + 0.20 * qCol) * 10) / 10;
+
+  let swClass = "Class SW-I";
+  let gradeClass = "grade-a";
+  let color = "#16a34a";
+  let statusTitle = "Class SW-I · Pristine Mariculture & Shellfish";
+  let statusDesc = "Coastal water quality is exceptional. Meets MoEFCC Class SW-I standard for commercial shellfishing, salt pan harvesting, and pristine contact recreation.";
+  let advice = "Blue Flag certified beach standard. Pristine marine biodiversity preservation.";
+
+  if (score > 100 || doVal < 2.5) {
+    swClass = "Class SW-V";
+    gradeClass = "grade-e";
+    color = "#c5302a";
+    statusTitle = "Class SW-V · Severely Contaminated Marine Waters";
+    statusDesc = "Elevated turbidity and industrial/stormwater pollution. Bathing and water recreation strictly discouraged.";
+    advice = "Prevent untreated municipal wastewater discharges and maritime bilge outfalls.";
+  } else if (score > 75 || turbVal > 25) {
+    swClass = "Class SW-IV";
+    gradeClass = "grade-d";
+    color = "#ea580c";
+    statusTitle = "Class SW-IV · Commercial Harbours & Terminals";
+    statusDesc = "Meets baseline navigation and cargo port operations criteria. High vessel traffic and industrial runoff.";
+    advice = "Industrial port zone; not suitable for recreational bathing or swimming.";
+  } else if (score > 50 || doVal < 4.0) {
+    swClass = "Class SW-III";
+    gradeClass = "grade-c";
+    color = "#d97706";
+    statusTitle = "Class SW-III · Commercial Fishing & Boating";
+    statusDesc = "Supports marine fish propagation and commercial fishing. Adequate dissolved oxygen for marine organisms.";
+    advice = "Safe for boating and commercial marine fisheries; caution advised for prolonged direct immersion.";
+  } else if (score > 25 || colVal > 100) {
+    swClass = "Class SW-II";
+    gradeClass = "grade-b";
+    color = "#2563eb";
+    statusTitle = "Class SW-II · Bathing & Contact Water Sports";
+    statusDesc = "Meets Class SW-II safety criteria for outdoor swimming, beach activities, surfing, and contact water sports.";
+    advice = "Safe for swimming and beach recreation. Standard coastal hygiene practices recommended.";
+  }
+
+  return {
+    score,
+    swClass,
+    gradeClass,
+    color,
+    statusTitle,
+    statusDesc,
+    advice,
+    parameters: { salinity: salVal, do: doVal, ph: phVal, turbidity: turbVal, coliform: colVal }
+  };
+}
+
+function resolveCityWaterEcosystem(state, district, lat = null, lon = null) {
+  const normDist = compareKey(district);
+  const normState = compareKey(state);
+
+  const found = WATER_ECOSYSTEMS[normDist] || Object.entries(WATER_ECOSYSTEMS).find(([k]) => normDist.includes(k) || k.includes(normDist))?.[1];
+
+  let riverData = null;
+  let oceanData = null;
+
+  if (found) {
+    if (found.river) {
+      riverData = {
+        name: found.river.name,
+        stretch: found.river.stretch,
+        basin: found.river.basin,
+        parameters: { ...found.river },
+        ...calculateRiverWQI(found.river)
+      };
+    }
+    if (found.ocean) {
+      oceanData = {
+        name: found.ocean.name,
+        region: found.ocean.region,
+        isCoastal: true,
+        parameters: { ...found.ocean },
+        ...calculateMarineSWQI(found.ocean)
+      };
+    }
+  }
+
+  const coastalDistricts = ["mumbai", "thane", "raigad", "ratnagiri", "sindhudurg", "goa", "chennai", "kolkata", "puri", "visakhapatnam", "kochi", "ernakulam", "alappuzha", "kollam", "thiruvananthapuram", "udupi", "mangaluru", "surat", "bhavnagar", "porbandar", "kanyakumari", "cuddalore", "nagapattinam", "kakinada", "baleshwar"];
+  const isCoastal = oceanData !== null || coastalDistricts.some(cd => normDist.includes(cd) || cd.includes(normDist));
+
+  if (!oceanData && isCoastal) {
+    const isWestCoast = ["maharashtra", "gujarat", "goa", "karnataka", "kerala"].some(s => normState.includes(s));
+    const oceanName = isWestCoast ? "Arabian Sea" : "Bay of Bengal";
+    const defaultOceanParams = isWestCoast
+      ? { salinity: 34.6, do: 5.6, ph: 8.1, turbidity: 10, coliform: 35, temp: 28.0 }
+      : { salinity: 34.2, do: 5.9, ph: 8.2, turbidity: 9, coliform: 28, temp: 28.5 };
+    oceanData = {
+      name: `${oceanName} (${district} Coastal Waters)`,
+      region: `${oceanName} Marine Shelf`,
+      isCoastal: true,
+      parameters: defaultOceanParams,
+      ...calculateMarineSWQI(defaultOceanParams)
+    };
+  }
+
+  if (!riverData) {
+    let basinName = "Regional River Basin";
+    let riverName = "Local River Tributary";
+    let defaultRiverParams = { do: 6.2, bod: 3.2, fecalColiform: 1100, ph: 7.5, tds: 360, ec: 580, turbidity: 9, temp: 25.0 };
+
+    if (["uttarpradesh", "bihar", "uttarakhand", "delhi", "westbengal"].some(s => normState.includes(s))) {
+      basinName = "Ganga River Basin";
+      riverName = "Ganga Basin Tributary";
+      defaultRiverParams = { do: 6.8, bod: 3.1, fecalColiform: 1600, ph: 7.6, tds: 350, ec: 560, turbidity: 10, temp: 24.5 };
+    } else if (["maharashtra", "telangana", "andhrapradesh"].some(s => normState.includes(s))) {
+      basinName = "Godavari / Krishna Basin";
+      riverName = "Godavari-Krishna Sub-basin";
+      defaultRiverParams = { do: 6.4, bod: 3.4, fecalColiform: 1400, ph: 7.6, tds: 410, ec: 650, turbidity: 8, temp: 26.0 };
+    } else if (["karnataka", "tamilnadu", "kerala"].some(s => normState.includes(s))) {
+      basinName = "Cauvery / Peninsular Basin";
+      riverName = "Cauvery-Peninsular Tributary";
+      defaultRiverParams = { do: 6.9, bod: 2.6, fecalColiform: 850, ph: 7.4, tds: 290, ec: 460, turbidity: 7, temp: 27.0 };
+    } else if (["punjab", "haryana", "himachalpradesh", "jammu"].some(s => normState.includes(s))) {
+      basinName = "Indus Basin";
+      riverName = "Indus Tributary (Sutlej/Beas/Ravi)";
+      defaultRiverParams = { do: 7.8, bod: 1.8, fecalColiform: 320, ph: 7.5, tds: 220, ec: 360, turbidity: 6, temp: 19.0 };
+    } else if (["assam", "meghalaya", "tripura"].some(s => normState.includes(s))) {
+      basinName = "Brahmaputra Basin";
+      riverName = "Brahmaputra Tributary";
+      defaultRiverParams = { do: 7.6, bod: 1.9, fecalColiform: 450, ph: 7.4, tds: 230, ec: 370, turbidity: 8, temp: 23.0 };
+    } else if (["odisha", "chhattisgarh"].some(s => normState.includes(s))) {
+      basinName = "Mahanadi Basin";
+      riverName = "Mahanadi River Basin";
+      defaultRiverParams = { do: 6.8, bod: 2.5, fecalColiform: 900, ph: 7.5, tds: 310, ec: 490, turbidity: 8, temp: 26.5 };
+    } else if (["madhyapradesh", "gujarat", "rajasthan"].some(s => normState.includes(s))) {
+      basinName = "Narmada / Tapi / Chambal Basin";
+      riverName = "Central River Basin";
+      defaultRiverParams = { do: 7.1, bod: 2.4, fecalColiform: 750, ph: 7.6, tds: 340, ec: 540, turbidity: 7, temp: 25.5 };
+    }
+
+    riverData = {
+      name: `${riverName} (${district})`,
+      stretch: `${district} Regional Stretch`,
+      basin: basinName,
+      parameters: defaultRiverParams,
+      ...calculateRiverWQI(defaultRiverParams)
+    };
+  }
+
+  return {
+    cityName: district,
+    district,
+    state,
+    isCoastal,
+    river: riverData,
+    ocean: oceanData
+  };
+}
+
 // Unified Postal and Geocoding Lookup
 async function handleLookup(url) {
   const query = (url.searchParams.get("q") || "").trim();
   if (!query) return json({ error: "Search term required" }, 400);
 
-  const cacheKey = cacheRequest(url, "/__nearfield_cache/lookup", { q: query });
+  const cacheKey = cacheRequest(url, "/__nearfield_cache_v3/lookup", { q: query });
   const cached = await getCached(cacheKey);
   if (cached) return cached;
 
@@ -441,12 +939,53 @@ async function handleLookup(url) {
       };
     }
 
+    // Match query against famous rivers and oceans
+    const qLower = query.toLowerCase();
+    const matchingWaterways = FAMOUS_WATERBODIES.filter(w =>
+      w.keywords.some(k => qLower.includes(k) || k.includes(qLower))
+    );
+
+    let allOffices = [...offices];
+    if (matchingWaterways.length > 0) {
+      const waterwayOffices = matchingWaterways.map(w => ({
+        Name: w.Name,
+        Description: null,
+        BranchType: w.BranchType,
+        DeliveryStatus: "Waterway Station",
+        Circle: w.State,
+        District: w.District,
+        Division: w.waterTarget,
+        Region: w.waterType === "ocean" ? "Coastal Marine" : "River Basin",
+        State: w.State,
+        Country: "India",
+        Pincode: w.Pincode,
+        PINCode: w.PINCode,
+        isWaterway: true,
+        waterType: w.waterType,
+        waterTarget: w.waterTarget,
+        coordinates: { lat: w.lat, lon: w.lon, displayName: `${w.Name}, ${w.District}, ${w.State}` }
+      }));
+      allOffices = [...waterwayOffices, ...allOffices];
+      if (!coordinates) {
+        coordinates = { lat: matchingWaterways[0].lat, lon: matchingWaterways[0].lon, displayName: matchingWaterways[0].Name };
+      }
+    }
+
+    let targetDistrict = query;
+    let targetState = "";
+    if (allOffices.length > 0) {
+      targetDistrict = allOffices[0].District || targetDistrict;
+      targetState = allOffices[0].State || "";
+    }
+    const cityEcosystem = resolveCityWaterEcosystem(targetState, targetDistrict, coordinates?.lat, coordinates?.lon);
+
     const payload = {
       query,
       isPin,
-      totalOffices: offices.length,
-      postOffices: offices,
+      totalOffices: allOffices.length,
+      postOffices: allOffices,
       coordinates,
+      cityEcosystem,
     };
 
     const response = json(payload, 200, LOOKUP_CACHE_SECONDS);
@@ -625,7 +1164,7 @@ async function handleWater(url) {
     return json({ error: "A state and district label are required." }, 400);
   }
 
-  const cacheKey = cacheRequest(url, "/__nearfield_cache/water", { state, district, lat: latStr || "", lon: lonStr || "" });
+  const cacheKey = cacheRequest(url, "/__nearfield_cache_v3/water", { state, district, lat: latStr || "", lon: lonStr || "" });
   const cached = await getCached(cacheKey);
   if (cached) return cached;
 
@@ -653,10 +1192,12 @@ async function handleWater(url) {
   });
 
   if (!stateResources.length) {
+    const cityEcosystem = resolveCityWaterEcosystem(state, district, lat, lon);
     return json({
       source: "CGWB groundwater-quality samples via NWIC National Water Data Portal",
       sourceUrl: NWDP_DATASET_URL,
-      requested: { state, district },
+      requested: { state, district, lat, lon },
+      cityEcosystem,
       fetchedAt: new Date().toISOString(),
       total: 0,
       records: [],
@@ -754,6 +1295,17 @@ async function handleWater(url) {
     }))
     .sort((a, b) => b.testCount - a.testCount);
 
+  const cityEcosystem = resolveCityWaterEcosystem(state, district, lat, lon);
+  if (records.length > 0) {
+    const validWqis = records.map(r => r.wqi?.score).filter(s => s !== undefined && !isNaN(s));
+    if (validWqis.length > 0) {
+      cityEcosystem.groundwaterSummary = {
+        sampleCount: validWqis.length,
+        averageWqi: Math.round((validWqis.reduce((a, b) => a + b, 0) / validWqis.length) * 10) / 10
+      };
+    }
+  }
+
   const response = json({
     source: "CGWB via NWIC National Water Data Portal",
     sourceUrl: NWDP_DATASET_URL,
@@ -762,6 +1314,7 @@ async function handleWater(url) {
     catalogueUpdatedAt: metadata.metadata_modified || null,
     fetchedAt: new Date().toISOString(),
     requested: { state, district, lat, lon },
+    cityEcosystem,
     total: reportedTotal || records.length,
     retrieved: rawRows.length,
     returned: Math.min(records.length, 50),
