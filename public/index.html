@@ -1423,6 +1423,555 @@
     [data-theme="dark"] .cigarette-card.safe-air .proj-val { color: var(--green); }
     .proj-sub { display: block; font-size: 10.5px; color: var(--muted); margin-top: 2px; }
 
+    /* ============ CIGARETTE CALCULATOR BAR & CONVERTER TABLE ============ */
+    .cig-calculator-bar {
+      margin-bottom: 24px;
+      padding: 18px 20px;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+    }
+    .cig-calc-input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .cig-calc-lbl {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .cig-input-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .cig-input {
+      flex: 1;
+      min-width: 140px;
+      padding: 10px 14px;
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+      background: var(--surface);
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      outline: none;
+      transition: all var(--dur-fast) ease;
+    }
+    .cig-input:focus {
+      border-color: var(--green);
+      box-shadow: var(--shadow-focus);
+    }
+    .cig-calc-action-btn {
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      background: var(--green);
+      border: none;
+      border-radius: 12px;
+      transition: all var(--dur-fast) ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .cig-calc-action-btn:hover {
+      background: var(--green-mid);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(46,107,69,.25);
+    }
+    .cig-sync-btn {
+      padding: 10px 14px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink-soft);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all var(--dur-fast) ease;
+    }
+    .cig-sync-btn:hover {
+      color: var(--ink);
+      border-color: var(--green);
+      background: var(--mint);
+    }
+    .cig-presets-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding-top: 10px;
+      border-top: 1px solid var(--line-subtle);
+    }
+    .cig-presets-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .cig-preset-pill {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink-soft);
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--r-pill);
+      transition: all var(--dur-fast) ease;
+    }
+    .cig-preset-pill:hover, .cig-preset-pill.active {
+      border-color: var(--green);
+      color: var(--ink);
+      background: var(--mint);
+      font-weight: 700;
+    }
+
+    .cig-live-calc-box {
+      margin-top: 12px;
+      padding: 10px 14px;
+      background: var(--surface-3);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font-size: 12px;
+      color: var(--ink-soft);
+    }
+    .cig-live-calc-box strong { color: var(--ink); }
+    .cig-live-calc-formula {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--amber);
+    }
+
+    .cig-chart-box {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+    .cig-chart-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+    .cig-chart-head h5 {
+      font: 700 13px var(--font-display);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--ink);
+    }
+    .cig-chart-sub { font-size: 11px; color: var(--muted); }
+    .cig-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+    }
+    .cig-chart-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+      text-align: left;
+    }
+    .cig-chart-table th {
+      padding: 9px 14px;
+      background: var(--surface-2);
+      font-weight: 700;
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      border-bottom: 1px solid var(--line);
+    }
+    .cig-chart-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--line-subtle);
+      transition: background var(--dur-fast) ease;
+    }
+    .cig-chart-table tr.cig-row { cursor: pointer; }
+    .cig-chart-table tr.cig-row:hover { background: var(--mint); }
+    .cig-chart-table tr.cig-row.active { background: var(--mint-2); font-weight: 700; }
+    .mono-badge {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 12.5px;
+      color: var(--ink);
+    }
+    .sev-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .sev-moderate    { background: #fef3c7; color: #b45309; }
+    .sev-sensitive   { background: #fed7aa; color: #c2410c; }
+    .sev-harmful     { background: #fecdd3; color: #be123c; }
+    .sev-very-harmful{ background: #fecaca; color: #b91c1c; }
+    .sev-critical    { background: #fee2e2; color: #991b1b; }
+    [data-theme="dark"] .sev-moderate    { background: rgba(245,158,11,.18); color: #fbbf24; }
+    [data-theme="dark"] .sev-sensitive   { background: rgba(234,88,12,.18);  color: #fb923c; }
+    [data-theme="dark"] .sev-harmful     { background: rgba(225,29,72,.18);  color: #fb7185; }
+    [data-theme="dark"] .sev-very-harmful{ background: rgba(220,38,38,.18);  color: #f87171; }
+    [data-theme="dark"] .sev-critical    { background: rgba(185,28,28,.25);  color: #ef4444; }
+
+    /* ============ WATER QUALITY INDEX (WQI) CHECKER ============ */
+    .wqi-section {
+      padding: 40px 0 20px;
+    }
+    .wqi-bezel {
+      padding: 5px;
+      background: var(--surface-3);
+      border: 1px solid var(--line);
+      border-radius: calc(var(--r-xl) + 6px);
+      box-shadow: var(--shadow-lg);
+    }
+    .wqi-card {
+      background: var(--surface);
+      border-radius: var(--r-xl);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;
+    }
+    [data-theme="dark"] .wqi-card { box-shadow: none; }
+    .wqi-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .wqi-title-stack h3 {
+      font: 800 22px var(--font-display);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .wqi-title-stack p { font-size: 13px; color: var(--ink-soft); margin: 0; }
+    .wqi-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: var(--r-pill);
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--blue-bg);
+      color: var(--blue);
+      border: 1px solid rgba(30,100,120,.2);
+    }
+
+    .wqi-presets-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      padding: 12px 16px;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+    .wqi-presets-lbl {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .wqi-preset-btn {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 10px;
+      transition: all var(--dur-fast) ease;
+    }
+    .wqi-preset-btn:hover, .wqi-preset-btn.active {
+      border-color: var(--blue);
+      background: var(--blue-bg);
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .wqi-body-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .wqi-inputs-card {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      padding: 22px;
+    }
+    .wqi-inputs-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .wqi-inputs-head h4 {
+      font: 700 14px var(--font-display);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--ink);
+    }
+    .wqi-inputs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .wqi-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .wqi-field label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      justify-content: space-between;
+    }
+    .wqi-field label span.wqi-std-hint {
+      font-weight: 400;
+      color: var(--muted);
+      font-size: 10.5px;
+    }
+    .wqi-input-box {
+      display: flex;
+      align-items: center;
+      background: var(--surface);
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      padding: 0 10px;
+      transition: border-color var(--dur-fast) ease;
+    }
+    .wqi-input-box:focus-within {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(30,100,120,.15);
+    }
+    .wqi-num-input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      padding: 8px 0;
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .wqi-unit-tag {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .wqi-actions-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .wqi-calc-btn {
+      flex: 1;
+      padding: 10px 18px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      border-radius: 11px;
+      transition: all var(--dur-fast) ease;
+    }
+    .wqi-calc-btn:hover {
+      opacity: .92;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(30,100,120,.25);
+    }
+    .wqi-reset-btn {
+      padding: 10px 14px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-soft);
+      transition: all var(--dur-fast) ease;
+    }
+    .wqi-reset-btn:hover { color: var(--ink); border-color: var(--ink-soft); }
+
+    .wqi-analysis-card {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .wqi-score-banner {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .wqi-big-score {
+      font: 900 48px/1 var(--font-display);
+      letter-spacing: -2px;
+      color: var(--green);
+      transition: color .4s ease;
+    }
+    .wqi-status-stack { display: flex; flex-direction: column; gap: 4px; }
+    .wqi-grade-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: var(--r-pill);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      background: var(--mint);
+      color: var(--green);
+      border: 1px solid var(--mint-2);
+      width: fit-content;
+    }
+    .wqi-grade-pill.grade-a { background: #dcfce7; color: #15803d; border-color: #bbf7d0; }
+    .wqi-grade-pill.grade-b { background: #dbeafe; color: #1d4ed8; border-color: #bfdbfe; }
+    .wqi-grade-pill.grade-c { background: #fef3c7; color: #b45309; border-color: #fde68a; }
+    .wqi-grade-pill.grade-d { background: #ffedd5; color: #c2410c; border-color: #fed7aa; }
+    .wqi-grade-pill.grade-e { background: #fee2e2; color: #b91c1c; border-color: #fecaca; }
+    [data-theme="dark"] .wqi-grade-pill.grade-a { background: rgba(34,197,94,.18); color: #4ade80; border-color: rgba(34,197,94,.3); }
+    [data-theme="dark"] .wqi-grade-pill.grade-b { background: rgba(59,130,246,.18); color: #60a5fa; border-color: rgba(59,130,246,.3); }
+    [data-theme="dark"] .wqi-grade-pill.grade-c { background: rgba(245,158,11,.18); color: #fbbf24; border-color: rgba(245,158,11,.3); }
+    [data-theme="dark"] .wqi-grade-pill.grade-d { background: rgba(249,115,22,.18); color: #fb923c; border-color: rgba(249,115,22,.3); }
+    [data-theme="dark"] .wqi-grade-pill.grade-e { background: rgba(239,68,68,.18);  color: #f87171; border-color: rgba(239,68,68,.3); }
+
+    .wqi-status-title { font: 700 15px var(--font-display); color: var(--ink); }
+    .wqi-status-desc { font-size: 12.5px; line-height: 1.6; color: var(--ink-soft); }
+
+    .wqi-param-bars-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      padding: 12px 0;
+      border-top: 1px solid var(--line-subtle);
+      border-bottom: 1px solid var(--line-subtle);
+    }
+    .wqi-bar-item { display: flex; flex-direction: column; gap: 3px; }
+    .wqi-bar-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--ink-soft);
+    }
+    .wqi-bar-meta strong { color: var(--ink); font-family: var(--font-mono); }
+    .wqi-bar-track {
+      height: 5px;
+      background: var(--line);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .wqi-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: var(--green);
+      transition: width var(--dur-base) ease, background var(--dur-base) ease;
+    }
+    .wqi-bar-fill.normal { background: var(--green); }
+    .wqi-bar-fill.elevated { background: var(--amber); }
+    .wqi-bar-fill.danger { background: var(--danger); }
+
+    .wqi-recs-box { font-size: 12px; }
+    .wqi-recs-box strong { display: block; margin-bottom: 5px; color: var(--ink); }
+    .wqi-recs-box ul { padding-left: 16px; color: var(--ink-soft); line-height: 1.65; }
+
+    .wqi-scale-box {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+    .wqi-scale-box h5 {
+      font: 700 12.5px var(--font-display);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+      color: var(--ink);
+    }
+    .wqi-scale-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+    .wqi-scale-step {
+      padding: 8px;
+      border-radius: 10px;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      text-align: center;
+      font-size: 10.5px;
+    }
+    .wqi-scale-step strong { display: block; font-family: var(--font-mono); font-size: 12px; }
+    .wqi-scale-step span { display: block; color: var(--muted); margin-top: 2px; }
+
+    .water-wqi-badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: 10.5px;
+      font-weight: 700;
+      margin-left: 6px;
+    }
+    .water-wqi-badge.wqi-a { background: #dcfce7; color: #15803d; }
+    .water-wqi-badge.wqi-b { background: #dbeafe; color: #1d4ed8; }
+    .water-wqi-badge.wqi-c { background: #fef3c7; color: #b45309; }
+    .water-wqi-badge.wqi-d { background: #ffedd5; color: #c2410c; }
+    .water-wqi-badge.wqi-e { background: #fee2e2; color: #b91c1c; }
+    [data-theme="dark"] .water-wqi-badge.wqi-a { background: rgba(34,197,94,.2); color: #4ade80; }
+    [data-theme="dark"] .water-wqi-badge.wqi-b { background: rgba(59,130,246,.2); color: #60a5fa; }
+    [data-theme="dark"] .water-wqi-badge.wqi-c { background: rgba(245,158,11,.2); color: #fbbf24; }
+    [data-theme="dark"] .water-wqi-badge.wqi-d { background: rgba(249,115,22,.2); color: #fb923c; }
+    [data-theme="dark"] .water-wqi-badge.wqi-e { background: rgba(239,68,68,.2);  color: #f87171; }
+    .wqi-populate-btn {
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-left: 6px;
+      transition: all var(--dur-fast) ease;
+    }
+    .wqi-populate-btn:hover { background: var(--blue-bg); border-color: var(--blue); }
+
+    @media (max-width: 900px) {
+      .wqi-body-grid { grid-template-columns: 1fr; }
+      .wqi-scale-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
     /* ============ HISTORY SECTION ============ */
     .history-section {
       padding: 48px 0;
@@ -1626,6 +2175,7 @@
       </a>
       <nav class="nav-links" aria-label="Main navigation">
         <a href="#air-water">Air &amp; Water</a>
+        <a href="#wqi-section">Water WQI</a>
         <a href="#cigarette-section">Smoke Impact</a>
         <a href="#history-section">5-Year Trends</a>
         <a href="#standards-section">Standards</a>
@@ -1874,6 +2424,175 @@
       </div>
     </section>
 
+    <!-- Water Quality Index (WQI) Checker Section -->
+    <section class="wqi-section" id="wqi-section" aria-labelledby="wqi-heading">
+      <div class="wqi-bezel">
+        <div class="wqi-card">
+          <div class="wqi-card-head">
+            <div class="wqi-title-stack">
+              <span class="wqi-badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 3.2s6 6.4 6 11a6 6 0 0 1-12 0c0-4.6 6-11 6-11Z" stroke="currentColor" stroke-width="2"/><path d="M9 15.2a3 3 0 0 0 3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                BIS IS 10500:2012 Standard
+              </span>
+              <h3 id="wqi-heading">Water Quality Index (WQI) Checker</h3>
+              <p>Compute comprehensive potability ratings and chemical safety metrics using the official Weighted Arithmetic Index (WAWQI) method.</p>
+            </div>
+            <button type="button" class="wqi-calc-btn" id="wqi-load-borewell-btn" style="width:auto;padding:8px 16px;font-size:12px;">
+              📍 Load Nearest Borewell Data
+            </button>
+          </div>
+
+          <!-- Quick presets bar -->
+          <div class="wqi-presets-row" role="group" aria-label="Quick Water Presets">
+            <span class="wqi-presets-lbl">Quick Presets:</span>
+            <button type="button" class="wqi-preset-btn" data-preset="ro">RO Filtered (Pure)</button>
+            <button type="button" class="wqi-preset-btn active" data-preset="tap">Tap / Municipal</button>
+            <button type="button" class="wqi-preset-btn" data-preset="borewell">Standard Borewell</button>
+            <button type="button" class="wqi-preset-btn" data-preset="hard">Hard Groundwater</button>
+          </div>
+
+          <!-- Body Grid: Input parameters vs Analysis -->
+          <div class="wqi-body-grid">
+            <div class="wqi-inputs-card">
+              <div class="wqi-inputs-head">
+                <h4>Water Test Measurements</h4>
+                <span style="font-size:11px;color:var(--muted);">All units in mg/L unless stated</span>
+              </div>
+              <div class="wqi-inputs-grid">
+                <div class="wqi-field">
+                  <label for="wqi-tds">TDS (Total Solids) <span class="wqi-std-hint">Std: &lt; 500</span></label>
+                  <div class="wqi-input-box">
+                    <input type="number" id="wqi-tds" class="wqi-num-input" placeholder="260" min="0" max="10000" step="1">
+                    <span class="wqi-unit-tag">mg/L</span>
+                  </div>
+                </div>
+
+                <div class="wqi-field">
+                  <label for="wqi-ph">pH Value <span class="wqi-std-hint">Std: 6.5–8.5</span></label>
+                  <div class="wqi-input-box">
+                    <input type="number" id="wqi-ph" class="wqi-num-input" placeholder="7.4" min="0" max="14" step="0.1">
+                    <span class="wqi-unit-tag">pH</span>
+                  </div>
+                </div>
+
+                <div class="wqi-field">
+                  <label for="wqi-hardness">Total Hardness <span class="wqi-std-hint">Std: &lt; 200</span></label>
+                  <div class="wqi-input-box">
+                    <input type="number" id="wqi-hardness" class="wqi-num-input" placeholder="140" min="0" max="5000" step="1">
+                    <span class="wqi-unit-tag">mg/L</span>
+                  </div>
+                </div>
+
+                <div class="wqi-field">
+                  <label for="wqi-fluoride">Fluoride (F⁻) <span class="wqi-std-hint">Std: &lt; 1.0</span></label>
+                  <div class="wqi-input-box">
+                    <input type="number" id="wqi-fluoride" class="wqi-num-input" placeholder="0.6" min="0" max="50" step="0.05">
+                    <span class="wqi-unit-tag">mg/L</span>
+                  </div>
+                </div>
+
+                <div class="wqi-field">
+                  <label for="wqi-nitrate">Nitrate (NO₃⁻) <span class="wqi-std-hint">Std: &lt; 45</span></label>
+                  <div class="wqi-input-box">
+                    <input type="number" id="wqi-nitrate" class="wqi-num-input" placeholder="18" min="0" max="500" step="1">
+                    <span class="wqi-unit-tag">mg/L</span>
+                  </div>
+                </div>
+
+                <div class="wqi-field">
+                  <label for="wqi-chloride">Chloride (Cl⁻) <span class="wqi-std-hint">Std: &lt; 250</span></label>
+                  <div class="wqi-input-box">
+                    <input type="number" id="wqi-chloride" class="wqi-num-input" placeholder="90" min="0" max="5000" step="1">
+                    <span class="wqi-unit-tag">mg/L</span>
+                  </div>
+                </div>
+
+                <div class="wqi-field">
+                  <label for="wqi-ec">Conductivity (EC) <span class="wqi-std-hint">Std: &lt; 1000</span></label>
+                  <div class="wqi-input-box">
+                    <input type="number" id="wqi-ec" class="wqi-num-input" placeholder="420" min="0" max="15000" step="1">
+                    <span class="wqi-unit-tag">µS/cm</span>
+                  </div>
+                </div>
+
+                <div class="wqi-field">
+                  <label for="wqi-arsenic">Arsenic (As) <span class="wqi-std-hint">Std: &lt; 0.01</span></label>
+                  <div class="wqi-input-box">
+                    <input type="number" id="wqi-arsenic" class="wqi-num-input" placeholder="0.000" min="0" max="10" step="0.001">
+                    <span class="wqi-unit-tag">mg/L</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="wqi-actions-row">
+                <button type="button" id="wqi-calc-btn" class="wqi-calc-btn">Calculate Water Quality Index</button>
+                <button type="button" id="wqi-reset-btn" class="wqi-reset-btn">Reset Defaults</button>
+              </div>
+            </div>
+
+            <!-- Analysis Card -->
+            <div class="wqi-analysis-card">
+              <div class="wqi-score-banner">
+                <div class="wqi-big-score" id="wqi-big-score">28.4</div>
+                <div class="wqi-status-stack">
+                  <span class="wqi-grade-pill grade-b" id="wqi-grade-pill">Grade B · Good Quality</span>
+                  <div class="wqi-status-title" id="wqi-status-title">Safe Potable Water</div>
+                </div>
+              </div>
+
+              <div class="wqi-status-desc" id="wqi-status-desc">
+                Acceptable drinking quality meeting standard municipal safety criteria. Safe for household use.
+              </div>
+
+              <!-- Parameter breakdown bars -->
+              <div class="wqi-param-bars-wrap" id="wqi-param-bars"></div>
+
+              <!-- Recommendations list -->
+              <div class="wqi-recs-box">
+                <strong>Recommended Treatment Protocols:</strong>
+                <ul id="wqi-recs-list">
+                  <li>Safe for domestic supply and drinking.</li>
+                  <li>Basic sediment and activated carbon filtration recommended.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- WQI Scale Reference Table -->
+          <div class="wqi-scale-box">
+            <h5>Official BIS / WAWQI Safety Classification Matrix</h5>
+            <div class="wqi-scale-grid">
+              <div class="wqi-scale-step" style="border-top:3px solid #16a34a;">
+                <strong style="color:#16a34a;">0 – 25</strong>
+                <span>Grade A · Excellent</span>
+                <small style="color:var(--muted);font-size:9.5px;">Pristine / Direct Consumption</small>
+              </div>
+              <div class="wqi-scale-step" style="border-top:3px solid #2563eb;">
+                <strong style="color:#2563eb;">26 – 50</strong>
+                <span>Grade B · Good</span>
+                <small style="color:var(--muted);font-size:9.5px;">Potable / Basic Filtration</small>
+              </div>
+              <div class="wqi-scale-step" style="border-top:3px solid #d97706;">
+                <strong style="color:#d97706;">51 – 75</strong>
+                <span>Grade C · Poor</span>
+                <small style="color:var(--muted);font-size:9.5px;">RO Filtration Recommended</small>
+              </div>
+              <div class="wqi-scale-step" style="border-top:3px solid #ea580c;">
+                <strong style="color:#ea580c;">76 – 100</strong>
+                <span>Grade D · Very Poor</span>
+                <small style="color:var(--muted);font-size:9.5px;">Heavy Contaminants / Softener</small>
+              </div>
+              <div class="wqi-scale-step" style="border-top:3px solid #c5302a;">
+                <strong style="color:#c5302a;">&gt; 100</strong>
+                <span>Grade E · Unfit</span>
+                <small style="color:var(--muted);font-size:9.5px;">Severe Toxicity Hazard</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Cigarette Smoke Equivalency Section -->
     <section class="cigarette-section" id="cigarette-section" aria-labelledby="cig-heading">
       <div class="cig-bezel-outer">
@@ -1884,13 +2603,47 @@
                 <svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a8 8 0 1 0 8 8 8 8 0 0 0-8-8Zm1 12H9v-2h2Zm0-4H9V6h2Z"/></svg>
                 <span id="cig-badge-text">AQI EXCEEDS 100 · HEALTH ALERT</span>
               </span>
-              <span class="cig-section-label">Smoke Inhalation Equivalency</span>
+              <span class="cig-section-label" id="cig-heading">Air Quality Cigarette Calculator</span>
             </div>
             <div class="cig-duration-pills" role="group" aria-label="Select exposure duration">
               <button type="button" class="duration-btn active" data-period="day">Today (24h)</button>
               <button type="button" class="duration-btn" data-period="week">7 Days</button>
               <button type="button" class="duration-btn" data-period="month">30 Days</button>
               <button type="button" class="duration-btn" data-period="year">1 Year</button>
+            </div>
+          </div>
+
+          <!-- Interactive Calculator Bar -->
+          <div class="cig-calculator-bar">
+            <div class="cig-calc-input-wrap">
+              <label for="cig-aqi-input" class="cig-calc-lbl">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="10"/></svg>
+                Enter Current Air Quality Index (AQI):
+              </label>
+              <div class="cig-input-row">
+                <input type="number" id="cig-aqi-input" class="cig-input" min="0" max="999" placeholder="Enter AQI (e.g. 200)" aria-label="Enter Air Quality Index (AQI)">
+                <button type="button" id="cig-calc-btn" class="cig-calc-action-btn">Calculate Impact</button>
+                <button type="button" id="cig-sync-live-btn" class="cig-sync-btn" title="Sync live AQI from searched locality">
+                  <svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a8 8 0 1 0 8 8 8 8 0 0 0-8-8Zm1 12H9v-2h2Zm0-4H9V6h2Z"/></svg>
+                  Sync Live AQI
+                </button>
+              </div>
+            </div>
+
+            <div class="cig-presets-row">
+              <span class="cig-presets-label">Quick Presets:</span>
+              <button type="button" class="cig-preset-pill" data-aqi="50">50 (Good)</button>
+              <button type="button" class="cig-preset-pill" data-aqi="100">100 (4.4 cigs)</button>
+              <button type="button" class="cig-preset-pill" data-aqi="200">200 (8.8–10 cigs)</button>
+              <button type="button" class="cig-preset-pill" data-aqi="300">300 (13.3 cigs)</button>
+              <button type="button" class="cig-preset-pill" data-aqi="400">400 (17.7 cigs)</button>
+              <button type="button" class="cig-preset-pill" data-aqi="500">500 (22.2 cigs)</button>
+            </div>
+
+            <div class="cig-live-calc-box">
+              <span>Scientific Formula: <strong>Number of Cigarettes = AQI × 0.05</strong> (approx. AQI / 22) · </span>
+              <span>Calculation: <span class="cig-live-calc-formula" id="cig-formula-calc">200 × 0.05 = 10.0</span> cigarettes · </span>
+              <span>At <span id="cig-formula-hours">24</span>h outdoor exposure: <strong id="cig-formula-result" style="color:var(--danger);">10.0 cigarettes/day</strong></span>
             </div>
           </div>
 
@@ -1936,7 +2689,7 @@
               </h4>
               <p>According to landmark research by <strong>Berkeley Earth</strong> (Dr. Richard Muller &amp; Elizabeth Muller), breathing air with an average <strong>PM₂.₅ of 22 µg/m³ for 24 hours</strong> deposits the same particulate mass deep into lung alveoli as smoking <strong>one cigarette</strong>.</p>
               <div class="cig-formula">
-                <code>Equivalent Cigarettes = Daily PM₂.₅ (µg/m³) ÷ 22</code>
+                <code>Number of Cigarettes = AQI × 0.05 (approx. AQI / 22)</code>
               </div>
               <div class="cig-tips">
                 <strong>Protective Actions:</strong>
@@ -1946,6 +2699,9 @@
                   <li>Avoid outdoor cardio during morning traffic peaks.</li>
                 </ul>
               </div>
+              <p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.5;">
+                *<em>Health Disclaimer: This calculator is for educational purposes only as a simplified approximation based on PM₂.₅ and AQI levels. Depending on age, respiratory health, and activity, individual health effects can differ.</em>
+              </p>
             </div>
           </div>
 
@@ -1970,6 +2726,52 @@
               <span class="proj-label">1 Year</span>
               <div class="proj-val" id="proj-year">~0</div>
               <span class="proj-sub" id="proj-year-packs">~0 packs</span>
+            </div>
+          </div>
+
+          <!-- AQI to Cigarette Converter Chart -->
+          <div class="cig-chart-box">
+            <div class="cig-chart-head">
+              <h5>AQI to Cigarette Converter Chart</h5>
+              <span class="cig-chart-sub">Click any level to test that AQI value</span>
+            </div>
+            <div class="cig-table-wrap">
+              <table class="cig-chart-table">
+                <thead>
+                  <tr>
+                    <th>Level of AQI</th>
+                    <th>Equivalent Cigarettes Per Day</th>
+                    <th>Impact on Health</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cig-row" data-aqi="100">
+                    <td><strong>100</strong></td>
+                    <td><span class="mono-badge">4.4</span> cigarettes</td>
+                    <td><span class="sev-tag sev-moderate">Moderate</span></td>
+                  </tr>
+                  <tr class="cig-row" data-aqi="200">
+                    <td><strong>200</strong></td>
+                    <td><span class="mono-badge">8.8 – 10.0</span> cigarettes</td>
+                    <td><span class="sev-tag sev-sensitive">Harmful for Sensitive</span></td>
+                  </tr>
+                  <tr class="cig-row" data-aqi="300">
+                    <td><strong>300</strong></td>
+                    <td><span class="mono-badge">13.3</span> cigarettes</td>
+                    <td><span class="sev-tag sev-harmful">Harmful</span></td>
+                  </tr>
+                  <tr class="cig-row" data-aqi="400">
+                    <td><strong>400</strong></td>
+                    <td><span class="mono-badge">17.7</span> cigarettes</td>
+                    <td><span class="sev-tag sev-very-harmful">Very Harmful</span></td>
+                  </tr>
+                  <tr class="cig-row" data-aqi="500">
+                    <td><strong>500</strong></td>
+                    <td><span class="mono-badge">22.2</span> cigarettes</td>
+                    <td><span class="sev-tag sev-critical">Critical – Emergency Level</span></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -2158,8 +2960,16 @@
       const durationButtons = document.querySelectorAll('.duration-btn');
       const cigHoursSlider = document.getElementById('cig-hours-slider');
       const cigHoursVal = document.getElementById('cig-hours-val');
+      const cigAqiInput = document.getElementById('cig-aqi-input');
+      const cigCalcBtn = document.getElementById('cig-calc-btn');
+      const cigSyncLiveBtn = document.getElementById('cig-sync-live-btn');
+      const cigPresetPills = document.querySelectorAll('.cig-preset-pill');
+      const cigFormulaCalc = document.getElementById('cig-formula-calc');
+      const cigFormulaHours = document.getElementById('cig-formula-hours');
+      const cigFormulaResult = document.getElementById('cig-formula-result');
+      const cigChartRows = document.querySelectorAll('.cig-chart-table tr.cig-row');
 
-      // Water Elements
+      // Water Elements & WQI Checker
       const waterStationsList = document.getElementById('water-stations-list');
       const waterSummaryText = document.getElementById('water-summary-text');
       const waterFilterBtns = document.querySelectorAll('.water-filter-btn');
@@ -2167,6 +2977,25 @@
       const historyParamSelect = document.getElementById('history-param-select');
       const historyChartSvg = document.getElementById('history-chart-svg');
       const chartTooltip = document.getElementById('chart-tooltip');
+
+      const wqiTdsInput = document.getElementById('wqi-tds');
+      const wqiPhInput = document.getElementById('wqi-ph');
+      const wqiHardnessInput = document.getElementById('wqi-hardness');
+      const wqiFluorideInput = document.getElementById('wqi-fluoride');
+      const wqiNitrateInput = document.getElementById('wqi-nitrate');
+      const wqiChlorideInput = document.getElementById('wqi-chloride');
+      const wqiEcInput = document.getElementById('wqi-ec');
+      const wqiArsenicInput = document.getElementById('wqi-arsenic');
+      const wqiCalcBtn = document.getElementById('wqi-calc-btn');
+      const wqiResetBtn = document.getElementById('wqi-reset-btn');
+      const wqiPresetBtns = document.querySelectorAll('.wqi-preset-btn');
+      const wqiLoadBorewellBtn = document.getElementById('wqi-load-borewell-btn');
+      const wqiBigScore = document.getElementById('wqi-big-score');
+      const wqiGradePill = document.getElementById('wqi-grade-pill');
+      const wqiStatusTitle = document.getElementById('wqi-status-title');
+      const wqiStatusDesc = document.getElementById('wqi-status-desc');
+      const wqiParamBars = document.getElementById('wqi-param-bars');
+      const wqiRecsList = document.getElementById('wqi-recs-list');
 
       // State
       let map = null;
@@ -2177,6 +3006,7 @@
       let currentCoordinates = { lat: 20.5937, lon: 78.9629 };
       let currentCigarettesPerDay = 0;
       let currentAQI = 0;
+      let customAqi = null;
       let exposureHours = 24;
       let selectedDuration = 'day';
       let currentWaterFilter = 'all';
@@ -2349,9 +3179,11 @@
       // 3. Cigarette Equivalency & Exposure Logic
       // ========================================
       function updateCigaretteDisplay() {
-        const baseCigPerDay = currentCigarettesPerDay;
-        const aqi = currentAQI;
-        const cigPerDay = Math.round(baseCigPerDay * (exposureHours / 24) * 10) / 10;
+        const activeAqi = customAqi !== null ? customAqi : currentAQI;
+
+        // Scientific Formula: Number of Cigarettes = AQI * 0.05 (approx. AQI / 22)
+        const baseCig24h = activeAqi > 0 ? Math.round((activeAqi * 0.05) * 10) / 10 : 0;
+        const cigPerDay = Math.round(baseCig24h * (exposureHours / 24) * 10) / 10;
 
         const cigWeek = Math.round(cigPerDay * 7 * 10) / 10;
         const cigMonth = Math.round(cigPerDay * 30 * 10) / 10;
@@ -2387,6 +3219,30 @@
         cigUnitLabel.textContent = countUnits;
         cigPeriodLabel.textContent = activeLabel;
 
+        // Update live formula breakdown
+        if (cigFormulaCalc) {
+          cigFormulaCalc.textContent = `${activeAqi} × 0.05 = ${baseCig24h.toFixed(1)}`;
+        }
+        if (cigFormulaHours) {
+          cigFormulaHours.textContent = exposureHours;
+        }
+        if (cigFormulaResult) {
+          cigFormulaResult.textContent = `${cigPerDay.toFixed(1)} cigarettes/day`;
+        }
+
+        // Keep input synced if user hasn't explicitly focused it
+        if (cigAqiInput && document.activeElement !== cigAqiInput) {
+          cigAqiInput.value = activeAqi > 0 ? activeAqi : '';
+        }
+
+        // Highlight active converter chart row
+        if (cigChartRows) {
+          cigChartRows.forEach(row => {
+            const rowAqi = parseInt(row.dataset.aqi, 10);
+            row.classList.toggle('active', Math.abs(activeAqi - rowAqi) <= 25);
+          });
+        }
+
         // Render visual cigarette rack icons
         cigVisualRack.replaceChildren();
         const displayCount = Math.min(24, Math.max(1, Math.round(activeVal)));
@@ -2411,17 +3267,27 @@
         }
 
         // Whenever AQI > 100: Highlight severity alert
-        if (aqi > 100) {
+        if (activeAqi > 100) {
           cigaretteCard.classList.remove('safe-air');
           cigAlertBadge.classList.remove('safe');
-          cigBadgeText.textContent = `AQI EXCEEDS 100 · HEALTH ALERT (AQI ${aqi})`;
-          cigHeadline.textContent = `Breathing this air for ${exposureHours} hours delivers fine particulate (PM₂.₅) mass into your deep lungs equivalent to smoking ~${cigPerDay.toFixed(1)} commercial cigarettes today.`;
+          cigBadgeText.textContent = `AQI EXCEEDS 100 · HEALTH ALERT (AQI ${activeAqi})`;
+          cigHeadline.textContent = `Breathing this air for ${exposureHours} hours delivers fine particulate mass into your deep lungs equivalent to smoking ~${cigPerDay.toFixed(1)} commercial cigarettes today.`;
         } else {
           cigaretteCard.classList.add('safe-air');
           cigAlertBadge.classList.add('safe');
-          cigBadgeText.textContent = `AQI IS ${aqi} (≤ 100) · ACCEPTABLE RANGE`;
-          cigHeadline.textContent = `Air quality in your area is below the 100 AQI threshold. Particulate exposure is within acceptable limits (less than 1 cigarette equivalent per day).`;
+          cigBadgeText.textContent = `AQI IS ${activeAqi} (≤ 100) · ACCEPTABLE RANGE`;
+          cigHeadline.textContent = `Air quality is within acceptable limits (less than 1 cigarette equivalent per day).`;
         }
+
+        // Persistence
+        try {
+          if (customAqi !== null) {
+            localStorage.setItem('nf_calc_aqi', String(customAqi));
+          } else {
+            localStorage.removeItem('nf_calc_aqi');
+          }
+          localStorage.setItem('nf_exposure_hours', String(exposureHours));
+        } catch {}
       }
 
       durationButtons.forEach(btn => {
@@ -2441,6 +3307,327 @@
           }
           updateCigaretteDisplay();
         });
+      }
+
+      if (cigCalcBtn) {
+        cigCalcBtn.addEventListener('click', () => {
+          const val = parseInt(cigAqiInput.value, 10);
+          if (!isNaN(val) && val >= 0) {
+            customAqi = val;
+            updateCigaretteDisplay();
+          }
+        });
+      }
+
+      if (cigAqiInput) {
+        cigAqiInput.addEventListener('input', (e) => {
+          const val = parseInt(e.target.value, 10);
+          if (!isNaN(val) && val >= 0) {
+            customAqi = val;
+            updateCigaretteDisplay();
+          }
+        });
+        cigAqiInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            const val = parseInt(cigAqiInput.value, 10);
+            if (!isNaN(val) && val >= 0) {
+              customAqi = val;
+              updateCigaretteDisplay();
+            }
+          }
+        });
+      }
+
+      if (cigSyncLiveBtn) {
+        cigSyncLiveBtn.addEventListener('click', () => {
+          customAqi = null;
+          try { localStorage.removeItem('nf_calc_aqi'); } catch {}
+          if (cigAqiInput) cigAqiInput.value = currentAQI > 0 ? currentAQI : '';
+          updateCigaretteDisplay();
+        });
+      }
+
+      cigPresetPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          const aqi = parseInt(pill.dataset.aqi, 10);
+          if (!isNaN(aqi)) {
+            customAqi = aqi;
+            if (cigAqiInput) cigAqiInput.value = aqi;
+            updateCigaretteDisplay();
+          }
+        });
+      });
+
+      cigChartRows.forEach(row => {
+        row.addEventListener('click', () => {
+          const aqi = parseInt(row.dataset.aqi, 10);
+          if (!isNaN(aqi)) {
+            customAqi = aqi;
+            if (cigAqiInput) cigAqiInput.value = aqi;
+            updateCigaretteDisplay();
+          }
+        });
+      });
+
+      // ========================================
+      // 3b. Water Quality Index (WQI) Checker Logic
+      // ========================================
+      const WQI_STANDARDS = {
+        ph: { desirable: 8.5, ideal: 7.0, range: 1.5, weight: 0.20, label: 'pH Value', unit: '', minSafe: 6.5, maxSafe: 8.5 },
+        tds: { desirable: 500, ideal: 0, weight: 0.18, label: 'Total Dissolved Solids', unit: 'mg/L', maxSafe: 500, maxPerm: 2000 },
+        hardness: { desirable: 200, ideal: 0, weight: 0.12, label: 'Total Hardness', unit: 'mg/L CaCO₃', maxSafe: 200, maxPerm: 600 },
+        fluoride: { desirable: 1.0, ideal: 0, weight: 0.18, label: 'Fluoride', unit: 'mg/L', maxSafe: 1.0, maxPerm: 1.5 },
+        nitrate: { desirable: 45, ideal: 0, weight: 0.14, label: 'Nitrate Nitrogen', unit: 'mg/L', maxSafe: 45, maxPerm: 45 },
+        chloride: { desirable: 250, ideal: 0, weight: 0.08, label: 'Chloride', unit: 'mg/L', maxSafe: 250, maxPerm: 1000 },
+        ec: { desirable: 1000, ideal: 0, weight: 0.03, label: 'Conductivity (EC)', unit: 'µS/cm', maxSafe: 1000, maxPerm: 3000 },
+        arsenic: { desirable: 0.01, ideal: 0, weight: 0.25, label: 'Arsenic', unit: 'mg/L', maxSafe: 0.01, maxPerm: 0.01 }
+      };
+
+      const WQI_PRESETS = {
+        ro: { tds: 80, ph: 7.0, hardness: 50, fluoride: 0.2, nitrate: 5, chloride: 25, ec: 140, arsenic: 0 },
+        tap: { tds: 260, ph: 7.4, hardness: 140, fluoride: 0.6, nitrate: 18, chloride: 90, ec: 420, arsenic: 0 },
+        borewell: { tds: 680, ph: 7.8, hardness: 340, fluoride: 1.1, nitrate: 38, chloride: 210, ec: 1100, arsenic: 0.002 },
+        hard: { tds: 1450, ph: 8.2, hardness: 580, fluoride: 1.8, nitrate: 68, chloride: 450, ec: 2300, arsenic: 0.015 }
+      };
+
+      function getWqiInputs() {
+        return {
+          tds: wqiTdsInput?.value ? parseFloat(wqiTdsInput.value) : NaN,
+          ph: wqiPhInput?.value ? parseFloat(wqiPhInput.value) : NaN,
+          hardness: wqiHardnessInput?.value ? parseFloat(wqiHardnessInput.value) : NaN,
+          fluoride: wqiFluorideInput?.value ? parseFloat(wqiFluorideInput.value) : NaN,
+          nitrate: wqiNitrateInput?.value ? parseFloat(wqiNitrateInput.value) : NaN,
+          chloride: wqiChlorideInput?.value ? parseFloat(wqiChlorideInput.value) : NaN,
+          ec: wqiEcInput?.value ? parseFloat(wqiEcInput.value) : NaN,
+          arsenic: wqiArsenicInput?.value ? parseFloat(wqiArsenicInput.value) : NaN,
+        };
+      }
+
+      function setWqiInputs(vals) {
+        if (!vals) return;
+        if (wqiTdsInput) wqiTdsInput.value = vals.tds !== undefined && !isNaN(vals.tds) ? vals.tds : '';
+        if (wqiPhInput) wqiPhInput.value = vals.ph !== undefined && !isNaN(vals.ph) ? vals.ph : '';
+        if (wqiHardnessInput) wqiHardnessInput.value = vals.hardness !== undefined && !isNaN(vals.hardness) ? vals.hardness : '';
+        if (wqiFluorideInput) wqiFluorideInput.value = vals.fluoride !== undefined && !isNaN(vals.fluoride) ? vals.fluoride : '';
+        if (wqiNitrateInput) wqiNitrateInput.value = vals.nitrate !== undefined && !isNaN(vals.nitrate) ? vals.nitrate : '';
+        if (wqiChlorideInput) wqiChlorideInput.value = vals.chloride !== undefined && !isNaN(vals.chloride) ? vals.chloride : '';
+        if (wqiEcInput) wqiEcInput.value = vals.ec !== undefined && !isNaN(vals.ec) ? vals.ec : '';
+        if (wqiArsenicInput) wqiArsenicInput.value = vals.arsenic !== undefined && !isNaN(vals.arsenic) ? vals.arsenic : '';
+      }
+
+      function calculateWQIClient(params) {
+        let sumWq = 0;
+        let sumW = 0;
+        let criticalViolation = false;
+        let paramReports = [];
+
+        for (const [key, def] of Object.entries(WQI_STANDARDS)) {
+          const val = params[key];
+          if (!isNaN(val) && val >= 0) {
+            let q = 0;
+            let status = 'normal';
+            if (key === 'ph') {
+              q = (Math.abs(val - def.ideal) / def.range) * 100;
+              if (val < def.minSafe || val > def.maxSafe) status = 'danger';
+            } else {
+              q = (val / def.desirable) * 100;
+              if (def.maxPerm && val > def.maxPerm) {
+                status = 'danger';
+                criticalViolation = true;
+              } else if (val > def.maxSafe) {
+                status = 'elevated';
+              }
+            }
+            sumWq += def.weight * q;
+            sumW += def.weight;
+            paramReports.push({
+              id: key,
+              label: def.label,
+              value: val,
+              unit: def.unit,
+              status,
+              pct: Math.min(200, Math.round(q)),
+              limitText: def.maxPerm ? `${def.maxSafe} (max ${def.maxPerm}) ${def.unit}` : `${def.maxSafe} ${def.unit}`
+            });
+          }
+        }
+
+        if (sumW === 0) return null;
+        let score = Math.round((sumWq / sumW) * 10) / 10;
+        if (criticalViolation && score < 76) score = Math.max(score, 76);
+
+        let grade = 'A';
+        let category = 'Excellent Quality';
+        let color = '#16a34a';
+        let gradeClass = 'grade-a';
+        let statusTitle = 'Pristine Drinking Water';
+        let statusDesc = 'Chemical parameters are well within Bureau of Indian Standards (BIS IS 10500:2012) desirable limits. Safe for direct consumption.';
+        let recommendations = [
+          'Safe for drinking, cooking, and infant preparation without special treatment.',
+          'Preserves essential calcium, magnesium, and natural mineral electrolytes.'
+        ];
+
+        if (score > 100) {
+          grade = 'E';
+          category = 'Unfit for Drinking';
+          color = '#c5302a';
+          gradeClass = 'grade-e';
+          statusTitle = 'Severe Chemical Hazard';
+          statusDesc = 'Water exceeds maximum permissible contamination limits (high Fluoride, Nitrate, Arsenic, or extreme TDS). Toxic for human consumption.';
+          recommendations = [
+            'DO NOT DRINK untreated — high cardiovascular and skeletal health risks.',
+            'Requires multi-stage RO (Reverse Osmosis) + activated alumina / ion exchange.',
+            'Boiling does NOT remove heavy metals or nitrates.'
+          ];
+        } else if (score > 75) {
+          grade = 'D';
+          category = 'Very Poor Quality';
+          color = '#ea580c';
+          gradeClass = 'grade-d';
+          statusTitle = 'Heavily Contaminated Water';
+          statusDesc = 'Parameters exceed permissible thresholds. High mineral hardness and dissolved solids cause kidney strain and digestive irritation.';
+          recommendations = [
+            'Multi-stage RO purification mandatory before drinking.',
+            'Install whole-house water softening to prevent scaling in pipes.'
+          ];
+        } else if (score > 50) {
+          grade = 'C';
+          category = 'Poor Quality';
+          color = '#d97706';
+          gradeClass = 'grade-c';
+          statusTitle = 'Moderate Contamination';
+          statusDesc = 'Exceeds desirable baseline. High mineral content or elevated hardness requires active filtration.';
+          recommendations = [
+            'Domestic RO filtration or high-density carbon block recommended.',
+            'Boiling and sediment filtration advised before drinking.'
+          ];
+        } else if (score > 25) {
+          grade = 'B';
+          category = 'Good Quality';
+          color = '#2563eb';
+          gradeClass = 'grade-b';
+          statusTitle = 'Safe Potable Water';
+          statusDesc = 'Acceptable drinking quality meeting standard municipal safety criteria. Safe for household use.';
+          recommendations = [
+            'Safe for domestic supply and drinking.',
+            'Basic activated carbon or sediment cartridge recommended for clarity and taste.'
+          ];
+        }
+
+        return { score, grade, gradeClass, category, color, statusTitle, statusDesc, recommendations, paramReports };
+      }
+
+      function updateWqiDisplay() {
+        const inputs = getWqiInputs();
+        const res = calculateWQIClient(inputs);
+        if (!res) return;
+
+        if (wqiBigScore) {
+          wqiBigScore.textContent = res.score.toFixed(1);
+          wqiBigScore.style.color = res.color;
+        }
+        if (wqiGradePill) {
+          wqiGradePill.className = `wqi-grade-pill ${res.gradeClass}`;
+          wqiGradePill.textContent = `Grade ${res.grade} · ${res.category}`;
+        }
+        if (wqiStatusTitle) wqiStatusTitle.textContent = res.statusTitle;
+        if (wqiStatusDesc) wqiStatusDesc.textContent = res.statusDesc;
+
+        // Render parameter progress bars
+        if (wqiParamBars) {
+          wqiParamBars.replaceChildren();
+          res.paramReports.forEach(p => {
+            const item = document.createElement('div');
+            item.className = 'wqi-bar-item';
+            item.innerHTML = `
+              <div class="wqi-bar-meta">
+                <span>${p.label} (Std: ${p.limitText})</span>
+                <strong>${p.value} ${p.unit}</strong>
+              </div>
+              <div class="wqi-bar-track">
+                <div class="wqi-bar-fill ${p.status}" style="width: ${Math.min(100, p.pct)}%"></div>
+              </div>
+            `;
+            wqiParamBars.appendChild(item);
+          });
+        }
+
+        // Render recommendations
+        if (wqiRecsList) {
+          wqiRecsList.replaceChildren();
+          res.recommendations.forEach(r => {
+            const li = document.createElement('li');
+            li.textContent = r;
+            wqiRecsList.appendChild(li);
+          });
+        }
+
+        // Save inputs to localStorage
+        try {
+          localStorage.setItem('nf_wqi_inputs', JSON.stringify(inputs));
+        } catch {}
+      }
+
+      if (wqiCalcBtn) {
+        wqiCalcBtn.addEventListener('click', updateWqiDisplay);
+      }
+
+      [wqiTdsInput, wqiPhInput, wqiHardnessInput, wqiFluorideInput, wqiNitrateInput, wqiChlorideInput, wqiEcInput, wqiArsenicInput].forEach(inp => {
+        if (inp) {
+          inp.addEventListener('input', updateWqiDisplay);
+        }
+      });
+
+      if (wqiResetBtn) {
+        wqiResetBtn.addEventListener('click', () => {
+          setWqiInputs(WQI_PRESETS.tap);
+          updateWqiDisplay();
+        });
+      }
+
+      wqiPresetBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          wqiPresetBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const p = btn.dataset.preset;
+          if (WQI_PRESETS[p]) {
+            setWqiInputs(WQI_PRESETS[p]);
+            updateWqiDisplay();
+          }
+        });
+      });
+
+      if (wqiLoadBorewellBtn) {
+        wqiLoadBorewellBtn.addEventListener('click', () => {
+          if (!currentWaterRecords || !currentWaterRecords.length) {
+            alert('Please search an Indian PIN code or area first to load nearby CGWB borewell lab data.');
+            return;
+          }
+          const nearest = currentWaterRecords[0];
+          populateWqiFromRecord(nearest);
+        });
+      }
+
+      function populateWqiFromRecord(rec) {
+        if (!rec || !rec.measurements) return;
+        const mapped = {};
+        rec.measurements.forEach(m => {
+          if (m.numericValue !== null && !isNaN(m.numericValue)) {
+            if (m.id === 'tds') mapped.tds = m.numericValue;
+            if (m.id === 'ph') mapped.ph = m.numericValue;
+            if (m.id === 'hardness') mapped.hardness = m.numericValue;
+            if (m.id === 'fluoride') mapped.fluoride = m.numericValue;
+            if (m.id === 'nitrate') mapped.nitrate = m.numericValue;
+            if (m.id === 'chloride') mapped.chloride = m.numericValue;
+            if (m.id === 'ec') mapped.ec = m.numericValue;
+            if (m.id === 'arsenic') mapped.arsenic = m.numericValue;
+          }
+        });
+        setWqiInputs(mapped);
+        updateWqiDisplay();
+        const section = document.getElementById('wqi-section');
+        if (section) section.scrollIntoView({ behavior: 'smooth' });
       }
 
       // ========================================
@@ -2550,10 +3737,15 @@
           if (p.id === 'o3') valO3.textContent = p.value !== null ? p.value : '--';
         });
 
-        // Calculate cigarette equivalency: Berkeley Earth benchmark (PM2.5 / 22)
+        // Calculate cigarette equivalency: Scientific formula Number of Cigarettes = AQI * 0.05
+        currentAQI = cur.naqi !== undefined ? cur.naqi : (cur.usAqi || 0);
         currentCigarettesPerDay = cur.cigarettesPerDay !== undefined
           ? cur.cigarettesPerDay
-          : (pm25Val > 0 ? Math.round((pm25Val / 22) * 10) / 10 : 0);
+          : (currentAQI > 0 ? Math.round((currentAQI * 0.05) * 10) / 10 : (pm25Val > 0 ? Math.round((pm25Val / 22) * 10) / 10 : 0));
+
+        if (customAqi === null && cigAqiInput) {
+          cigAqiInput.value = currentAQI > 0 ? currentAQI : '';
+        }
 
         updateCigaretteDisplay();
 
@@ -2605,11 +3797,12 @@
           return;
         }
 
-        records.forEach((rec) => {
+        records.forEach((rec, idx) => {
           const card = document.createElement('div');
           card.className = 'water-card';
 
           const distBadge = rec.distanceKm !== null ? `<span class="water-distance-badge">${rec.distanceKm} km away</span>` : '';
+          const wqiBadge = rec.wqi ? `<span class="water-wqi-badge wqi-${rec.wqi.grade.toLowerCase()}">WQI ${rec.wqi.score} · Grade ${rec.wqi.grade}</span>` : '';
           const placeMeta = [rec.village, rec.tehsil, rec.district, rec.observedAt ? 'Sampled: ' + rec.observedAt : 'Date N/A'].filter(Boolean).join(' · ');
 
           let chipsHtml = '';
@@ -2628,17 +3821,25 @@
                 <h4 class="water-station-name">${rec.station}</h4>
                 <div class="water-meta">${placeMeta}</div>
               </div>
-              ${distBadge}
+              <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                ${wqiBadge}
+                ${distBadge}
+              </div>
             </div>
             <div class="water-measurements-grid">
               ${chipsHtml}
             </div>
-            ${rec.latitude && rec.longitude ? `
-              <button type="button" class="locate-btn" data-lat="${rec.latitude}" data-lon="${rec.longitude}" data-name="${rec.station}">
-                <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a8 8 0 1 0 8 8 8 8 0 0 0-8-8Zm1 12H9v-2h2Zm0-4H9V6h2Z"/></svg>
-                Focus on OpenStreetMap (${rec.latitude.toFixed(3)}, ${rec.longitude.toFixed(3)})
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+              ${rec.latitude && rec.longitude ? `
+                <button type="button" class="locate-btn" data-lat="${rec.latitude}" data-lon="${rec.longitude}" data-name="${rec.station}">
+                  <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a8 8 0 1 0 8 8 8 8 0 0 0-8-8Zm1 12H9v-2h2Zm0-4H9V6h2Z"/></svg>
+                  Focus on OpenStreetMap (${rec.latitude.toFixed(3)}, ${rec.longitude.toFixed(3)})
+                </button>
+              ` : ''}
+              <button type="button" class="wqi-populate-btn" data-index="${idx}">
+                🧪 Test in WQI Tool ↗
               </button>
-            ` : ''}
+            </div>
           `;
 
           const locateBtn = card.querySelector('.locate-btn');
@@ -2647,6 +3848,13 @@
               const lat = parseFloat(locateBtn.dataset.lat);
               const lon = parseFloat(locateBtn.dataset.lon);
               map.flyTo([lat, lon], 14);
+            });
+          }
+
+          const wqiBtn = card.querySelector('.wqi-populate-btn');
+          if (wqiBtn) {
+            wqiBtn.addEventListener('click', () => {
+              populateWqiFromRecord(rec);
             });
           }
 
@@ -2874,6 +4082,7 @@
           notice.classList.add('visible');
           noticeTitle.textContent = `${data.postOffices.length} Matching Post Office${data.postOffices.length === 1 ? '' : 's'}`;
           noticeText.textContent = `Choose your exact locality below to load live environmental measurements and OpenStreetMap view:`;
+          try { localStorage.setItem('nf_last_location', q.trim()); } catch {}
 
           data.postOffices.forEach((office, index) => {
             const btn = document.createElement('button');
@@ -2893,7 +4102,10 @@
               <span class="office-pin">${pin}</span>
             `;
 
-            btn.addEventListener('click', () => selectOffice(office, btn, data.coordinates));
+            btn.addEventListener('click', () => {
+              try { localStorage.setItem('nf_last_location', pin); } catch {}
+              selectOffice(office, btn, data.coordinates);
+            });
             officeList.appendChild(btn);
 
             if (index === 0) {
@@ -2922,14 +4134,45 @@
         });
       });
 
-      // Initialize OpenStreetMap and load Mumbai sample default
+      // Initialize Water Quality Index (WQI) Checker with persisted or default values
+      try {
+        const savedWqi = localStorage.getItem('nf_wqi_inputs');
+        if (savedWqi) {
+          setWqiInputs(JSON.parse(savedWqi));
+        } else {
+          setWqiInputs(WQI_PRESETS.tap);
+        }
+      } catch {
+        setWqiInputs(WQI_PRESETS.tap);
+      }
+      updateWqiDisplay();
+
+      // Restore saved AQI calculator state
+      try {
+        const savedCalcAqi = localStorage.getItem('nf_calc_aqi');
+        if (savedCalcAqi) {
+          customAqi = parseInt(savedCalcAqi, 10);
+          if (cigAqiInput) cigAqiInput.value = customAqi;
+        }
+        const savedHours = localStorage.getItem('nf_exposure_hours');
+        if (savedHours) {
+          exposureHours = parseInt(savedHours, 10);
+          if (cigHoursSlider) cigHoursSlider.value = exposureHours;
+          if (cigHoursVal) cigHoursVal.textContent = exposureHours === 24 ? '24 Hours (Full Day)' : `${exposureHours} Hours/Day`;
+        }
+      } catch {}
+      updateCigaretteDisplay();
+
+      // Initialize OpenStreetMap and load persisted or default locality
       initMap();
+      const savedLoc = localStorage.getItem('nf_last_location') || '400001';
+      input.value = savedLoc;
       setTimeout(() => {
-        doSearch('400001');
+        doSearch(savedLoc);
       }, 300);
 
       // Scroll-reveal IntersectionObserver
-      const revealEls = document.querySelectorAll('.panel-bezel, .cig-bezel-outer, .history-bezel, .standard-bezel, .oss-bezel');
+      const revealEls = document.querySelectorAll('.panel-bezel, .wqi-bezel, .cig-bezel-outer, .history-bezel, .standard-bezel, .oss-bezel');
       revealEls.forEach(el => el.classList.add('reveal'));
       const revealObs = new IntersectionObserver((entries) => {
         entries.forEach(entry => {

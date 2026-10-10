@@ -275,8 +275,110 @@ function extractMeasurements(record) {
   return measurements;
 }
 
+// Weighted Arithmetic Water Quality Index (WAWQI) according to BIS IS 10500:2012
+function calculateWQI(measurements) {
+  if (!measurements || !measurements.length) return null;
+  const stds = {
+    ph: { desirable: 8.5, ideal: 7.0, range: 1.5, weight: 0.20 },
+    tds: { desirable: 500, ideal: 0, weight: 0.18 },
+    hardness: { desirable: 200, ideal: 0, weight: 0.12 },
+    fluoride: { desirable: 1.0, ideal: 0, weight: 0.18 },
+    nitrate: { desirable: 45, ideal: 0, weight: 0.14 },
+    chloride: { desirable: 250, ideal: 0, weight: 0.08 },
+    sulphate: { desirable: 200, ideal: 0, weight: 0.05 },
+    ec: { desirable: 1000, ideal: 0, weight: 0.03 },
+    arsenic: { desirable: 0.01, ideal: 0, weight: 0.25 },
+  };
+
+  let sumWq = 0;
+  let sumW = 0;
+  let criticalViolation = false;
+  let violations = [];
+
+  for (const m of measurements) {
+    const s = stds[m.id];
+    if (s && m.numericValue !== null && !isNaN(m.numericValue)) {
+      let q = 0;
+      if (m.id === "ph") {
+        q = (Math.abs(m.numericValue - s.ideal) / s.range) * 100;
+        if (m.numericValue < 6.5 || m.numericValue > 8.5) {
+          violations.push(`pH ${m.numericValue} outside safe range (6.5–8.5)`);
+        }
+      } else {
+        q = (m.numericValue / s.desirable) * 100;
+        if (m.id === "fluoride" && m.numericValue > 1.5) {
+          criticalViolation = true;
+          violations.push(`Fluoride (${m.numericValue} mg/L) exceeds permissible limit (1.5)`);
+        }
+        if (m.id === "arsenic" && m.numericValue > 0.01) {
+          criticalViolation = true;
+          violations.push(`Arsenic (${m.numericValue} mg/L) exceeds strict limit (0.01)`);
+        }
+        if (m.id === "nitrate" && m.numericValue > 45) {
+          violations.push(`Nitrate (${m.numericValue} mg/L) exceeds safe limit (45)`);
+        }
+        if (m.id === "tds" && m.numericValue > 2000) {
+          criticalViolation = true;
+          violations.push(`TDS (${m.numericValue} mg/L) exceeds permissible limit (2000)`);
+        }
+      }
+      sumWq += s.weight * q;
+      sumW += s.weight;
+    }
+  }
+
+  if (sumW === 0) return null;
+  let score = Math.round((sumWq / sumW) * 10) / 10;
+  if (criticalViolation && score < 76) {
+    score = Math.max(score, 76.0);
+  }
+
+  let grade = "A";
+  let category = "Excellent";
+  let color = "#16a34a";
+  let status = "Pristine drinking quality; safe without special treatment";
+  let advice = "Suitable for direct consumption and domestic use.";
+
+  if (score > 100) {
+    grade = "E";
+    category = "Unfit for Drinking";
+    color = "#c5302a";
+    status = "Severe chemical contamination; exceeds BIS limits";
+    advice = "Do not drink untreated. Requires advanced multi-stage RO & chemical remediation.";
+  } else if (score > 75) {
+    grade = "D";
+    category = "Very Poor";
+    color = "#ea580c";
+    status = "Heavy mineralization / contamination";
+    advice = "Intense multi-stage RO filtration and water softening required.";
+  } else if (score > 50) {
+    grade = "C";
+    category = "Poor";
+    color = "#d97706";
+    status = "Exceeds desirable baseline standards";
+    advice = "Standard domestic RO membrane filtration recommended before drinking.";
+  } else if (score > 25) {
+    grade = "B";
+    category = "Good";
+    color = "#2563eb";
+    status = "Good potability; safe for domestic supply";
+    advice = "Basic sediment and activated carbon filtration recommended.";
+  }
+
+  return {
+    score,
+    grade,
+    category,
+    color,
+    status,
+    advice,
+    violations,
+  };
+}
+
 function sampleRecord(record, targetLat = null, targetLon = null) {
   const measurements = extractMeasurements(record);
+  const wqi = calculateWQI(measurements);
   const latitude = record.Latitude === null || record.Latitude === undefined || String(record.Latitude).trim() === "" ? NaN : Number(record.Latitude);
   const longitude = record.Longitude === null || record.Longitude === undefined || String(record.Longitude).trim() === "" ? NaN : Number(record.Longitude);
   const validLat = Number.isFinite(latitude) && latitude >= -90 && latitude <= 90 ? latitude : null;
@@ -296,6 +398,7 @@ function sampleRecord(record, targetLat = null, targetLon = null) {
     distanceKm,
     observedAt: String(record["Data Acquisition Time"] || ""),
     measurements,
+    wqi,
   };
 }
 
@@ -471,7 +574,11 @@ async function handleAqi(url, env) {
       }
     }
 
-    const cigarettesPerDay = pm25 !== null && pm25 !== undefined ? Math.round((pm25 / 22) * 10) / 10 : 0;
+    const finalAqi = indianAqi?.aqi ?? cur.us_aqi ?? (pm25 ? Math.round(pm25 * 1.6) : 0);
+    // Scientific Formula: Number of Cigarettes = AQI * 0.05 (approx. AQI / 22)
+    const cigarettesPerDay = finalAqi > 0
+      ? Math.round((finalAqi * 0.05) * 10) / 10
+      : (pm25 !== null && pm25 !== undefined ? Math.round((pm25 / 22) * 10) / 10 : 0);
 
     const response = json({
       source: "Open-Meteo Air Quality & CAMS Model Ground Observation",
@@ -495,7 +602,7 @@ async function handleAqi(url, env) {
       },
       pollutants,
       hourlyTrend: hourlyData.slice(-48),
-      note: "Live real-time observations calibrated to local coordinates. Indian National AQI (NAQI) calculated using official CPCB break-point sub-indices. Cigarette equivalency computed using Berkeley Earth benchmark (22 µg/m³ of PM₂.₅/day ≈ 1 cigarette).",
+      note: "Live real-time observations calibrated to local coordinates. Indian National AQI (NAQI) calculated using official CPCB break-point sub-indices. Cigarette equivalency computed using scientific formula: Number of Cigarettes = AQI × 0.05 (approx. AQI / 22).",
     }, 200, AQI_CACHE_SECONDS);
 
     await putCached(cacheKey, response, AQI_CACHE_SECONDS);
@@ -635,6 +742,7 @@ async function handleWater(url) {
       year,
       date: dateStr,
       measurements: rec.measurements,
+      wqi: rec.wqi,
     });
   });
 
