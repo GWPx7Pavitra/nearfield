@@ -5,11 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f5f6f2">
   <meta name="description" content="Nearfield — Free, open-source hyperlocal air quality and groundwater monitoring for India. Real CPCB stations, CGWB chemical tests, OpenStreetMap, and cigarette smoke equivalency.">
+  <meta name="keywords" content="India air quality, AQI, CPCB, groundwater, CGWB, WQI, water quality index, PM2.5, environmental monitoring, cigarette equivalence">
+  <meta name="author" content="Pavitra (@GWPx7Pavitra)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content="Nearfield — Hyperlocal Air Quality & Groundwater Monitoring">
+  <meta property="og:description" content="Free, open-source environmental transparency for India. Real CPCB AQI stations, CGWB chemical tests, OpenStreetMap, and cigarette smoke equivalency.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://nearfield.pages.dev/">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Nearfield — Hyperlocal Air Quality & Groundwater Monitoring">
+  <meta name="twitter:description" content="Free, open-source environmental transparency for India. Real CPCB AQI stations, CGWB chemical tests, OpenStreetMap, and cigarette smoke equivalency.">
+
   <title>Nearfield — Your neighbourhood, in context</title>
+
+  <!-- Preconnect & Non-blocking Font Loading -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  </noscript>
+
+  <!-- Leaflet CSS Preload -->
+  <link rel="preload" as="style" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" onload="this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  </noscript>
+
   <link rel="icon" type="image/svg+xml" href="/logo.svg">
   <style>
     /* ===================================================
@@ -112,6 +139,7 @@
       font-family: var(--font-body);
       font-size: 15px;
       line-height: 1.65;
+      overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       transition: background var(--dur-base) var(--ease-out-quart),
@@ -121,8 +149,42 @@
     button, input, select, textarea { font: inherit; }
     button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
     a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
-    ul { list-style: none; }
-    h1, h2, h3, h4, h5 { font-family: var(--font-display); line-height: 1.15; font-weight: 800; color: var(--ink); letter-spacing: -0.025em; }
+    p { text-wrap: pretty; }
+    h1, h2, h3, h4, h5 { font-family: var(--font-display); line-height: 1.15; font-weight: 800; color: var(--ink); letter-spacing: -0.025em; text-wrap: balance; }
+    h2 { font-size: clamp(22px, 3vw, 32px); letter-spacing: -0.03em; font-weight: 800; text-wrap: balance; }
+
+    /* Accessible Focus Visible Styles (Stage 9) */
+    :focus-visible {
+      outline: 2px solid var(--green);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+    button:focus-visible,
+    a:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 2px solid var(--green);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+
+    /* Compact text utility */
+    .text-muted-xs {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* Dedicated Display Eyebrow */
+    .display-eyebrow {
+      font-size: 10.5px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--green);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
 
     /* ============ LAYOUT SHELL ============ */
     .shell { width: min(1220px, calc(100% - 48px)); margin-inline: auto; }
@@ -149,14 +211,15 @@
       background: var(--surface-glass);
       backdrop-filter: blur(20px) saturate(180%);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid var(--line);
+      border: 1px solid rgba(220,226,216,0.7);
       border-radius: var(--r-pill);
-      box-shadow: var(--shadow), 0 1px 0 rgba(255,255,255,.5) inset;
+      box-shadow: var(--shadow), 0 1px 0 rgba(255,255,255,.55) inset, 0 -1px 0 rgba(0,0,0,.04) inset;
       transition: box-shadow var(--dur-base) var(--ease-out-quart),
                   border-color var(--dur-base) ease;
     }
     [data-theme="dark"] .nav-inner {
-      box-shadow: var(--shadow), 0 1px 0 rgba(255,255,255,.06) inset;
+      border-color: rgba(255,255,255,.07);
+      box-shadow: var(--shadow), 0 1px 0 rgba(255,255,255,.05) inset;
     }
     .brand {
       display: inline-flex;
@@ -169,9 +232,12 @@
       height: 34px;
       border-radius: 10px;
       box-shadow: var(--shadow-sm);
-      transition: transform var(--dur-base) var(--ease-spring);
+      transition: transform var(--dur-base) var(--ease-spring), box-shadow var(--dur-base) var(--ease-spring);
     }
-    .brand:hover .brand-logo-img { transform: scale(1.08) rotate(-3deg); }
+    .brand:hover .brand-logo-img {
+      transform: scale(1.12) rotate(-5deg);
+      box-shadow: var(--shadow-sm), 0 0 0 3px var(--green-glow);
+    }
     .brand-name {
       font: 800 18px/1 var(--font-display);
       letter-spacing: -0.04em;
@@ -328,12 +394,72 @@
     /* ============ HERO ============ */
     .hero-section {
       padding: 52px 0 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      filter: url(#grain);
+      opacity: 0.028;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .hero-bg-texture {
+      position: absolute;
+      inset: 0;
+      background-image: url('/hero_texture_bg.jpg');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.10;
+      pointer-events: none;
+      z-index: 0;
+      transition: opacity var(--dur-base) ease;
+    }
+    .hero-bg-texture::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, var(--bg) 0%, var(--bg) 35%, transparent 100%),
+                  linear-gradient(to bottom, var(--bg) 0%, transparent 20%, transparent 80%, var(--bg) 100%);
+      pointer-events: none;
+    }
+    .hero-radar-accent {
+      position: absolute;
+      right: -60px;
+      top: -40px;
+      width: 320px;
+      height: 320px;
+      opacity: 0.06;
+      z-index: 0;
+      pointer-events: none;
+      border-radius: 50%;
+      overflow: hidden;
+      transition: opacity var(--dur-base) ease;
+    }
+    .hero-radar-accent img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: contrast(1.15) brightness(0.9);
+      mix-blend-mode: multiply;
+    }
+    [data-theme="dark"] .hero-radar-accent {
+      opacity: 0.10;
+    }
+    [data-theme="dark"] .hero-radar-accent img {
+      filter: none;
+      mix-blend-mode: screen;
     }
     .hero-grid {
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
       gap: 48px;
       align-items: stretch;
+      position: relative;
+      z-index: 1;
     }
     .hero-copy { display: flex; flex-direction: column; justify-content: center; }
 
@@ -346,10 +472,10 @@
       border-radius: var(--r-pill);
       border: 1px solid var(--line);
       background: var(--surface);
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 700;
       color: var(--green);
-      letter-spacing: 0.06em;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       width: fit-content;
       margin-bottom: 20px;
@@ -361,7 +487,11 @@
       border-radius: 50%;
       background: #22c55e;
       box-shadow: 0 0 0 3px rgba(34,197,94,.25);
-      animation: pulse-ring 2.2s var(--ease-out-quart) infinite;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .live-pulse {
+        animation: pulse-ring 2.2s var(--ease-out-quart) infinite;
+      }
     }
     @keyframes pulse-ring {
       0%, 100% { transform: scale(1); opacity: 1; }
@@ -373,9 +503,23 @@
       font-weight: 900;
       letter-spacing: -0.04em;
       line-height: 1.05;
+      text-wrap: balance;
       margin-bottom: 20px;
     }
-    h1 .accent { color: var(--green); }
+    h1 .accent {
+      color: var(--green);
+      display: inline-block;
+      background: linear-gradient(90deg, var(--green), var(--green-light));
+      background-size: 100% 2px;
+      background-position: bottom left;
+      background-repeat: no-repeat;
+      padding-bottom: 4px;
+      animation: accent-slide 3s var(--ease-out-expo) infinite alternate;
+    }
+    @keyframes accent-slide {
+      0% { background-size: 60% 2px; }
+      100% { background-size: 100% 2px; }
+    }
     .hero-sub {
       font-size: 15.5px;
       line-height: 1.7;
@@ -466,6 +610,8 @@
     }
     .search-chips-label { font-size: 11px; color: var(--muted); font-weight: 600; }
     .search-chips button {
+      position: relative;
+      overflow: hidden;
       border: 1px solid var(--line);
       border-radius: var(--r-pill);
       padding: 4px 11px;
@@ -475,7 +621,23 @@
       font-weight: 600;
       transition: all var(--dur-fast) ease;
     }
-    .search-chips button:hover { border-color: var(--green); color: var(--green); background: var(--mint); }
+    .search-chips button::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--green-glow);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--dur-fast) ease;
+    }
+    .search-chips button:hover {
+      border-color: var(--green);
+      color: var(--green);
+      background: var(--mint);
+    }
+    .search-chips button:hover::after {
+      opacity: 1;
+    }
     .search-status { min-height: 18px; margin-top: 10px; font-size: 12px; font-weight: 600; color: var(--amber); }
 
     /* ============ MAP CONTAINER ============ */
@@ -558,14 +720,19 @@
       gap: 8px;
       padding: 7px 13px;
       border-radius: var(--r-pill);
-      background: var(--surface-glass);
-      backdrop-filter: blur(16px) saturate(160%);
-      -webkit-backdrop-filter: blur(16px) saturate(160%);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow-sm);
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(220, 226, 216, 0.6);
+      box-shadow: var(--shadow-sm), 0 1px 0 rgba(255, 255, 255, 0.9) inset;
       font-size: 11.5px;
       font-weight: 700;
       color: var(--ink);
+    }
+    [data-theme="dark"] .map-hud-pill {
+      background: rgba(22, 32, 25, 0.92);
+      border-color: rgba(255, 255, 255, 0.08);
+      box-shadow: var(--shadow-sm), 0 1px 0 rgba(255, 255, 255, 0.06) inset;
     }
     .map-coords-chip {
       font-family: var(--font-mono);
@@ -680,7 +847,11 @@
       height: 48px;
       border-radius: 50%;
       background: rgba(46,107,69,.25);
-      animation: radar-expand 2.4s var(--ease-out-quart) infinite;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .radar-pulse-ring {
+        animation: radar-expand 2.4s var(--ease-out-quart) infinite;
+      }
     }
     @keyframes radar-expand {
       0% { transform: scale(.3); opacity: 1; }
@@ -798,12 +969,12 @@
     .data-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      gap: 24px;
     }
 
     /* Double-bezel panel card */
     .panel-bezel {
-      padding: 4px;
+      padding: 5px;
       background: var(--surface-3);
       border: 1px solid var(--line);
       border-radius: calc(var(--r-xl) + 4px);
@@ -811,20 +982,39 @@
       transition: box-shadow var(--dur-base) ease;
     }
     .panel-bezel:hover { box-shadow: var(--shadow); }
+    [data-theme="dark"] .panel-bezel {
+      background: linear-gradient(145deg, #1d2b21, #141e17);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
     .panel-card {
+      position: relative;
+      overflow: hidden;
       background: var(--surface);
       border-radius: var(--r-xl);
       padding: 22px;
-      box-shadow: 0 1px 0 rgba(255,255,255,.7) inset;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 -1px 0 rgba(0, 0, 0, 0.03) inset;
       height: 100%;
     }
-    [data-theme="dark"] .panel-card { box-shadow: none; }
+    .panel-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--green-glow), transparent 50%);
+      pointer-events: none;
+    }
+    [data-theme="dark"] .panel-card {
+      background: linear-gradient(155deg, #18231a, #121a14);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+    }
     .panel-head {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 16px;
-      padding-bottom: 14px;
+      padding-bottom: 16px;
       border-bottom: 1px solid var(--line);
     }
     .panel-head h3 {
@@ -943,8 +1133,23 @@
     }
     .aqi-radial-svg { width: 150px; height: 150px; overflow: visible; }
     .gauge-bg { stroke: var(--line); transition: stroke .3s ease; }
+    .gauge-segment { transition: opacity .3s ease; }
+    .gauge-tick { stroke: var(--line); stroke-width: 1.5; stroke-linecap: round; }
     .gauge-meter { transition: stroke-dashoffset 1.4s var(--ease-out-expo), stroke .4s ease; }
-    .gauge-dot { transition: all 1.4s var(--ease-out-expo); }
+    .gauge-dot { transition: all 1.4s var(--ease-out-expo); transform-box: fill-box; transform-origin: center; }
+    .gauge-dot.gauge-dot-alert {
+      animation: gauge-dot-pulse 1.8s var(--ease-out-quart) infinite;
+    }
+    @keyframes gauge-dot-pulse {
+      0%, 100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 2px rgba(220, 38, 38, 0.4));
+      }
+      50% {
+        transform: scale(1.45);
+        filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.85));
+      }
+    }
     .aqi-center-display {
       position: absolute;
       top: 57%;
@@ -960,6 +1165,7 @@
       font: 800 36px/1 var(--font-display);
       letter-spacing: -2px;
       color: var(--ink);
+      font-variant-numeric: tabular-nums;
       transition: color .4s ease;
     }
     .aqi-center-sub {
@@ -1005,9 +1211,15 @@
       color: #fff;
       opacity: .8;
       cursor: default;
-      transition: opacity .2s ease, transform .2s ease;
+      transition: opacity .2s ease, transform var(--dur-fast) var(--ease-spring), box-shadow var(--dur-fast) ease;
     }
-    .scale-step:hover { opacity: 1; transform: scaleY(1.2); }
+    .scale-step:hover {
+      opacity: 1;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .25);
+      transform: scaleY(1.3) scaleX(1.05);
+    }
     .step-good  { background: #16a34a; }
     .step-sat   { background: #65a30d; }
     .step-mod   { background: #ca8a04; }
@@ -1025,11 +1237,15 @@
     .pollutant-tile {
       background: var(--surface-2);
       border: 1px solid var(--line);
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 11px 13px;
       display: flex;
       flex-direction: column;
       gap: 4px;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+    .pollutant-tile:hover {
+      border-color: var(--green-light);
     }
     .pollutant-head { display: flex; justify-content: space-between; align-items: baseline; }
     .pollutant-name { font-size: 12px; font-weight: 700; color: var(--ink); }
@@ -1043,9 +1259,36 @@
       border: 1px solid var(--line);
       border-radius: 14px;
       padding: 13px;
+      position: relative;
     }
     .sparkline-title { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 8px; }
-    .sparkline-svg { width: 100%; height: 70px; overflow: visible; }
+    .sparkline-svg { width: 100%; height: 70px; overflow: visible; cursor: crosshair; }
+    .spark-point { transition: r 0.2s ease, fill 0.2s ease; }
+    .spark-point-latest {
+      animation: spark-pulse 2s var(--ease-out-quart) infinite;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    @keyframes spark-pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.4); opacity: 0.7; }
+    }
+    .spark-tooltip {
+      position: absolute;
+      display: none;
+      padding: 5px 9px;
+      background: var(--ink);
+      color: var(--bg);
+      border-radius: 7px;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      pointer-events: none;
+      z-index: 10;
+      box-shadow: var(--shadow-sm);
+      transform: translate(-50%, -130%);
+      white-space: nowrap;
+      transition: opacity 0.15s ease;
+    }
 
     /* Groundwater Filter Bar */
     .water-filter-bar {
@@ -1059,6 +1302,8 @@
     }
     .filter-label { font-size: 10.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; }
     .water-filter-btn {
+      position: relative;
+      overflow: hidden;
       border: 1px solid var(--line);
       background: var(--surface-2);
       color: var(--ink-soft);
@@ -1066,22 +1311,58 @@
       font-weight: 600;
       padding: 4px 10px;
       border-radius: 8px;
-      transition: all var(--dur-fast) ease;
+      transition: color var(--dur-fast) ease, border-color var(--dur-fast) ease;
+      z-index: 1;
+    }
+    .water-filter-btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--green);
+      border-radius: inherit;
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform var(--dur-base) var(--ease-out-expo);
+      z-index: -1;
     }
     .water-filter-btn:hover { border-color: var(--green); color: var(--ink); }
-    .water-filter-btn.active { background: var(--green); color: #fff; border-color: var(--green); font-weight: 700; }
+    .water-filter-btn.active {
+      color: #fff;
+      border-color: transparent;
+      font-weight: 700;
+    }
+    .water-filter-btn.active::before {
+      transform: scaleX(1);
+    }
 
     /* Water Card */
     #water-summary-text { font-size: 12px; color: var(--ink-soft); margin-bottom: 12px; }
     .water-stations-list { display: grid; gap: 10px; max-height: 480px; overflow-y: auto; padding-right: 2px; }
     .water-card {
-      background: var(--surface-2);
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(145deg, var(--surface-2), var(--surface-3));
       border: 1px solid var(--line);
       border-radius: 16px;
       padding: 14px 16px;
       transition: all var(--dur-fast) ease;
     }
-    .water-card:hover { border-color: var(--green); box-shadow: var(--shadow-xs); }
+    .water-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--blue-bg), transparent);
+      pointer-events: none;
+    }
+    .water-card:hover {
+      background: linear-gradient(145deg, var(--surface), var(--surface-2));
+      border-color: var(--green);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
     .water-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
     .water-station-name { font: 700 14px var(--font-display); color: var(--ink); margin-bottom: 2px; }
     .water-distance-badge {
@@ -1135,13 +1416,17 @@
     .locate-btn:hover { text-decoration: underline; }
 
     /* ============ CIGARETTE SECTION ============ */
-    .cigarette-section { padding: 40px 0 20px; }
+    .cigarette-section { padding: 56px 0 32px; }
     .cig-bezel-outer {
       padding: 5px;
       background: var(--surface-3);
       border: 1px solid var(--line);
       border-radius: calc(var(--r-xl) + 6px);
       box-shadow: var(--shadow-lg);
+    }
+    [data-theme="dark"] .cig-bezel-outer {
+      background: linear-gradient(145deg, #1d2b21, #141e17);
+      border-color: rgba(255, 255, 255, 0.08);
     }
     .cigarette-card {
       background: var(--surface);
@@ -1153,23 +1438,48 @@
       transition: all .4s ease;
       box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;
     }
-    [data-theme="dark"] .cigarette-card { box-shadow: none; }
+    [data-theme="dark"] .cigarette-card {
+      background: linear-gradient(150deg, #18231b, #121914);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+    }
     .cigarette-card::before {
       content: "";
       position: absolute;
-      width: 420px;
-      height: 420px;
-      top: -150px;
-      right: -100px;
+      width: 520px;
+      height: 520px;
+      top: -200px;
+      right: -120px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(207,58,39,.07) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(207,58,39,.12) 0%, rgba(207,58,39,.04) 40%, transparent 70%);
       pointer-events: none;
       transition: background .4s ease;
     }
     .cigarette-card.safe-air::before {
-      background: radial-gradient(circle, rgba(46,107,69,.08) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(46,107,69,.12) 0%, rgba(46,107,69,.04) 40%, transparent 70%);
     }
     [data-theme="dark"] .cigarette-card::before { opacity: 1.5; }
+    .cigarette-card::after {
+      content: "";
+      position: absolute;
+      width: 380px;
+      height: 380px;
+      bottom: -160px;
+      left: -120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245,184,67,.08) 0%, rgba(245,184,67,.02) 40%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+      transition: background .4s ease;
+    }
+    .cigarette-card.safe-air::after {
+      background: radial-gradient(circle, rgba(46,107,69,.08) 0%, rgba(46,107,69,.02) 45%, transparent 70%);
+    }
+    [data-theme="dark"] .cigarette-card::after {
+      background: radial-gradient(circle, rgba(245,184,67,.12) 0%, rgba(245,184,67,.03) 40%, transparent 70%);
+    }
+    [data-theme="dark"] .cigarette-card.safe-air::after {
+      background: radial-gradient(circle, rgba(82,196,122,.08) 0%, rgba(82,196,122,.02) 45%, transparent 70%);
+    }
 
     .cig-card-head {
       display: flex;
@@ -1177,7 +1487,7 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 14px;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
       position: relative;
       z-index: 2;
     }
@@ -1201,6 +1511,9 @@
       background: var(--mint);
       color: var(--green);
       border-color: var(--mint-2);
+    }
+    [data-theme="dark"] .cig-alert-badge {
+      border-color: rgba(248,113,113,.25);
     }
     .cig-section-label {
       font-size: 11px;
@@ -1258,6 +1571,7 @@
       font: 900 clamp(44px, 7vw, 76px)/1 var(--font-display);
       letter-spacing: -3px;
       color: var(--danger);
+      font-variant-numeric: tabular-nums;
       transition: color .4s ease;
     }
     .cigarette-card.safe-air .cig-big-num { color: var(--green); }
@@ -1350,16 +1664,22 @@
       border-radius: 3px;
       overflow: hidden;
       box-shadow: 0 2px 4px rgba(0,0,0,.12);
-      animation: cig-pop var(--dur-slow) var(--ease-spring) both;
     }
-    @keyframes cig-pop { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     .cig-ember {
       width: 5px;
       height: 13px;
       background: #ff3d00;
       box-shadow: 0 0 8px #ff5722;
-      animation: ember-flicker 1.8s infinite alternate ease-in-out;
     }
+    @media (prefers-reduced-motion: no-preference) {
+      .cig-item {
+        animation: cig-pop var(--dur-slow) var(--ease-spring) both;
+      }
+      .cig-ember {
+        animation: ember-flicker 1.8s infinite alternate ease-in-out;
+      }
+    }
+    @keyframes cig-pop { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     @keyframes ember-flicker { 0% { opacity: .65; } 100% { opacity: 1; filter: brightness(1.35); } }
     .cig-body   { width: 34px; height: 13px; background: #fff; border-right: 1px solid #e2ded5; }
     .cig-filter { width: 12px; height: 13px; background: #d78b3d; }
@@ -1393,6 +1713,10 @@
       color: var(--amber);
       margin-bottom: 14px;
     }
+    [data-theme="dark"] .cig-formula {
+      background: rgba(245,184,67,.1);
+      border-left-color: var(--amber);
+    }
     .cig-tips strong { display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; }
     .cig-tips ul { padding-left: 16px; font-size: 12px; color: var(--ink-soft); line-height: 1.7; }
 
@@ -1408,16 +1732,34 @@
       z-index: 2;
     }
     .proj-tile {
-      background: var(--surface-2);
+      background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface-3) 100%);
       border: 1px solid var(--line);
+      border-top: 2px solid transparent;
       border-radius: 14px;
       padding: 14px;
       text-align: center;
-      transition: all var(--dur-fast) ease;
+      transition: transform var(--dur-base) var(--ease-spring),
+                  border-color var(--dur-base) ease,
+                  box-shadow var(--dur-base) var(--ease-spring);
     }
-    .proj-tile:hover { border-color: var(--green); transform: translateY(-2px); box-shadow: var(--shadow-xs); }
+    .proj-tile:hover {
+      border-color: var(--green);
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: var(--shadow);
+    }
+    .cigarette-card.safe-air .proj-tile { border-top-color: var(--green-glow); }
     .proj-label { display: block; font-size: 10.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
-    .proj-val { font: 800 22px/1.2 var(--font-display); letter-spacing: -0.03em; color: var(--danger); }
+    .proj-val {
+      display: inline-block;
+      font: 800 22px/1.2 var(--font-display);
+      letter-spacing: -0.03em;
+      color: var(--danger);
+      font-variant-numeric: tabular-nums;
+      transition: transform var(--dur-base) var(--ease-spring);
+    }
+    .proj-tile:hover .proj-val {
+      transform: scale(1.08);
+    }
     .cigarette-card.safe-air .proj-val { color: var(--green); }
     [data-theme="dark"] .proj-val { color: #fb923c; }
     [data-theme="dark"] .cigarette-card.safe-air .proj-val { color: var(--green); }
@@ -1627,7 +1969,7 @@
 
     /* ============ WATER QUALITY INDEX (WQI) CHECKER ============ */
     .wqi-section {
-      padding: 40px 0 20px;
+      padding: 56px 0 32px;
     }
     .wqi-bezel {
       padding: 5px;
@@ -1635,6 +1977,10 @@
       border: 1px solid var(--line);
       border-radius: calc(var(--r-xl) + 6px);
       box-shadow: var(--shadow-lg);
+    }
+    [data-theme="dark"] .wqi-bezel {
+      background: linear-gradient(145deg, #1d2b21, #141e17);
+      border-color: rgba(255, 255, 255, 0.08);
     }
     .wqi-card {
       background: var(--surface);
@@ -1644,14 +1990,28 @@
       overflow: hidden;
       box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;
     }
-    [data-theme="dark"] .wqi-card { box-shadow: none; }
+    [data-theme="dark"] .wqi-card {
+      background: linear-gradient(150deg, #18231b, #121914);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+    }
+    .wqi-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 80% 20%, rgba(46,107,69,.04) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 1;
+    }
+    [data-theme="dark"] .wqi-card::after {
+      background: radial-gradient(circle at 80% 20%, rgba(82,196,122,.06) 0%, transparent 60%);
+    }
     .wqi-card-head {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       flex-wrap: wrap;
       gap: 16px;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
     }
     .wqi-title-stack {
       flex: 1;
@@ -1879,6 +2239,10 @@
       border-radius: var(--r-lg);
       padding: 22px;
     }
+    [data-theme="dark"] .wqi-inputs-card {
+      background: var(--surface-2);
+      border-color: var(--line);
+    }
     .wqi-inputs-head {
       display: flex;
       justify-content: space-between;
@@ -2013,6 +2377,7 @@
       font: 900 48px/1 var(--font-display);
       letter-spacing: -2px;
       color: var(--green);
+      font-variant-numeric: tabular-nums;
       transition: color .4s ease;
     }
     .wqi-status-stack { display: flex; flex-direction: column; gap: 4px; }
@@ -2113,6 +2478,10 @@
     }
     .wqi-scale-step strong { display: block; font-family: var(--font-mono); font-size: 12px; }
     .wqi-scale-step span { display: block; color: var(--muted); margin-top: 2px; }
+    [data-theme="dark"] .wqi-scale-step {
+      background: var(--surface-2);
+      border-color: var(--line);
+    }
 
     .water-wqi-badge {
       display: inline-block;
@@ -2151,9 +2520,13 @@
       .wqi-scale-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
+    #hero-section, #air-water, #wqi-section, #cigarette-section, #history-section, #standards-section {
+      scroll-margin-top: 80px;
+    }
+
     /* ============ HISTORY SECTION ============ */
     .history-section {
-      padding: 48px 0;
+      padding: 64px 0;
     }
     .history-bezel {
       padding: 5px;
@@ -2175,7 +2548,7 @@
       gap: 16px;
       margin-bottom: 22px;
     }
-    .history-top h2 { font: 800 22px var(--font-display); letter-spacing: -0.03em; margin-bottom: 4px; }
+    .history-top h2 { font: 800 clamp(22px, 3vw, 32px) var(--font-display); letter-spacing: -0.03em; text-wrap: balance; margin-bottom: 4px; }
     .history-top p  { font-size: 13px; color: var(--ink-soft); margin: 0; }
     .history-controls { display: flex; gap: 8px; flex-wrap: wrap; }
     .history-select {
@@ -2214,16 +2587,26 @@
       margin-top: -8px;
       white-space: nowrap;
     }
+    .history-line {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: draw-chart-line 1.2s var(--ease-out-expo) forwards;
+    }
+    @keyframes draw-chart-line {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
     .history-note { font-size: 11.5px; color: var(--muted); margin: 14px 0 0; line-height: 1.6; }
 
     /* ============ STANDARDS SECTION ============ */
-    #standards-section { padding: 0 0 48px; }
+    #standards-section { padding: 20px 0 64px; }
     .standards-header { margin-bottom: 28px; }
-    .standards-header h2 { font: 800 24px var(--font-display); letter-spacing: -0.03em; margin: 8px 0 0; }
+    .standards-header h2 { font: 800 clamp(22px, 3vw, 32px) var(--font-display); letter-spacing: -0.03em; text-wrap: balance; margin: 8px 0 0; }
     .standards-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+      grid-template-columns: 1.15fr 1fr 0.85fr;
+      gap: 18px;
     }
     .standard-bezel {
       padding: 4px;
@@ -2231,12 +2614,23 @@
       border: 1px solid var(--line);
       border-radius: calc(var(--r-lg) + 4px);
       transition: box-shadow var(--dur-base) ease;
+      display: flex;
+      flex-direction: column;
     }
     .standard-bezel:hover { box-shadow: var(--shadow-sm); }
+    .standard-bezel:first-child {
+      padding: 6px;
+    }
+    .standard-bezel:first-child .standard-card {
+      padding: 24px 22px;
+    }
     .standard-card {
       background: var(--surface);
       border-radius: var(--r-lg);
       padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
     .standard-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .std-pill { font-size: 9.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; padding: 3px 8px; border-radius: 6px; }
@@ -2299,6 +2693,23 @@
     footer {
       padding: 28px 0 40px;
       border-top: 1px solid var(--line);
+      position: relative;
+    }
+    footer::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green-glow), transparent);
+      pointer-events: none;
+    }
+    .footer-tagline {
+      font-size: 12.5px;
+      color: var(--ink-soft);
+      margin-bottom: 20px;
+      line-height: 1.5;
     }
     .footer-row { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
     .footer-copy { font-size: 11.5px; color: var(--muted); }
@@ -2308,42 +2719,912 @@
     .footer-links a { font-size: 11.5px; color: var(--muted); font-weight: 600; transition: color var(--dur-fast) ease; }
     .footer-links a:hover { color: var(--green); }
 
-    /* ============ SCROLL REVEAL ANIMATIONS ============ */
+    /* ============ SCROLL REVEAL & ENTRANCE ANIMATIONS (Stage 4) ============ */
     @keyframes reveal-up {
       from { opacity: 0; transform: translateY(16px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+    @keyframes hero-in {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes hero-map-in {
+      from { opacity: 0; transform: translateX(20px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .hero-copy .status-badge {
+      animation: hero-in 0.8s var(--ease-out-expo) 0.1s forwards;
+      opacity: 0;
+    }
+    .hero-copy h1 {
+      animation: hero-in 0.8s var(--ease-out-expo) 0.22s forwards;
+      opacity: 0;
+    }
+    .hero-copy .hero-sub {
+      animation: hero-in 0.8s var(--ease-out-expo) 0.36s forwards;
+      opacity: 0;
+    }
+    .hero-copy .search-bezel-outer {
+      animation: hero-in 0.8s var(--ease-out-expo) 0.48s forwards;
+      opacity: 0;
+    }
+    .map-bezel-outer {
+      animation: hero-map-in 0.9s var(--ease-out-expo) 0.3s forwards;
+      opacity: 0;
+    }
+
     .reveal {
       opacity: 0;
       transform: translateY(20px);
       transition: opacity var(--dur-slow) var(--ease-out-expo),
                   transform var(--dur-slow) var(--ease-out-expo);
     }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-
-    /* ============ RESPONSIVE ============ */
-    @media (max-width: 960px) {
-      .hero-grid { grid-template-columns: 1fr; gap: 32px; }
-      .data-grid  { grid-template-columns: 1fr; }
-      .cigarette-body { grid-template-columns: 1fr; }
-      .cig-projections { grid-template-columns: repeat(2, 1fr); }
-      .standards-grid { grid-template-columns: 1fr; }
-      .oss-card { flex-direction: column; align-items: flex-start; }
-      .nav-links { display: none; }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
+    .reveal-child {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity var(--dur-slow) var(--ease-out-expo),
+                  transform var(--dur-slow) var(--ease-out-expo);
+    }
+    .reveal-child.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-from-left {
+      opacity: 0;
+      transform: translateX(-24px);
+      transition: opacity var(--dur-slow) var(--ease-out-expo),
+                  transform var(--dur-slow) var(--ease-out-expo);
+    }
+    .reveal-from-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .reveal-from-right {
+      opacity: 0;
+      transform: translateX(24px);
+      transition: opacity var(--dur-slow) var(--ease-out-expo),
+                  transform var(--dur-slow) var(--ease-out-expo);
+    }
+    .reveal-from-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.96);
+      transition: opacity var(--dur-slow) var(--ease-out-expo),
+                  transform var(--dur-slow) var(--ease-out-expo);
+    }
+    .reveal-scale.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .reveal-delay-1 { transition-delay: 80ms; }
+    .reveal-delay-2 { transition-delay: 160ms; }
+    .reveal-delay-3 { transition-delay: 240ms; }
+    .reveal-delay-4 { transition-delay: 320ms; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-copy .status-badge,
+      .hero-copy h1,
+      .hero-copy .hero-sub,
+      .hero-copy .search-bezel-outer,
+      .map-bezel-outer {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+      .reveal, .reveal-child, .reveal-from-left, .reveal-from-right, .reveal-scale {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+      .skeleton {
+        animation: none !important;
+        background: var(--surface-2) !important;
+      }
+      .search-btn-pill.loading .btn-icon-wrap::before {
+        animation: none !important;
+      }
+      .live-pulse,
+      .radar-pulse-ring,
+      .cig-ember,
+      .cig-item,
+      .accent-slide {
+        animation: none !important;
+      }
+    }
+
+    /* ============ STAGE 6: SKELETONS, LOADERS & ERROR STATES ============ */
+    @keyframes skeleton-shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .skeleton {
+      background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-3) 50%, var(--surface-2) 75%);
+      background-size: 200% 100%;
+      animation: skeleton-shimmer 1.6s ease-in-out infinite;
+      border-radius: var(--r-sm);
+    }
+    .panel-skeleton {
+      animation: fadeIn var(--dur-fast) ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Search Button Loading State */
+    .search-btn-pill.loading {
+      pointer-events: none;
+      opacity: 0.9;
+    }
+    .search-btn-pill.loading .btn-icon-wrap svg {
+      display: none;
+    }
+    .search-btn-pill.loading .btn-icon-wrap::before {
+      content: '';
+      display: inline-block;
+      width: 13px;
+      height: 13px;
+      border: 2px solid rgba(255,255,255,0.35);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Map Bezel Loading Glass State */
+    .map-bezel-inner.map-loading::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      background: var(--surface-glass);
+      z-index: 1000;
+      pointer-events: none;
+      animation: fadeIn var(--dur-fast) ease;
+    }
+
+    /* Styled Error States */
+    .panel-error-state {
+      padding: 14px 16px;
+      background: var(--amber-bg);
+      border: 1px solid var(--amber-glow);
+      border-radius: var(--r-md);
+      margin-bottom: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      animation: reveal-up 0.4s var(--ease-out-expo);
+    }
+    .panel-error-icon {
+      flex-shrink: 0;
+      color: var(--amber);
+      margin-top: 1px;
+    }
+    .panel-error-body {
+      flex: 1;
+    }
+    .panel-error-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+    .panel-error-desc {
+      font-size: 12px;
+      color: var(--ink-soft);
+      line-height: 1.5;
+      margin: 0;
+    }
+    .panel-error-dismiss {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 0 4px;
+      font-size: 18px;
+      line-height: 1;
+      border-radius: 4px;
+      transition: color var(--dur-fast) ease;
+    }
+    .panel-error-dismiss:hover {
+      color: var(--ink);
+    }
+
+    /* Glassmorphism Fallback for Non-Supporting Browsers */
+    @supports not (backdrop-filter: blur(1px)) {
+      .nav-inner,
+      .map-hud-pill,
+      .map-action-btn,
+      .mobile-dock-inner,
+      .map-legend {
+        background: var(--surface) !important;
+        opacity: 0.97;
+      }
+    }
+
+    /* ===================================================
+       MOBILE & TABLET RESPONSIVE ARCHITECTURE
+       Native App-Feel · Touch Ergonomics · Zero Clutter
+    =================================================== */
+
+    /* Touch ergonomics and smooth scroll */
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px;
+    }
+    button, a, input, select, .wqi-preset-btn, .wqi-source-tab, .cig-preset-pill, .office-choice {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Floating Mobile Bottom Dock */
+    .mobile-bottom-dock {
+      display: none;
+    }
+
+    @media (max-width: 960px) {
+      body {
+        padding-bottom: calc(76px + env(safe-area-inset-bottom));
+      }
+      .hero-grid { grid-template-columns: 1fr; gap: 28px; }
+      .hero-copy { order: 1; }
+      .map-bezel-outer {
+        order: -1;
+        min-height: 260px;
+        max-height: 300px;
+      }
+      #hero-map {
+        min-height: 260px;
+      }
+      .data-grid { grid-template-columns: 1fr; gap: 24px; }
+      .cigarette-body { grid-template-columns: 1fr; gap: 24px; }
+      .cig-projections { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .standards-grid { grid-template-columns: 1fr; gap: 14px; }
+      .oss-card { flex-direction: column; align-items: flex-start; padding: 22px; gap: 16px; }
+      .nav-links { display: none; }
+
+      /* Mobile Bottom Dock */
+      .mobile-bottom-dock {
+        display: block;
+        position: fixed;
+        bottom: max(10px, env(safe-area-inset-bottom));
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        pointer-events: none;
+        padding: 0 12px;
+        animation: reveal-up .4s var(--ease-out-expo);
+      }
+      .mobile-dock-inner {
+        pointer-events: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        gap: 3px;
+        max-width: 440px;
+        margin: 0 auto;
+        padding: 5px 6px;
+        background: var(--surface-glass);
+        backdrop-filter: blur(28px) saturate(190%);
+        -webkit-backdrop-filter: blur(28px) saturate(190%);
+        border: 1px solid var(--line);
+        border-radius: var(--r-pill);
+        box-shadow: 0 10px 30px rgba(0,0,0,.15), 0 2px 6px rgba(0,0,0,.08);
+      }
+      [data-theme="dark"] .mobile-dock-inner {
+        box-shadow: 0 14px 36px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.07) inset;
+      }
+      .dock-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        padding: 7px 6px;
+        border-radius: var(--r-pill);
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 700;
+        text-decoration: none;
+        flex: 1;
+        min-width: 0;
+        min-height: 46px;
+        position: relative;
+        transition: transform var(--dur-base) var(--ease-spring),
+                    color var(--dur-fast) ease,
+                    background var(--dur-fast) ease,
+                    box-shadow var(--dur-fast) ease;
+      }
+      .dock-item svg {
+        transition: transform var(--dur-base) var(--ease-spring);
+      }
+      .dock-item:active {
+        transform: scale(0.92);
+      }
+      .dock-item.active {
+        color: var(--green);
+        background: var(--mint);
+        border-radius: var(--r-pill);
+        box-shadow: 0 2px 8px rgba(46,107,69,.12);
+      }
+      .dock-item.active svg {
+        transform: scale(1.12);
+      }
+      [data-theme="dark"] .dock-item.active {
+        background: rgba(34,197,94,.16);
+        color: #4ade80;
+        border-radius: var(--r-pill);
+        box-shadow: 0 0 0 1px rgba(74,222,128,.22) inset, 0 2px 8px rgba(0,0,0,.3);
+      }
+    }
+
+    @media (max-width: 820px) {
+      /* WQI Mode Switcher - 3-Tab Segmented Control */
+      .wqi-source-switcher {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        padding: 5px;
+        border-radius: 14px;
+        margin-bottom: 16px;
+      }
+      .wqi-source-tab {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 9px 4px;
+        gap: 4px;
+        border-radius: 10px;
+      }
+      .wqi-tab-icon {
+        font-size: 20px;
+      }
+      .wqi-tab-text {
+        align-items: center;
+      }
+      .wqi-tab-text strong {
+        font-size: 11px;
+        white-space: normal;
+        text-align: center;
+        line-height: 1.25;
+      }
+      .wqi-tab-text small {
+        display: none;
+      }
+      .wqi-tab-coastal-badge {
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        font-size: 8px;
+        padding: 1px 4px;
+      }
+
+      /* WQI Presets - Horizontal Swipe Track */
+      .wqi-presets-row {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding: 10px 12px;
+        margin-inline: -2px;
+        gap: 8px;
+        scroll-snap-type: x proximity;
+      }
+      .wqi-presets-row::-webkit-scrollbar { display: none; }
+      .wqi-presets-lbl {
+        flex-shrink: 0;
+        align-self: center;
+        font-size: 11px;
+      }
+      .wqi-preset-btn {
+        flex-shrink: 0;
+        white-space: nowrap;
+        scroll-snap-align: start;
+        padding: 6px 12px;
+        font-size: 11.5px;
+      }
+    }
+
     @media (max-width: 640px) {
-      .shell { width: calc(100% - 32px); }
-      .pollutant-grid { grid-template-columns: repeat(2, 1fr); }
-      .cig-projections { grid-template-columns: 1fr; }
-      .map-bezel-outer { min-height: 320px; }
-      h1 { font-size: clamp(32px, 9vw, 42px); }
-      .nav-inner { padding: 0 6px 0 12px; }
+      .shell { width: calc(100% - 24px); }
+      
+      /* Top Nav Island */
+      .nav-island {
+        top: max(8px, env(safe-area-inset-top));
+        padding: 0 10px;
+      }
+      .nav-inner {
+        height: 50px;
+        padding: 0 8px 0 12px;
+        overflow: hidden;
+        backdrop-filter: blur(14px) saturate(180%);
+        -webkit-backdrop-filter: blur(14px) saturate(180%);
+      }
+      .mobile-dock-inner {
+        backdrop-filter: blur(14px) saturate(190%);
+        -webkit-backdrop-filter: blur(14px) saturate(190%);
+      }
+      .brand-logo-img {
+        width: 28px;
+        height: 28px;
+      }
+      .brand-name {
+        font-size: 14px;
+      }
       .author-credit-pill, .edition-pill { display: none; }
+      .github-star-pill {
+        padding: 5px 9px;
+        font-size: 11px;
+      }
+      .theme-toggle-btn {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        min-height: 36px;
+      }
+
+      /* Hero Section */
+      .hero-section {
+        padding: 24px 0 16px;
+      }
+      .hero-bg-texture {
+        opacity: 0.05;
+      }
+      .hero-radar-accent {
+        display: none !important;
+      }
+      h1 {
+        font-size: clamp(30px, 9vw, 44px);
+        letter-spacing: -0.035em;
+        line-height: 1.1;
+        text-wrap: balance;
+        margin-bottom: 14px;
+      }
+      .hero-sub {
+        font-size: 14px;
+        line-height: 1.55;
+        margin-bottom: 20px;
+      }
+
+      /* Search Bar */
+      .search-bezel-outer {
+        border-radius: 18px;
+        padding: 4px;
+      }
+      .search-form-inner {
+        border-radius: 14px;
+        padding: 4px 4px 4px 10px;
+        gap: 4px;
+      }
+      .search-form-inner input {
+        font-size: 16px; /* Prevents iOS Safari auto-zoom */
+        min-height: 38px;
+      }
+      .search-btn-pill {
+        padding: 9px 13px;
+        font-size: 12.5px;
+        border-radius: 12px;
+        min-height: 48px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .search-chips {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 4px;
+        margin-inline: -2px;
+        gap: 6px;
+      }
+      .search-chips::-webkit-scrollbar { display: none; }
+      .search-chips button {
+        flex-shrink: 0;
+        white-space: nowrap;
+        padding: 5px 11px;
+        font-size: 11px;
+      }
+      .search-chips-label {
+        flex-shrink: 0;
+      }
+
+      /* Leaflet Map Card */
+      .map-bezel-outer {
+        order: -1;
+        min-height: 260px;
+        max-height: 300px;
+        border-radius: calc(var(--r-xl) + 2px);
+      }
+      #hero-map {
+        min-height: 260px;
+      }
+      .map-top-bar {
+        top: 8px;
+        left: 8px;
+        right: 8px;
+        gap: 6px;
+      }
+      .map-hud-pill, .map-action-btn {
+        padding: 6px 10px;
+        font-size: 10.5px;
+        border-radius: 12px;
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+      }
+
+      /* Touch Ergonomics Standard (44px min targets) */
+      .water-filter-btn,
+      .wqi-preset-btn,
+      .cig-preset-pill,
+      .aqi-std-btn,
+      .duration-btn {
+        min-height: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+      }
+
+      /* Air Quality Cards */
+      .pollutant-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      .pollutant-box {
+        padding: 12px 10px;
+        border-radius: 12px;
+      }
+      /* Stage 5: Mobile Data Visualization Upgrades */
+      .aqi-radial-wrap {
+        transform: scale(0.85);
+        transform-origin: center;
+      }
+      .sparkline-svg {
+        height: 55px;
+      }
+      #history-chart-svg {
+        height: 170px;
+      }
+      .pollutant-box strong {
+        font-size: 20px;
+      }
+      .panel-card {
+        padding: 18px 16px;
+      }
+
+      /* Cigarette Impact Calculator */
+      .cig-card {
+        padding: 18px 16px;
+      }
+      .cig-input-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .cig-input {
+        font-size: 16px; /* Prevents iOS auto-zoom */
+        min-height: 44px;
+      }
+      .cig-calc-action-btn, .cig-sync-btn {
+        min-height: 44px;
+        justify-content: center;
+      }
+      .cig-slider-wrap input[type="range"] {
+        height: 8px;
+      }
+      .cig-slider-wrap input[type="range"]::-webkit-slider-thumb {
+        width: 26px;
+        height: 26px;
+      }
+      .cig-projections {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      .cig-proj-card {
+        padding: 14px 10px;
+        border-radius: 12px;
+      }
+      .cig-proj-card strong {
+        font-size: 22px;
+      }
+      .cig-presets-row {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 4px;
+      }
+      .cig-presets-row::-webkit-scrollbar { display: none; }
+      .cig-preset-pill {
+        flex-shrink: 0;
+        white-space: nowrap;
+        padding: 6px 12px;
+      }
+      .cig-duration-pills {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        max-width: 100%;
+      }
+      .cig-duration-pills::-webkit-scrollbar { display: none; }
+
+      /* Water Station Filters & List */
+      .water-filter-bar {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 4px;
+        margin-inline: -2px;
+        gap: 6px;
+      }
+      .water-filter-bar::-webkit-scrollbar { display: none; }
+      .filter-label {
+        flex-shrink: 0;
+        align-self: center;
+      }
+      .water-filter-btn {
+        flex-shrink: 0;
+        white-space: nowrap;
+      }
+      .water-stations-list {
+        max-height: 380px;
+      }
+
+      /* Water Quality Index (WQI) Section */
+      .wqi-card {
+        padding: 18px 16px;
+      }
+      .wqi-header {
+        margin-bottom: 16px;
+      }
+      .wqi-eco-tags {
+        gap: 6px;
+      }
+      .wqi-eco-tag {
+        font-size: 10.5px;
+        padding: 3px 8px;
+      }
+      .wqi-inputs-card {
+        padding: 16px 14px;
+        border-radius: 16px;
+      }
+      .wqi-inputs-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      .wqi-field label {
+        font-size: 11px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1px;
+      }
+      .wqi-field label span.wqi-std-hint {
+        font-size: 10px;
+      }
+      .wqi-input-box {
+        min-height: 44px;
+        padding: 0 8px;
+        border-radius: 10px;
+      }
+      .wqi-num-input {
+        font-size: 16px; /* Prevents iOS auto-zoom */
+        padding: 8px 0;
+      }
+      .wqi-unit-tag {
+        font-size: 9.5px;
+      }
+      .wqi-result-card {
+        padding: 20px 16px;
+        border-radius: 18px;
+      }
+      .wqi-score-display {
+        font-size: clamp(40px, 11vw, 54px);
+      }
+      
+      /* WQI Scale Matrix - Swipeable Carousel */
+      .wqi-scale-box {
+        margin-top: 18px;
+        padding-top: 14px;
+      }
+      .wqi-scale-grid {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 8px;
+        padding-bottom: 6px;
+        margin-inline: -2px;
+      }
+      .wqi-scale-grid::-webkit-scrollbar { display: none; }
+      .wqi-scale-step {
+        flex: 0 0 128px;
+        scroll-snap-align: start;
+        padding: 10px 8px;
+        border-radius: 10px;
+      }
+
+      /* Historical Chart */
+      .history-card {
+        padding: 18px 16px;
+      }
+      .history-top {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+      .history-controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        width: 100%;
+      }
+      .history-select {
+        width: 100%;
+        min-height: 40px;
+        font-size: 12.5px;
+      }
+      .history-chart-wrap {
+        height: 200px;
+        padding: 10px;
+      }
+
+      /* OSS & Footer */
+      .oss-card {
+        padding: 20px 16px;
+      }
+      .oss-links {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .oss-btn {
+        width: 100%;
+        justify-content: center;
+        min-height: 42px;
+      }
+      footer {
+        padding: 24px 0 32px;
+      }
+      .footer-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      /* Nav Island Mobile: show ONLY brand logo + brand name + theme toggle */
+      .github-star-pill {
+        display: none !important;
+      }
+
+      /* AQI Radial Gauge Collapse */
+      .aqi-gauge-wrap {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 14px 12px;
+        text-align: center;
+      }
+      .aqi-radial-wrap {
+        width: 120px;
+        height: 110px;
+        margin: 0 auto;
+        transform: scale(0.78);
+        transform-origin: center;
+      }
+      .aqi-radial-svg {
+        width: 120px;
+        height: 120px;
+      }
+      .aqi-center-num {
+        font-size: 28px;
+        letter-spacing: -1px;
+      }
+      .aqi-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .aqi-dual-standards {
+        justify-content: center;
+      }
+      .aqi-scale-strip {
+        justify-content: center;
+      }
+
+      /* Cigarette Section Collapse */
+      .cigarette-body {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .cig-big-num {
+        font-size: clamp(40px, 14vw, 60px);
+      }
+
+      /* Water Stations List & Measurements */
+      .water-measurements-grid {
+        grid-template-columns: 1fr;
+      }
+      .water-stations-list {
+        max-height: 380px;
+      }
+
+      /* Water Quality Index (WQI) Inputs */
+      .wqi-inputs-grid {
+        grid-template-columns: 1fr;
+      }
+      .wqi-input-box {
+        min-height: 48px;
+      }
+      .wqi-big-score {
+        font-size: 40px;
+      }
+
+      /* Search Chips Label Hide */
+      .search-chips-label {
+        display: none;
+      }
+
+      /* Footer mobile links grid */
+      .footer-links {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .cig-projections {
+        grid-template-columns: 1fr;
+      }
+      .history-controls {
+        grid-template-columns: 1fr;
+      }
+      .dock-item span {
+        font-size: 9px;
+      }
+    }
+
+    @media (max-width: 340px) {
+      .pollutant-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 
 </head>
 <body>
+
+  <!-- SVG Noise Grain Filter (Stage 2 Surface Depth) -->
+  <svg style="position:absolute;width:0;height:0;overflow:hidden;" aria-hidden="true">
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+      <feColorMatrix type="saturate" values="0" />
+    </filter>
+  </svg>
 
   <!-- Floating Island Nav -->
   <div class="nav-island" id="top">
@@ -2385,17 +3666,22 @@
 
   <main class="shell">
     <!-- Hero Section -->
-    <section class="hero-section" aria-labelledby="hero-title">
+    <section class="hero-section" id="hero-section" aria-labelledby="hero-title">
+      <!-- Background Environmental Texture & Radar Accent -->
+      <div class="hero-bg-texture" aria-hidden="true"></div>
+      <div class="hero-radar-accent" aria-hidden="true">
+        <img src="/hero_radar_accent.jpg" alt="" width="320" height="320" loading="eager">
+      </div>
       <div class="hero-grid">
         <div class="hero-copy">
-          <div class="status-badge">
+          <div class="status-badge reveal reveal-delay-1">
             <span class="live-pulse"></span>
             Free &amp; Open Source · India, Place by Place
           </div>
-          <h1 id="hero-title">Your neighbourhood,<br><span class="accent">in context.</span></h1>
-          <p class="hero-sub">Real-time air quality and official groundwater chemical samples, mapped to your locality via OpenStreetMap. Search any Indian PIN code or area.</p>
+          <h1 id="hero-title" class="reveal reveal-delay-2">Your neighbourhood,<br><span class="accent">in context.</span></h1>
+          <p class="hero-sub reveal reveal-delay-3">Real-time air quality and official groundwater chemical samples, mapped to your locality via OpenStreetMap. Search any Indian PIN code or area.</p>
 
-          <div class="search-bezel-outer">
+          <div class="search-bezel-outer reveal reveal-delay-4">
             <form class="search-form-inner" id="place-search" role="search">
               <span class="search-icon" aria-hidden="true">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m16.5 16.5 4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -2422,13 +3708,13 @@
         </div>
 
         <!-- OpenStreetMap Map Container — Double Bezel -->
-        <div class="map-bezel-outer" id="map-section">
+        <div class="map-bezel-outer reveal-from-right" id="map-section">
           <div class="map-bezel-inner">
             <div class="map-top-bar">
               <div class="map-hud-pill" id="map-status-pill">
                 <span class="live-pulse" style="width:7px;height:7px;"></span>
                 <span id="map-badge-text">OpenStreetMap</span>
-                <span class="map-coords-chip" id="map-coords-chip">18.990° N, 72.850° E</span>
+                <span class="map-coords-chip" id="map-coords-chip">20.594° N, 78.963° E</span>
               </div>
               <button type="button" class="map-action-btn" id="map-recenter-btn" title="Recenter map">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/></svg>
@@ -2467,7 +3753,7 @@
       <div class="data-grid">
 
         <!-- Air Quality Panel — Double Bezel -->
-        <div class="panel-bezel">
+        <div class="panel-bezel reveal-from-left">
           <div class="panel-card" id="air-panel">
             <div class="panel-head">
               <h3>
@@ -2475,18 +3761,39 @@
                 Air Quality Index
               </h3>
               <div class="panel-head-actions">
-                <div class="aqi-std-switch" id="aqi-std-switch" role="group" aria-label="AQI Standard">
-                  <button type="button" class="aqi-std-btn active" id="btn-std-cpcb" data-std="cpcb" title="Official Indian CPCB National AQI">CPCB (India)</button>
-                  <button type="button" class="aqi-std-btn" id="btn-std-us" data-std="us" title="US EPA Standard (used by AQI.in, Apple Weather, Google)">US EPA</button>
+                <div class="aqi-std-switch" id="aqi-std-switch" role="radiogroup" aria-label="AQI Standard">
+                  <button type="button" class="aqi-std-btn active" id="btn-std-cpcb" data-std="cpcb" role="radio" aria-checked="true" title="Official Indian CPCB National AQI">CPCB (India)</button>
+                  <button type="button" class="aqi-std-btn" id="btn-std-us" data-std="us" role="radio" aria-checked="false" title="US EPA Standard (used by AQI.in, Apple Weather, Google)">US EPA</button>
                 </div>
                 <span class="panel-badge" id="aqi-source-badge">Real-Time</span>
               </div>
             </div>
 
+            <!-- Air Quality Panel Skeleton Loader (Stage 6) -->
+            <div id="aqi-skeleton" class="panel-skeleton" style="display:none;" aria-hidden="true">
+              <div class="aqi-gauge-wrap" style="padding:14px;border:none;background:transparent;">
+                <div class="skeleton" style="width:140px;height:128px;border-radius:50%;margin:0 auto;"></div>
+                <div class="aqi-info" style="display:flex;flex-direction:column;gap:10px;justify-content:center;">
+                  <div class="skeleton" style="width:140px;height:26px;border-radius:var(--r-pill);"></div>
+                  <div class="skeleton" style="width:100%;height:36px;border-radius:8px;"></div>
+                  <div class="skeleton" style="width:75%;height:14px;border-radius:6px;"></div>
+                </div>
+              </div>
+              <div class="pollutant-grid" style="margin-top:14px;">
+                <div class="skeleton" style="height:76px;border-radius:14px;"></div>
+                <div class="skeleton" style="height:76px;border-radius:14px;"></div>
+                <div class="skeleton" style="height:76px;border-radius:14px;"></div>
+                <div class="skeleton" style="height:76px;border-radius:14px;"></div>
+                <div class="skeleton" style="height:76px;border-radius:14px;"></div>
+                <div class="skeleton" style="height:76px;border-radius:14px;"></div>
+              </div>
+              <div class="skeleton" style="height:70px;border-radius:14px;margin-top:14px;"></div>
+            </div>
+
             <div id="aqi-content">
               <div class="aqi-gauge-wrap" id="aqi-hero">
                 <div class="aqi-radial-wrap">
-                  <svg class="aqi-radial-svg" viewBox="0 0 160 160">
+                  <svg class="aqi-radial-svg" id="aqi-gauge-svg" viewBox="0 0 160 160" role="img" aria-label="AQI gauge showing -- — Awaiting Locality">
                     <defs>
                       <linearGradient id="aqiArcGrad" x1="0%" y1="100%" x2="100%" y2="0%">
                         <stop offset="0%"   stop-color="#16a34a" />
@@ -2496,7 +3803,27 @@
                         <stop offset="100%" stop-color="#dc2626" />
                       </linearGradient>
                     </defs>
+                    <!-- Background Track -->
                     <path class="gauge-bg" d="M 28 132 A 66 66 0 1 1 132 132" fill="none" stroke-width="12" stroke-linecap="round"/>
+                    <!-- 6 Category Background Arc Segments (0.25 opacity) -->
+                    <g class="gauge-segments" opacity="0.25">
+                      <path class="gauge-segment" d="M 28 132 A 66 66 0 1 1 132 132" fill="none" stroke="#16a34a" stroke-width="12" stroke-dasharray="29.5 295" stroke-dashoffset="0"/>
+                      <path class="gauge-segment" d="M 28 132 A 66 66 0 1 1 132 132" fill="none" stroke="#65a30d" stroke-width="12" stroke-dasharray="29.5 295" stroke-dashoffset="-29.5"/>
+                      <path class="gauge-segment" d="M 28 132 A 66 66 0 1 1 132 132" fill="none" stroke="#ca8a04" stroke-width="12" stroke-dasharray="59 295" stroke-dashoffset="-59"/>
+                      <path class="gauge-segment" d="M 28 132 A 66 66 0 1 1 132 132" fill="none" stroke="#ea580c" stroke-width="12" stroke-dasharray="59 295" stroke-dashoffset="-118"/>
+                      <path class="gauge-segment" d="M 28 132 A 66 66 0 1 1 132 132" fill="none" stroke="#dc2626" stroke-width="12" stroke-dasharray="59 295" stroke-dashoffset="-177"/>
+                      <path class="gauge-segment" d="M 28 132 A 66 66 0 1 1 132 132" fill="none" stroke="#7f1d1d" stroke-width="12" stroke-dasharray="59 295" stroke-dashoffset="-236"/>
+                    </g>
+                    <!-- 6 Category Boundary Radial Ticks -->
+                    <g class="gauge-ticks">
+                      <line class="gauge-tick" x1="20.4" y1="104.5" x2="10.7" y2="106.6"/>
+                      <line class="gauge-tick" x1="20.6" y1="77.4" x2="10.9" y2="75.2"/>
+                      <line class="gauge-tick" x1="53.6" y1="36.3" x2="49.3" y2="27.3"/>
+                      <line class="gauge-tick" x1="106.4" y1="36.3" x2="110.7" y2="27.3"/>
+                      <line class="gauge-tick" x1="139.4" y1="77.4" x2="149.1" y2="75.2"/>
+                      <line class="gauge-tick" x1="128.1" y1="128.9" x2="135.9" y2="135.1"/>
+                    </g>
+                    <!-- Active Meter & Pointer Dot -->
                     <path id="gauge-meter" class="gauge-meter" d="M 28 132 A 66 66 0 1 1 132 132" fill="none" stroke="url(#aqiArcGrad)" stroke-width="12" stroke-linecap="round" stroke-dasharray="295" stroke-dashoffset="295"/>
                     <circle id="gauge-dot" cx="80" cy="14" r="6" fill="#ffffff" stroke="#ca8a04" stroke-width="3" style="opacity:0;filter:drop-shadow(0 2px 5px rgba(0,0,0,.3));"/>
                   </svg>
@@ -2562,13 +3889,20 @@
               </div>
 
               <!-- Trend Sparkline -->
-              <div class="sparkline-box">
+              <div class="sparkline-box" id="sparkline-box">
                 <div class="sparkline-title">
                   <span>Recent Trend (PM₂.₅ &amp; AQI)</span>
                   <span id="trend-timeframe">Last 48 Hours</span>
                 </div>
-                <svg class="sparkline-svg" id="aqi-sparkline" viewBox="0 0 400 70" preserveAspectRatio="none">
-                  <text x="200" y="38" text-anchor="middle" fill="var(--muted)" font-size="11">Search a location to display timeline</text>
+                <div class="spark-tooltip" id="spark-tooltip"></div>
+                <svg class="sparkline-svg" id="aqi-sparkline" viewBox="0 0 400 70" preserveAspectRatio="none" role="img" aria-label="PM2.5 and AQI trend over the last 48 hours">
+                  <g class="sparkline-empty">
+                    <line x1="20" y1="35" x2="380" y2="35" stroke="var(--line)" stroke-dasharray="3,3" stroke-width="1"/>
+                    <circle cx="200" cy="22" r="9" fill="var(--surface-3)" stroke="var(--line)" stroke-width="1.2"/>
+                    <path d="M 197 22 L 199 24 L 204 19" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <text x="200" y="42" text-anchor="middle" fill="var(--ink)" font-size="11.5" font-weight="700">Awaiting Locality Data</text>
+                    <text x="200" y="56" text-anchor="middle" fill="var(--muted)" font-size="9.5">Search any Indian PIN code or area to plot 48-hour PM₂.₅ trend</text>
+                  </g>
                 </svg>
               </div>
             </div>
@@ -2576,7 +3910,7 @@
         </div>
 
         <!-- Groundwater Panel — Double Bezel -->
-        <div class="panel-bezel">
+        <div class="panel-bezel reveal-from-right">
           <div class="panel-card" id="water-panel">
             <div class="panel-head">
               <h3>
@@ -2584,6 +3918,15 @@
                 Groundwater Borewells
               </h3>
               <span class="panel-badge" id="water-source-badge">CGWB Archive</span>
+            </div>
+
+            <!-- Groundwater Panel Skeleton Loader (Stage 6) -->
+            <div id="water-skeleton" class="panel-skeleton" style="display:none;" aria-hidden="true">
+              <div class="skeleton" style="height:16px;width:70%;margin-bottom:14px;border-radius:6px;"></div>
+              <div class="skeleton" style="height:36px;width:100%;margin-bottom:16px;border-radius:10px;"></div>
+              <div class="skeleton" style="height:120px;border-radius:16px;margin-bottom:12px;"></div>
+              <div class="skeleton" style="height:120px;border-radius:16px;margin-bottom:12px;"></div>
+              <div class="skeleton" style="height:120px;border-radius:16px;"></div>
             </div>
 
             <div id="water-content">
@@ -2605,7 +3948,7 @@
 
     <!-- Water Quality Index (WQI) Checker Section -->
     <section class="wqi-section" id="wqi-section" aria-labelledby="wqi-heading">
-      <div class="wqi-bezel">
+      <div class="wqi-bezel reveal">
         <div class="wqi-card">
           <div class="wqi-card-head">
             <div class="wqi-title-stack">
@@ -2614,10 +3957,10 @@
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 3.2s6 6.4 6 11a6 6 0 0 1-12 0c0-4.6 6-11 6-11Z" stroke="currentColor" stroke-width="2"/><path d="M9 15.2a3 3 0 0 0 3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
                   BIS IS 10500:2012 Standard
                 </span>
-                <span class="wqi-eco-tag" id="wqi-city-tag">📍 India National Baseline</span>
+                <span class="wqi-eco-tag" id="wqi-city-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:4px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>India National Baseline</span>
               </div>
               <h3 id="wqi-heading">Water Quality Index: <span id="wqi-location-name" class="wqi-city-highlight">National Tap / Ground</span></h3>
-              <p id="wqi-location-sub">Evaluate potability, river basin health, or coastal seawater quality according to official Bureau of Indian Standards (BIS), Central Pollution Control Board (CPCB), and Ministry of Environment (MoEFCC) benchmarks.</p>
+              <p id="wqi-location-sub">Evaluate potability and water body health according to official BIS, CPCB, and MoEFCC benchmarks. Enter measured values below.</p>
               <div class="wqi-eco-tags" id="wqi-eco-tags">
                 <span class="wqi-eco-tag tag-river" id="wqi-river-tag">🏞️ Ganga Basin Tributaries</span>
                 <span class="wqi-eco-tag tag-ocean" id="wqi-ocean-tag">🌊 Indian Marine Waters</span>
@@ -2625,27 +3968,27 @@
               </div>
             </div>
             <button type="button" class="wqi-calc-btn" id="wqi-load-city-btn" style="width:auto;padding:8px 16px;font-size:12px;">
-              📍 Load City Water Baseline
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Load City Water Baseline
             </button>
           </div>
 
           <!-- 3-Way Source Switcher: City Tap / River / Ocean -->
-          <div class="wqi-source-switcher" role="tablist" aria-label="Water Source Category">
-            <button type="button" class="wqi-source-tab active" id="wqi-tab-city" data-source="city" role="tab" aria-selected="true">
+          <div class="wqi-source-switcher reveal reveal-delay-1" role="tablist" aria-label="Water Source Category">
+            <button type="button" class="wqi-source-tab active" id="wqi-tab-city" data-source="city" role="tab" aria-selected="true" tabindex="0" aria-controls="wqi-panel-city">
               <span class="wqi-tab-icon">🏙️</span>
               <span class="wqi-tab-text">
                 <strong>City Tap & Groundwater</strong>
                 <small>BIS IS 10500:2012 Potability</small>
               </span>
             </button>
-            <button type="button" class="wqi-source-tab" id="wqi-tab-river" data-source="river" role="tab" aria-selected="false">
+            <button type="button" class="wqi-source-tab" id="wqi-tab-river" data-source="river" role="tab" aria-selected="false" tabindex="-1" aria-controls="wqi-panel-river">
               <span class="wqi-tab-icon">🏞️</span>
               <span class="wqi-tab-text">
                 <strong id="wqi-river-tab-label">River Water Quality</strong>
                 <small id="wqi-river-tab-sub">CPCB NWMP Criteria (A–E)</small>
               </span>
             </button>
-            <button type="button" class="wqi-source-tab" id="wqi-tab-ocean" data-source="ocean" role="tab" aria-selected="false">
+            <button type="button" class="wqi-source-tab" id="wqi-tab-ocean" data-source="ocean" role="tab" aria-selected="false" tabindex="-1" aria-controls="wqi-panel-ocean">
               <span class="wqi-tab-icon">🌊</span>
               <span class="wqi-tab-text">
                 <strong id="wqi-ocean-tab-label">Ocean & Coastal Water</strong>
@@ -2662,7 +4005,7 @@
             <button type="button" class="wqi-preset-btn active" data-preset="tap">Tap / Municipal</button>
             <button type="button" class="wqi-preset-btn" data-preset="borewell">Standard Borewell</button>
             <button type="button" class="wqi-preset-btn" data-preset="hard">Hard Groundwater</button>
-            <button type="button" class="wqi-preset-btn btn-city-sync" id="wqi-preset-city-sync">📍 Load <span class="wqi-btn-city-name">City</span> Borewell</button>
+            <button type="button" class="wqi-preset-btn btn-city-sync" id="wqi-preset-city-sync"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Load <span class="wqi-btn-city-name">City</span> Borewell</button>
           </div>
 
           <div class="wqi-presets-row" id="wqi-presets-river" role="group" aria-label="Quick River Presets" style="display:none;">
@@ -2673,7 +4016,7 @@
             <button type="button" class="wqi-preset-btn" data-preset="cauvery">Cauvery (Tiruchirappalli)</button>
             <button type="button" class="wqi-preset-btn" data-preset="narmada">Narmada (Jabalpur)</button>
             <button type="button" class="wqi-preset-btn" data-preset="pristine_river">Pristine Mountain Stream</button>
-            <button type="button" class="wqi-preset-btn btn-city-sync" id="wqi-preset-river-sync">📍 Load <span class="wqi-btn-city-name">City</span> River Stretch</button>
+            <button type="button" class="wqi-preset-btn btn-city-sync" id="wqi-preset-river-sync"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Load <span class="wqi-btn-city-name">City</span> River Stretch</button>
           </div>
 
           <div class="wqi-presets-row" id="wqi-presets-ocean" role="group" aria-label="Quick Ocean Presets" style="display:none;">
@@ -2683,7 +4026,7 @@
             <button type="button" class="wqi-preset-btn" data-preset="goa">Goa Beach Waters</button>
             <button type="button" class="wqi-preset-btn" data-preset="puri">Puri Beach Waters</button>
             <button type="button" class="wqi-preset-btn" data-preset="coral">Pristine Coral Lagoon</button>
-            <button type="button" class="wqi-preset-btn btn-city-sync" id="wqi-preset-ocean-sync">📍 Load <span class="wqi-btn-city-name">City</span> Coastal Waters</button>
+            <button type="button" class="wqi-preset-btn btn-city-sync" id="wqi-preset-ocean-sync"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Load <span class="wqi-btn-city-name">City</span> Coastal Waters</button>
           </div>
 
           <!-- Body Grid: Input parameters vs Analysis -->
@@ -2691,16 +4034,16 @@
             <div class="wqi-inputs-card">
               <div class="wqi-inputs-head">
                 <h4 id="wqi-inputs-heading">Water Test Measurements</h4>
-                <span id="wqi-inputs-unit-hint" style="font-size:11px;color:var(--muted);">All units in mg/L unless stated</span>
+                <span id="wqi-inputs-unit-hint" class="text-muted-xs">All units in mg/L unless stated</span>
               </div>
 
               <!-- 1. City Groundwater & Tap Inputs Panel -->
-              <div class="wqi-inputs-panel active" id="wqi-panel-city">
+              <div class="wqi-inputs-panel active" id="wqi-panel-city" role="tabpanel" aria-labelledby="wqi-tab-city">
                 <div class="wqi-inputs-grid">
                   <div class="wqi-field">
                     <label for="wqi-tds">TDS (Total Solids) <span class="wqi-std-hint">Std: &lt; 500</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-tds" class="wqi-num-input" placeholder="260" min="0" max="10000" step="1">
+                      <input type="number" id="wqi-tds" class="wqi-num-input" inputmode="decimal" placeholder="260" min="0" max="10000" step="1">
                       <span class="wqi-unit-tag">mg/L</span>
                     </div>
                   </div>
@@ -2708,7 +4051,7 @@
                   <div class="wqi-field">
                     <label for="wqi-ph">pH Value <span class="wqi-std-hint">Std: 6.5–8.5</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-ph" class="wqi-num-input" placeholder="7.4" min="0" max="14" step="0.1">
+                      <input type="number" id="wqi-ph" class="wqi-num-input" inputmode="decimal" placeholder="7.4" min="0" max="14" step="0.1">
                       <span class="wqi-unit-tag">pH</span>
                     </div>
                   </div>
@@ -2716,7 +4059,7 @@
                   <div class="wqi-field">
                     <label for="wqi-hardness">Total Hardness <span class="wqi-std-hint">Std: &lt; 200</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-hardness" class="wqi-num-input" placeholder="140" min="0" max="5000" step="1">
+                      <input type="number" id="wqi-hardness" class="wqi-num-input" inputmode="decimal" placeholder="140" min="0" max="5000" step="1">
                       <span class="wqi-unit-tag">mg/L</span>
                     </div>
                   </div>
@@ -2724,7 +4067,7 @@
                   <div class="wqi-field">
                     <label for="wqi-fluoride">Fluoride (F⁻) <span class="wqi-std-hint">Std: &lt; 1.0</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-fluoride" class="wqi-num-input" placeholder="0.6" min="0" max="50" step="0.05">
+                      <input type="number" id="wqi-fluoride" class="wqi-num-input" inputmode="decimal" placeholder="0.6" min="0" max="50" step="0.05">
                       <span class="wqi-unit-tag">mg/L</span>
                     </div>
                   </div>
@@ -2732,7 +4075,7 @@
                   <div class="wqi-field">
                     <label for="wqi-nitrate">Nitrate (NO₃⁻) <span class="wqi-std-hint">Std: &lt; 45</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-nitrate" class="wqi-num-input" placeholder="18" min="0" max="500" step="1">
+                      <input type="number" id="wqi-nitrate" class="wqi-num-input" inputmode="decimal" placeholder="18" min="0" max="500" step="1">
                       <span class="wqi-unit-tag">mg/L</span>
                     </div>
                   </div>
@@ -2740,7 +4083,7 @@
                   <div class="wqi-field">
                     <label for="wqi-chloride">Chloride (Cl⁻) <span class="wqi-std-hint">Std: &lt; 250</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-chloride" class="wqi-num-input" placeholder="90" min="0" max="5000" step="1">
+                      <input type="number" id="wqi-chloride" class="wqi-num-input" inputmode="decimal" placeholder="90" min="0" max="5000" step="1">
                       <span class="wqi-unit-tag">mg/L</span>
                     </div>
                   </div>
@@ -2748,7 +4091,7 @@
                   <div class="wqi-field">
                     <label for="wqi-ec">Conductivity (EC) <span class="wqi-std-hint">Std: &lt; 1000</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-ec" class="wqi-num-input" placeholder="420" min="0" max="15000" step="1">
+                      <input type="number" id="wqi-ec" class="wqi-num-input" inputmode="decimal" placeholder="420" min="0" max="15000" step="1">
                       <span class="wqi-unit-tag">µS/cm</span>
                     </div>
                   </div>
@@ -2756,7 +4099,7 @@
                   <div class="wqi-field">
                     <label for="wqi-arsenic">Arsenic (As) <span class="wqi-std-hint">Std: &lt; 0.01</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-arsenic" class="wqi-num-input" placeholder="0.000" min="0" max="10" step="0.001">
+                      <input type="number" id="wqi-arsenic" class="wqi-num-input" inputmode="decimal" placeholder="0.000" min="0" max="10" step="0.001">
                       <span class="wqi-unit-tag">mg/L</span>
                     </div>
                   </div>
@@ -2764,12 +4107,12 @@
               </div>
 
               <!-- 2. River Water Inputs Panel -->
-              <div class="wqi-inputs-panel" id="wqi-panel-river">
+              <div class="wqi-inputs-panel" id="wqi-panel-river" role="tabpanel" aria-labelledby="wqi-tab-river">
                 <div class="wqi-inputs-grid">
                   <div class="wqi-field">
                     <label for="wqi-river-do">Dissolved Oxygen (DO) <span class="wqi-std-hint">Std: &gt; 5.0</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-river-do" class="wqi-num-input" placeholder="6.5" min="0" max="20" step="0.1">
+                      <input type="number" id="wqi-river-do" class="wqi-num-input" inputmode="decimal" placeholder="6.5" min="0" max="20" step="0.1">
                       <span class="wqi-unit-tag">mg/L</span>
                     </div>
                   </div>
@@ -2777,7 +4120,7 @@
                   <div class="wqi-field">
                     <label for="wqi-river-bod">BOD (Organic Load) <span class="wqi-std-hint">Std: &lt; 3.0</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-river-bod" class="wqi-num-input" placeholder="2.8" min="0" max="100" step="0.1">
+                      <input type="number" id="wqi-river-bod" class="wqi-num-input" inputmode="decimal" placeholder="2.8" min="0" max="100" step="0.1">
                       <span class="wqi-unit-tag">mg/L</span>
                     </div>
                   </div>
@@ -2785,7 +4128,7 @@
                   <div class="wqi-field">
                     <label for="wqi-river-coliform">Fecal Coliform <span class="wqi-std-hint">Std: &lt; 500</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-river-coliform" class="wqi-num-input" placeholder="450" min="0" max="500000" step="10">
+                      <input type="number" id="wqi-river-coliform" class="wqi-num-input" inputmode="decimal" placeholder="450" min="0" max="500000" step="10">
                       <span class="wqi-unit-tag">MPN/100ml</span>
                     </div>
                   </div>
@@ -2793,7 +4136,7 @@
                   <div class="wqi-field">
                     <label for="wqi-river-ph">River pH Value <span class="wqi-std-hint">Std: 6.5–8.5</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-river-ph" class="wqi-num-input" placeholder="7.5" min="0" max="14" step="0.1">
+                      <input type="number" id="wqi-river-ph" class="wqi-num-input" inputmode="decimal" placeholder="7.5" min="0" max="14" step="0.1">
                       <span class="wqi-unit-tag">pH</span>
                     </div>
                   </div>
@@ -2801,7 +4144,7 @@
                   <div class="wqi-field">
                     <label for="wqi-river-turbidity">Turbidity <span class="wqi-std-hint">Std: &lt; 10</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-river-turbidity" class="wqi-num-input" placeholder="8" min="0" max="500" step="1">
+                      <input type="number" id="wqi-river-turbidity" class="wqi-num-input" inputmode="decimal" placeholder="8" min="0" max="500" step="1">
                       <span class="wqi-unit-tag">NTU</span>
                     </div>
                   </div>
@@ -2809,7 +4152,7 @@
                   <div class="wqi-field">
                     <label for="wqi-river-tds">Total Dissolved Solids <span class="wqi-std-hint">Std: &lt; 500</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-river-tds" class="wqi-num-input" placeholder="320" min="0" max="10000" step="1">
+                      <input type="number" id="wqi-river-tds" class="wqi-num-input" inputmode="decimal" placeholder="320" min="0" max="10000" step="1">
                       <span class="wqi-unit-tag">mg/L</span>
                     </div>
                   </div>
@@ -2817,7 +4160,7 @@
                   <div class="wqi-field">
                     <label for="wqi-river-ec">Conductivity (EC) <span class="wqi-std-hint">Std: &lt; 750</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-river-ec" class="wqi-num-input" placeholder="520" min="0" max="10000" step="1">
+                      <input type="number" id="wqi-river-ec" class="wqi-num-input" inputmode="decimal" placeholder="520" min="0" max="10000" step="1">
                       <span class="wqi-unit-tag">µS/cm</span>
                     </div>
                   </div>
@@ -2825,7 +4168,7 @@
                   <div class="wqi-field">
                     <label for="wqi-river-temp">Water Temperature <span class="wqi-std-hint">Ambient</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-river-temp" class="wqi-num-input" placeholder="25" min="0" max="50" step="0.5">
+                      <input type="number" id="wqi-river-temp" class="wqi-num-input" inputmode="decimal" placeholder="25" min="0" max="50" step="0.5">
                       <span class="wqi-unit-tag">°C</span>
                     </div>
                   </div>
@@ -2833,12 +4176,12 @@
               </div>
 
               <!-- 3. Ocean & Coastal Seawater Inputs Panel -->
-              <div class="wqi-inputs-panel" id="wqi-panel-ocean">
+              <div class="wqi-inputs-panel" id="wqi-panel-ocean" role="tabpanel" aria-labelledby="wqi-tab-ocean">
                 <div class="wqi-inputs-grid">
                   <div class="wqi-field">
                     <label for="wqi-ocean-salinity">Salinity <span class="wqi-std-hint">Std: 32–36</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-ocean-salinity" class="wqi-num-input" placeholder="34.5" min="0" max="50" step="0.1">
+                      <input type="number" id="wqi-ocean-salinity" class="wqi-num-input" inputmode="decimal" placeholder="34.5" min="0" max="50" step="0.1">
                       <span class="wqi-unit-tag">PSU (ppt)</span>
                     </div>
                   </div>
@@ -2846,7 +4189,7 @@
                   <div class="wqi-field">
                     <label for="wqi-ocean-do">Marine Dissolved O₂ <span class="wqi-std-hint">Std: &gt; 5.0</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-ocean-do" class="wqi-num-input" placeholder="5.8" min="0" max="20" step="0.1">
+                      <input type="number" id="wqi-ocean-do" class="wqi-num-input" inputmode="decimal" placeholder="5.8" min="0" max="20" step="0.1">
                       <span class="wqi-unit-tag">mg/L</span>
                     </div>
                   </div>
@@ -2854,7 +4197,7 @@
                   <div class="wqi-field">
                     <label for="wqi-ocean-ph">Marine pH <span class="wqi-std-hint">Std: 7.5–8.4</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-ocean-ph" class="wqi-num-input" placeholder="8.1" min="0" max="14" step="0.1">
+                      <input type="number" id="wqi-ocean-ph" class="wqi-num-input" inputmode="decimal" placeholder="8.1" min="0" max="14" step="0.1">
                       <span class="wqi-unit-tag">pH</span>
                     </div>
                   </div>
@@ -2862,7 +4205,7 @@
                   <div class="wqi-field">
                     <label for="wqi-ocean-turbidity">Turbidity <span class="wqi-std-hint">Std: &lt; 15</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-ocean-turbidity" class="wqi-num-input" placeholder="10" min="0" max="200" step="1">
+                      <input type="number" id="wqi-ocean-turbidity" class="wqi-num-input" inputmode="decimal" placeholder="10" min="0" max="200" step="1">
                       <span class="wqi-unit-tag">NTU</span>
                     </div>
                   </div>
@@ -2870,7 +4213,7 @@
                   <div class="wqi-field">
                     <label for="wqi-ocean-coliform">Coliform / Pathogens <span class="wqi-std-hint">Std: &lt; 100</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-ocean-coliform" class="wqi-num-input" placeholder="35" min="0" max="50000" step="5">
+                      <input type="number" id="wqi-ocean-coliform" class="wqi-num-input" inputmode="decimal" placeholder="35" min="0" max="50000" step="5">
                       <span class="wqi-unit-tag">MPN/100ml</span>
                     </div>
                   </div>
@@ -2878,7 +4221,7 @@
                   <div class="wqi-field">
                     <label for="wqi-ocean-temp">Sea Surface Temp (SST) <span class="wqi-std-hint">24–30 °C</span></label>
                     <div class="wqi-input-box">
-                      <input type="number" id="wqi-ocean-temp" class="wqi-num-input" placeholder="28.0" min="0" max="45" step="0.5">
+                      <input type="number" id="wqi-ocean-temp" class="wqi-num-input" inputmode="decimal" placeholder="28.0" min="0" max="45" step="0.5">
                       <span class="wqi-unit-tag">°C</span>
                     </div>
                   </div>
@@ -2955,8 +4298,8 @@
     </section>
 
     <!-- Cigarette Smoke Equivalency Section -->
-    <section class="cigarette-section" id="cigarette-section" aria-labelledby="cig-heading">
-      <div class="cig-bezel-outer">
+    <section class="cigarette-section" id="cigarette-section" aria-labelledby="cig-badge-text">
+      <div class="cig-bezel-outer reveal-scale">
         <div class="cigarette-card" id="cigarette-card">
           <div class="cig-card-head">
             <div class="cig-badge-wrap">
@@ -2964,13 +4307,12 @@
                 <svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a8 8 0 1 0 8 8 8 8 0 0 0-8-8Zm1 12H9v-2h2Zm0-4H9V6h2Z"/></svg>
                 <span id="cig-badge-text">AQI EXCEEDS 100 · HEALTH ALERT</span>
               </span>
-              <span class="cig-section-label" id="cig-heading">Air Quality Cigarette Calculator</span>
             </div>
-            <div class="cig-duration-pills" role="group" aria-label="Select exposure duration">
-              <button type="button" class="duration-btn active" data-period="day">Today (24h)</button>
-              <button type="button" class="duration-btn" data-period="week">7 Days</button>
-              <button type="button" class="duration-btn" data-period="month">30 Days</button>
-              <button type="button" class="duration-btn" data-period="year">1 Year</button>
+            <div class="cig-duration-pills" role="radiogroup" aria-label="Select exposure duration">
+              <button type="button" class="duration-btn active" data-period="day" role="radio" aria-checked="true">Today (24h)</button>
+              <button type="button" class="duration-btn" data-period="week" role="radio" aria-checked="false">7 Days</button>
+              <button type="button" class="duration-btn" data-period="month" role="radio" aria-checked="false">30 Days</button>
+              <button type="button" class="duration-btn" data-period="year" role="radio" aria-checked="false">1 Year</button>
             </div>
           </div>
 
@@ -2982,7 +4324,7 @@
                 Enter Current Air Quality Index (AQI):
               </label>
               <div class="cig-input-row">
-                <input type="number" id="cig-aqi-input" class="cig-input" min="0" max="999" placeholder="Enter AQI (e.g. 200)" aria-label="Enter Air Quality Index (AQI)">
+                <input type="number" id="cig-aqi-input" class="cig-input" inputmode="numeric" min="0" max="999" placeholder="Enter AQI (e.g. 200)" aria-label="Enter Air Quality Index (AQI)">
                 <button type="button" id="cig-calc-btn" class="cig-calc-action-btn">Calculate Impact</button>
                 <button type="button" id="cig-sync-live-btn" class="cig-sync-btn" title="Sync live AQI from searched locality">
                   <svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a8 8 0 1 0 8 8 8 8 0 0 0-8-8Zm1 12H9v-2h2Zm0-4H9V6h2Z"/></svg>
@@ -3002,7 +4344,7 @@
             </div>
 
             <div class="cig-live-calc-box">
-              <span>Scientific Formula: <strong>Number of Cigarettes = AQI × 0.05</strong> (approx. AQI / 22) · </span>
+              <span>Scientific Formula: <strong>Number of Cigarettes = AQI × 0.05</strong> · </span>
               <span>Calculation: <span class="cig-live-calc-formula" id="cig-formula-calc">200 × 0.05 = 10.0</span> cigarettes · </span>
               <span>At <span id="cig-formula-hours">24</span>h outdoor exposure: <strong id="cig-formula-result" style="color:var(--danger);">10.0 cigarettes/day</strong></span>
             </div>
@@ -3060,33 +4402,35 @@
                   <li>Avoid outdoor cardio during morning traffic peaks.</li>
                 </ul>
               </div>
-              <p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.5;">
+              <p class="text-muted-xs" style="margin-top:12px;line-height:1.5;">
                 *<em>Health Disclaimer: This calculator is for educational purposes only as a simplified approximation based on PM₂.₅ and AQI levels. Depending on age, respiratory health, and activity, individual health effects can differ.</em>
               </p>
             </div>
           </div>
 
           <!-- Cumulative Projections -->
-          <div class="cig-projections">
-            <div class="proj-tile">
-              <span class="proj-label">Today (24h)</span>
-              <div class="proj-val" id="proj-today">~0.0</div>
-              <span class="proj-sub">cigarettes</span>
-            </div>
-            <div class="proj-tile">
-              <span class="proj-label">1 Week</span>
-              <div class="proj-val" id="proj-week">~0.0</div>
-              <span class="proj-sub">cigarettes</span>
-            </div>
-            <div class="proj-tile">
-              <span class="proj-label">1 Month</span>
-              <div class="proj-val" id="proj-month">~0.0</div>
-              <span class="proj-sub" id="proj-month-packs">~0.0 packs</span>
-            </div>
-            <div class="proj-tile">
-              <span class="proj-label">1 Year</span>
-              <div class="proj-val" id="proj-year">~0</div>
-              <span class="proj-sub" id="proj-year-packs">~0 packs</span>
+          <div class="reveal-stagger">
+            <div class="cig-projections">
+              <div class="proj-tile reveal-child">
+                <span class="proj-label">Today (24h)</span>
+                <div class="proj-val" id="proj-today">~0.0</div>
+                <span class="proj-sub">cigarettes</span>
+              </div>
+              <div class="proj-tile reveal-child">
+                <span class="proj-label">1 Week</span>
+                <div class="proj-val" id="proj-week">~0.0</div>
+                <span class="proj-sub">cigarettes</span>
+              </div>
+              <div class="proj-tile reveal-child">
+                <span class="proj-label">1 Month</span>
+                <div class="proj-val" id="proj-month">~0.0</div>
+                <span class="proj-sub" id="proj-month-packs">~0.0 packs</span>
+              </div>
+              <div class="proj-tile reveal-child">
+                <span class="proj-label">1 Year</span>
+                <div class="proj-val" id="proj-year">~0</div>
+                <span class="proj-sub" id="proj-year-packs">~0 packs</span>
+              </div>
             </div>
           </div>
 
@@ -3141,12 +4485,13 @@
 
     <!-- 5-Year Trend Analysis -->
     <section class="history-section" id="history-section">
-      <div class="history-bezel">
+      <div class="history-bezel reveal-scale">
         <div class="history-card">
           <div class="history-top">
             <div>
+              <span class="display-eyebrow" style="margin-bottom:6px;">Longitudinal Archive</span>
               <h2>Multi-Year Trend Analysis</h2>
-              <p id="history-subtitle">Track historical chemical evolution across monitoring years for verified CGWB observation sites.</p>
+              <p id="history-subtitle">Multi-year laboratory records from verified CGWB observation wells, plotted against BIS IS 10500:2012 limits.</p>
             </div>
             <div class="history-controls">
               <select class="history-select" id="history-station-select" aria-label="Select monitoring station">
@@ -3165,8 +4510,13 @@
           </div>
           <div class="history-chart-wrap" id="history-chart-wrap">
             <div class="chart-tooltip" id="chart-tooltip"></div>
-            <svg id="history-chart-svg" width="100%" height="100%" viewBox="0 0 800 210" preserveAspectRatio="none">
-              <text x="400" y="105" text-anchor="middle" fill="var(--muted)" font-size="13">Select a locality and station to plot verified multi-year observations.</text>
+            <svg id="history-chart-svg" width="100%" height="100%" viewBox="0 0 800 210" preserveAspectRatio="xMidYMid meet">
+              <g class="chart-empty-state">
+                <circle cx="400" cy="85" r="22" fill="var(--surface-3)" stroke="var(--line)" stroke-width="1.5"/>
+                <path d="M 393 90 L 398 81 L 403 86 L 408 77" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <text x="400" y="126" text-anchor="middle" fill="var(--ink)" font-size="13" font-weight="700">No Station Selected</text>
+                <text x="400" y="145" text-anchor="middle" fill="var(--muted)" font-size="11.5">Select a locality and monitoring borewell above to plot official CGWB lab tests</text>
+              </g>
             </svg>
           </div>
           <p class="history-note">
@@ -3179,49 +4529,51 @@
     <!-- Standards & Regulatory Benchmarks -->
     <section id="standards-section">
       <div class="standards-header">
-        <div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.12em;">Regulatory Benchmarks</div>
+        <span class="display-eyebrow" style="margin-bottom:6px;">Official Benchmarks</span>
         <h2>Understanding Your Water &amp; Air Values</h2>
       </div>
-      <div class="standards-grid">
-        <div class="standard-bezel">
-          <div class="standard-card">
-            <div class="standard-card-top">
-              <span class="std-pill water">BIS IS 10500:2012</span>
-              <span style="font-size:11px;color:var(--muted);">Water Quality</span>
-            </div>
-            <h4>Total Hardness &amp; Minerals</h4>
-            <p>Total hardness reflects calcium and magnesium ions. While hard water poses no direct cardiovascular hazard, excessive hardness encrusts pipes and degrades heating elements.</p>
-            <div class="benchmark-row">
-              <span>Acceptable: &lt; 200 mg/L</span>
-              <span>Permissible: 600 mg/L</span>
-            </div>
-          </div>
-        </div>
-        <div class="standard-bezel">
-          <div class="standard-card">
-            <div class="standard-card-top">
-              <span class="std-pill water">BIS IS 10500:2012</span>
-              <span style="font-size:11px;color:var(--muted);">Chemical Safety</span>
-            </div>
-            <h4>Fluoride, Arsenic &amp; Nitrates</h4>
-            <p>Chemical contaminants with acute biological significance. Fluoride above 1.5 mg/L causes crippling skeletal fluorosis. Arsenic above 0.01 mg/L is a confirmed carcinogen.</p>
-            <div class="benchmark-row">
-              <span>Fluoride: 1.0 — 1.5 mg/L</span>
-              <span>Arsenic: 0.01 mg/L max</span>
+      <div class="reveal-stagger">
+        <div class="standards-grid">
+          <div class="standard-bezel reveal-child">
+            <div class="standard-card">
+              <div class="standard-card-top">
+                <span class="std-pill water">BIS IS 10500:2012</span>
+                <span class="text-muted-xs">Water Quality</span>
+              </div>
+              <h4>Total Hardness &amp; Minerals</h4>
+              <p>Total hardness reflects calcium and magnesium ions. While hard water poses no direct cardiovascular hazard, excessive hardness encrusts pipes and degrades heating elements.</p>
+              <div class="benchmark-row">
+                <span>Acceptable: &lt; 200 mg/L</span>
+                <span>Permissible: 600 mg/L</span>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="standard-bezel">
-          <div class="standard-card">
-            <div class="standard-card-top">
-              <span class="std-pill air">CPCB NAQI</span>
-              <span style="font-size:11px;color:var(--muted);">Air Quality</span>
+          <div class="standard-bezel reveal-child">
+            <div class="standard-card">
+              <div class="standard-card-top">
+                <span class="std-pill water">BIS IS 10500:2012</span>
+                <span class="text-muted-xs">Chemical Safety</span>
+              </div>
+              <h4>Fluoride, Arsenic &amp; Nitrates</h4>
+              <p>Chemical contaminants with acute biological significance. Fluoride above 1.5 mg/L causes crippling skeletal fluorosis. Arsenic above 0.01 mg/L is a confirmed carcinogen.</p>
+              <div class="benchmark-row">
+                <span>Fluoride: 1.0 — 1.5 mg/L</span>
+                <span>Arsenic: 0.01 mg/L max</span>
+              </div>
             </div>
-            <h4>National Air Quality Index</h4>
-            <p>Calculated using 24-hour concentration sub-indices for PM₂.₅, PM₁₀, NO₂, and SO₂ based on official CPCB health break-point matrices. 0–50 is Good; &gt; 200 is Poor or hazardous.</p>
-            <div class="benchmark-row">
-              <span>Good: 0 — 50</span>
-              <span>Severe: &gt; 400</span>
+          </div>
+          <div class="standard-bezel reveal-child">
+            <div class="standard-card">
+              <div class="standard-card-top">
+                <span class="std-pill air">CPCB NAQI</span>
+                <span class="text-muted-xs">Air Quality</span>
+              </div>
+              <h4>National Air Quality Index</h4>
+              <p>Calculated using 24-hour concentration sub-indices for PM₂.₅, PM₁₀, NO₂, and SO₂ based on official CPCB health break-point matrices. 0–50 is Good; &gt; 200 is Poor or hazardous.</p>
+              <div class="benchmark-row">
+                <span>Good: 0 — 50</span>
+                <span>Severe: &gt; 400</span>
+              </div>
             </div>
           </div>
         </div>
@@ -3229,12 +4581,12 @@
     </section>
 
     <!-- OSS Banner -->
-    <div class="oss-bezel">
+    <div class="oss-bezel reveal">
       <div class="oss-card">
         <div class="oss-left">
-          <img class="oss-logo" src="/logo.svg" alt="Nearfield Logo">
+          <img class="oss-logo" src="/logo.svg" alt="Nearfield" width="48" height="48">
           <div class="oss-info">
-            <h3>Nearfield · Engineered by Pavitra</h3>
+            <h3>near<span style="color:var(--green);">field</span> · Engineered by Pavitra</h3>
             <p>Created by <strong>Pavitra</strong> (<a href="https://github.com/GWPx7Pavitra" target="_blank" rel="noreferrer">@GWPx7Pavitra</a>) for public transparency. Zero tracking, zero telemetry. Open source under the MIT License.</p>
           </div>
         </div>
@@ -3250,25 +4602,54 @@
     </div>
   </main>
 
+  <!-- Mobile Bottom Dock (App-Style Quick Jump) -->
+  <nav class="mobile-bottom-dock" aria-label="Mobile Navigation">
+    <div class="mobile-dock-inner">
+      <a href="#hero-section" class="dock-item active" data-dock="hero" aria-label="Search Locality">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M9 16A7 7 0 1 0 9 2a7 7 0 0 0 0 14Zm10 3-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Search</span>
+      </a>
+      <a href="#air-water" class="dock-item" data-dock="air" aria-label="Air Quality & Stations">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M3 7h11a3 3 0 1 0-3-3M3 11h14a3 3 0 1 1-3 3M3 15h8a2 2 0 1 0-2-2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Air &amp; Map</span>
+      </a>
+      <a href="#wqi-section" class="dock-item" data-dock="wqi" aria-label="Water Quality Index">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 2S4 9.5 4 14a6 6 0 0 0 12 0c0-4.5-6-12-6-12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Water WQI</span>
+      </a>
+      <a href="#cigarette-section" class="dock-item" data-dock="cig" aria-label="Cigarette Calculator">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M3 11h11M3 15h11m3-4v4m0-4a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Smoke</span>
+      </a>
+      <a href="#history-section" class="dock-item" data-dock="history" aria-label="Historical Trends">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M3 17V3m0 14h14M7 13l3.5-4 3 2.5 4-5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Trends</span>
+      </a>
+    </div>
+  </nav>
+
   <!-- Footer -->
   <footer>
-    <div class="shell footer-row">
-      <div class="footer-copy">
-        <strong style="color:var(--green);">nearfield</strong> · Designed &amp; engineered by <a href="https://github.com/GWPx7Pavitra" target="_blank" rel="noreferrer">Pavitra (@GWPx7Pavitra)</a>. Free and open-source under MIT License.
-      </div>
-      <div class="footer-links">
-        <a href="https://github.com/GWPx7Pavitra/nearfield" target="_blank" rel="noreferrer">GitHub Repo</a>
-        <a href="/clean">Clean Edition</a>
-        <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a>
-        <a href="https://nwdp.nwic.gov.in/dataset/ground-water-quality-manual-chemical-parameters-cgwb-f-gfg" target="_blank" rel="noreferrer">CGWB/NWDP</a>
-        <a href="https://open-meteo.com/en/docs/air-quality-api" target="_blank" rel="noreferrer">Open-Meteo</a>
-        <a href="https://berkeleyearth.org/air-pollution-and-cigarette-equivalence/" target="_blank" rel="noreferrer">Berkeley Earth Study</a>
+    <div class="shell">
+      <p class="footer-tagline">Nearfield is a free, open-source tool for environmental transparency. Zero tracking, zero telemetry. Data from official CPCB, CGWB, and OpenStreetMap sources.</p>
+      <div class="footer-row">
+        <div class="footer-copy">
+          <strong>near<span style="color:var(--green);">field</span></strong> · Designed &amp; engineered by <a href="https://github.com/GWPx7Pavitra" target="_blank" rel="noreferrer">Pavitra (@GWPx7Pavitra)</a>. Free and open-source under MIT License.
+        </div>
+        <div class="footer-links">
+          <a href="https://github.com/GWPx7Pavitra/nearfield" target="_blank" rel="noreferrer">GitHub Repo</a>
+          <a href="/clean">Clean Edition</a>
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a>
+          <a href="https://nwdp.nwic.gov.in/dataset/ground-water-quality-manual-chemical-parameters-cgwb-f-gfg" target="_blank" rel="noreferrer">CGWB/NWDP</a>
+          <a href="https://open-meteo.com/en/docs/air-quality-api" target="_blank" rel="noreferrer">Open-Meteo</a>
+          <a href="https://berkeleyearth.org/air-pollution-and-cigarette-equivalence/" target="_blank" rel="noreferrer">Berkeley Earth Study</a>
+        </div>
       </div>
     </div>
   </footer>
 
   <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
 
   <!-- Application Logic -->
   <script>
@@ -3455,9 +4836,31 @@
       });
 
       // ========================================
+      // Scroll-reveal IntersectionObserver System (Stage 4)
+      // ========================================
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            const children = entry.target.querySelectorAll('.reveal-child');
+            children.forEach((child, i) => {
+              setTimeout(() => child.classList.add('visible'), i * 80);
+            });
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.reveal, .reveal-stagger, .reveal-from-left, .reveal-from-right, .reveal-scale').forEach(el => revealObserver.observe(el));
+
+      // ========================================
       // 1. OpenStreetMap Leaflet Setup (free tiles, no API key)
       // ========================================
       function initMap() {
+        if (typeof L === 'undefined') {
+          setTimeout(initMap, 80);
+          return;
+        }
         if (map) return;
         map = L.map('hero-map', {
           zoomControl: true,
@@ -3476,11 +4879,21 @@
         if (recenterBtn) {
           recenterBtn.addEventListener('click', () => {
             if (currentCoordinates.lat && currentCoordinates.lon) {
+              const mapBezelInner = document.querySelector('.map-bezel-inner');
+              if (mapBezelInner) {
+                mapBezelInner.classList.add('map-loading');
+                setTimeout(() => mapBezelInner.classList.remove('map-loading'), 1500);
+              }
               map.flyTo([currentCoordinates.lat, currentCoordinates.lon], 13, { duration: 1.2 });
               if (userMarker) userMarker.openPopup();
             }
           });
         }
+
+        // Resize handler to preserve Leaflet tile geometry across viewport changes
+        window.addEventListener('resize', () => {
+          if (map) map.invalidateSize();
+        }, { passive: true });
       }
 
       function updateMap(lat, lon, label, waterRecords = []) {
@@ -3491,6 +4904,13 @@
         const coordsChip = document.getElementById('map-coords-chip');
         if (coordsChip) {
           coordsChip.textContent = `${lat.toFixed(3)}° N, ${lon.toFixed(3)}° E`;
+        }
+
+        // Map loading glass state (Stage 6)
+        const mapBezelInner = document.querySelector('.map-bezel-inner');
+        if (mapBezelInner) {
+          mapBezelInner.classList.add('map-loading');
+          setTimeout(() => mapBezelInner.classList.remove('map-loading'), 1500);
         }
 
         map.flyTo([lat, lon], 12.5, { duration: 1.5 });
@@ -3563,8 +4983,34 @@
         });
       }
 
+      // Ease-out-quart count-up animation for numeric displays (Stage 5)
+      function animateCounter(el, from, to, duration = 1200) {
+        if (!el) return;
+        const startVal = Number(from) || 0;
+        const endVal = Number(to) || 0;
+        if (startVal === endVal) {
+          el.textContent = endVal !== 0 ? endVal : '--';
+          return;
+        }
+        const startTime = performance.now();
+        function frame(now) {
+          const elapsed = now - startTime;
+          const progress = Math.min(1, elapsed / duration);
+          // Ease-out quart curve: 1 - (1 - t)^4
+          const ease = 1 - Math.pow(1 - progress, 4);
+          const current = Math.round(startVal + (endVal - startVal) * ease);
+          el.textContent = current;
+          if (progress < 1) {
+            requestAnimationFrame(frame);
+          } else {
+            el.textContent = endVal !== 0 ? endVal : '--';
+          }
+        }
+        requestAnimationFrame(frame);
+      }
+
       // ========================================
-      // 2. Radial Arc Gauge Animation
+      // 2. Radial Arc Gauge Animation (Stage 5 Upgrade)
       // ========================================
       function updateRadialGauge(aqi, category, color) {
         if (!gaugeMeter) return;
@@ -3576,6 +5022,11 @@
         gaugeMeter.style.strokeDasharray = `${totalLen}`;
         gaugeMeter.style.strokeDashoffset = `${offset}`;
 
+        const gaugeSvg = document.getElementById('aqi-gauge-svg');
+        if (gaugeSvg) {
+          gaugeSvg.setAttribute('aria-label', `AQI gauge showing ${aqi || '--'} — ${category || 'Awaiting Locality'}`);
+        }
+
         if (gaugeDot) {
           if (gaugeMeter.getPointAtLength) {
             const pt = gaugeMeter.getPointAtLength(progress * totalLen);
@@ -3584,6 +5035,13 @@
           }
           gaugeDot.style.opacity = clampedAqi > 0 ? '1' : '0';
           if (color) gaugeDot.setAttribute('stroke', color);
+
+          // Pulse gauge dot when AQI exceeds 200 (Stage 5)
+          if (clampedAqi > 200) {
+            gaugeDot.classList.add('gauge-dot-alert');
+          } else {
+            gaugeDot.classList.remove('gauge-dot-alert');
+          }
         }
 
         if (aqiDotBeacon && color) {
@@ -3654,7 +5112,7 @@
         // Highlight active converter chart row
         if (cigChartRows) {
           cigChartRows.forEach(row => {
-            const rowAqi = parseInt(row.dataset.aqi, 10);
+            const rowAqi = parseInt(row.dataset?.aqi || row.getAttribute('data-aqi') || '0', 10);
             row.classList.toggle('active', Math.abs(activeAqi - rowAqi) <= 25);
           });
         }
@@ -3666,7 +5124,7 @@
         for (let i = 0; i < displayCount; i++) {
           const item = document.createElement('div');
           item.className = 'cig-item';
-          item.style.animationDelay = `${i * 0.03}s`;
+          item.style.animationDelay = `${i * 35}ms`;
           item.innerHTML = `
             <span class="cig-ember"></span>
             <span class="cig-body"></span>
@@ -3708,8 +5166,12 @@
 
       durationButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-          durationButtons.forEach(b => b.classList.remove('active'));
+          durationButtons.forEach(b => {
+            b.classList.remove('active');
+            b.setAttribute('aria-checked', 'false');
+          });
           btn.classList.add('active');
+          btn.setAttribute('aria-checked', 'true');
           selectedDuration = btn.dataset.period;
           updateCigaretteDisplay();
         });
@@ -4339,14 +5801,17 @@
         if (wqiTabCity) {
           wqiTabCity.classList.toggle('active', mode === 'city');
           wqiTabCity.setAttribute('aria-selected', String(mode === 'city'));
+          wqiTabCity.setAttribute('tabindex', mode === 'city' ? '0' : '-1');
         }
         if (wqiTabRiver) {
           wqiTabRiver.classList.toggle('active', mode === 'river');
           wqiTabRiver.setAttribute('aria-selected', String(mode === 'river'));
+          wqiTabRiver.setAttribute('tabindex', mode === 'river' ? '0' : '-1');
         }
         if (wqiTabOcean) {
           wqiTabOcean.classList.toggle('active', mode === 'ocean');
           wqiTabOcean.setAttribute('aria-selected', String(mode === 'ocean'));
+          wqiTabOcean.setAttribute('tabindex', mode === 'ocean' ? '0' : '-1');
         }
 
         // 2. Toggle Preset Bars
@@ -4414,14 +5879,16 @@
         currentCityEcosystem = eco || currentCityEcosystem;
 
         if (wqiLocationName) wqiLocationName.textContent = currentCityName;
-        if (wqiCityTag) wqiCityTag.textContent = `📍 ${currentCityName}`;
+        if (wqiCityTag) {
+          wqiCityTag.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:4px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${currentCityName}`;
+        }
 
         document.querySelectorAll('.wqi-btn-city-name').forEach(el => {
           el.textContent = currentCityName;
         });
 
         if (wqiLoadCityBtn) {
-          wqiLoadCityBtn.textContent = `📍 Load ${currentCityName} Water Baseline`;
+          wqiLoadCityBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Load ${currentCityName} Water Baseline`;
         }
 
         // Update Ecosystem Badges
@@ -4677,8 +6144,14 @@
           displayAdv = usInfo.advisory;
           labelText = 'US EPA AQI';
           noteText = '🇺🇸 Showing US EPA Standard (used by AQI.in, Apple Weather & Google). Uses stricter 12 µg/m³ PM₂.₅ threshold & includes ground-level Ozone (O₃).';
-          if (btnUs) btnUs.classList.add('active');
-          if (btnCpcb) btnCpcb.classList.remove('active');
+          if (btnUs) {
+            btnUs.classList.add('active');
+            btnUs.setAttribute('aria-checked', 'true');
+          }
+          if (btnCpcb) {
+            btnCpcb.classList.remove('active');
+            btnCpcb.setAttribute('aria-checked', 'false');
+          }
           if (chipUs) chipUs.classList.add('active-std');
           if (chipCpcb) chipCpcb.classList.remove('active-std');
         } else {
@@ -4688,14 +6161,25 @@
           displayAdv = cur.advisory || 'Air quality status reported for locality.';
           labelText = 'CPCB NAQI';
           noteText = '🇮🇳 Showing Indian National AQI (CPCB NAQI). Evaluates official Indian health breakpoints (Good up to 30 µg/m³ PM₂.₅; Satisfactory up to 60 µg/m³).';
-          if (btnCpcb) btnCpcb.classList.add('active');
-          if (btnUs) btnUs.classList.remove('active');
+          if (btnCpcb) {
+            btnCpcb.classList.add('active');
+            btnCpcb.setAttribute('aria-checked', 'true');
+          }
+          if (btnUs) {
+            btnUs.classList.remove('active');
+            btnUs.setAttribute('aria-checked', 'false');
+          }
           if (chipCpcb) chipCpcb.classList.add('active-std');
           if (chipUs) chipUs.classList.remove('active-std');
         }
 
         currentAQI = displayVal;
-        aqiNum.textContent = displayVal !== 0 ? displayVal : '--';
+        const prevAqi = parseInt(aqiNum.textContent, 10) || 0;
+        if (displayVal > 0) {
+          animateCounter(aqiNum, prevAqi, displayVal, 1200);
+        } else {
+          aqiNum.textContent = '--';
+        }
         if (subLabel) subLabel.textContent = labelText;
         aqiCategory.textContent = displayCat;
         aqiAdvisory.textContent = displayAdv;
@@ -4748,34 +6232,88 @@
 
         updateCigaretteDisplay();
 
-        // Render 48h Sparkline
+        // Render 48h Sparkline (Stage 5 Upgrade)
         const trend = data.hourlyTrend || [];
+        const sparkTooltip = document.getElementById('spark-tooltip');
+
         if (trend.length > 1) {
           const vals = trend.map(t => t.pm25).filter(v => v !== null && !isNaN(v));
           const maxVal = Math.max(...vals, 100);
           const minVal = Math.min(...vals, 0);
           const range = maxVal - minVal || 1;
 
-          const points = trend.map((t, idx) => {
+          const sparkCoords = trend.map((t, idx) => {
             const x = (idx / (trend.length - 1)) * 390 + 5;
             const val = t.pm25 !== null ? t.pm25 : minVal;
-            const y = 65 - ((val - minVal) / range) * 55;
-            return `${x.toFixed(1)},${y.toFixed(1)}`;
+            const y = 62 - ((val - minVal) / range) * 52;
+            return { x, y, val, time: t.time || '' };
           });
+          window._activeSparkCoords = sparkCoords;
 
-          const pathD = `M ${points.join(' L ')}`;
+          const pathD = `M ${sparkCoords.map(c => `${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(' L ')}`;
           const areaD = `${pathD} L 395,70 L 5,70 Z`;
+
+          let dotsHtml = '';
+          sparkCoords.forEach((pt, idx) => {
+            const isLatest = idx === sparkCoords.length - 1;
+            const r = isLatest ? 4.5 : 3;
+            const cls = isLatest ? 'spark-point spark-point-latest' : 'spark-point';
+            dotsHtml += `<circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="${r}" fill="var(--green)" stroke="var(--surface)" stroke-width="1.5" class="${cls}" data-val="${Math.round(pt.val)}"/>`;
+          });
 
           aqiSparkline.innerHTML = `
             <defs>
               <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="${cur.color || '#41684c'}" stop-opacity="0.35"/>
-                <stop offset="100%" stop-color="${cur.color || '#41684c'}" stop-opacity="0.0"/>
+                <stop offset="0%" stop-color="var(--green)" stop-opacity="0.22"/>
+                <stop offset="100%" stop-color="var(--green)" stop-opacity="0.0"/>
               </linearGradient>
             </defs>
             <path d="${areaD}" fill="url(#sparkGrad)"/>
-            <path d="${pathD}" fill="none" stroke="${cur.color || '#41684c'}" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="${pathD}" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round"/>
+            ${dotsHtml}
           `;
+
+          // Interactive Hover Tooltip
+          aqiSparkline.onmousemove = (e) => {
+            if (!window._activeSparkCoords || !window._activeSparkCoords.length || !sparkTooltip) return;
+            const rect = aqiSparkline.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const normX = (mouseX / rect.width) * 400;
+
+            let nearest = window._activeSparkCoords[0];
+            let minDiff = Infinity;
+            window._activeSparkCoords.forEach(pt => {
+              const diff = Math.abs(pt.x - normX);
+              if (diff < minDiff) { minDiff = diff; nearest = pt; }
+            });
+
+            if (nearest) {
+              sparkTooltip.style.display = 'block';
+              const px = (nearest.x / 400) * rect.width;
+              const py = (nearest.y / 70) * rect.height;
+              sparkTooltip.style.left = `${px}px`;
+              sparkTooltip.style.top = `${py}px`;
+              const tStr = nearest.time ? nearest.time.replace(/T/, ' ') : 'Sampled';
+              sparkTooltip.innerHTML = `<strong>${Math.round(nearest.val)} µg/m³ PM₂.₅</strong> <span style="color:var(--muted);font-size:9.5px;">(${tStr})</span>`;
+            }
+          };
+
+          aqiSparkline.onmouseleave = () => {
+            if (sparkTooltip) sparkTooltip.style.display = 'none';
+          };
+        } else {
+          aqiSparkline.innerHTML = `
+            <g class="sparkline-empty">
+              <line x1="20" y1="35" x2="380" y2="35" stroke="var(--line)" stroke-dasharray="3,3" stroke-width="1"/>
+              <circle cx="200" cy="22" r="9" fill="var(--surface-3)" stroke="var(--line)" stroke-width="1.2"/>
+              <path d="M 197 22 L 199 24 L 204 19" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <text x="200" y="42" text-anchor="middle" fill="var(--ink)" font-size="11.5" font-weight="700">Awaiting Locality Data</text>
+              <text x="200" y="56" text-anchor="middle" fill="var(--muted)" font-size="9.5">Search any Indian PIN code or area to plot 48-hour PM₂.₅ trend</text>
+            </g>
+          `;
+          if (sparkTooltip) sparkTooltip.style.display = 'none';
+          aqiSparkline.onmousemove = null;
+          aqiSparkline.onmouseleave = null;
         }
       }
 
@@ -4927,15 +6465,32 @@
       }
 
       // ========================================
-      // 5. Multi-Year Historical Chart
+      // 5. Multi-Year Historical Chart (Stage 5 Upgrade)
       // ========================================
+      const BIS_STANDARDS = {
+        hardness: { val: 200, label: 'BIS Acceptable: 200 mg/L' },
+        tds: { val: 500, label: 'BIS Acceptable: 500 mg/L' },
+        ph: { val: 8.5, label: 'BIS Upper Limit: pH 8.5' },
+        fluoride: { val: 1.0, label: 'BIS Acceptable: 1.0 mg/L' },
+        nitrate: { val: 45, label: 'BIS Limit: 45 mg/L' },
+        chloride: { val: 250, label: 'BIS Acceptable: 250 mg/L' },
+        ec: { val: 1500, label: 'Max Safe: 1500 µS/cm' }
+      };
+
       function drawHistoryChart() {
         const selectedStation = historyStationSelect.value;
         const selectedParam = historyParamSelect.value;
         const stationObj = currentStationHistory.find(s => s.station === selectedStation) || currentStationHistory[0];
 
         if (!stationObj || !stationObj.tests || !stationObj.tests.length) {
-          historyChartSvg.innerHTML = `<text x="400" y="110" text-anchor="middle" fill="#8ca092" font-size="13">No multi-year test series found for selected station.</text>`;
+          historyChartSvg.innerHTML = `
+            <g class="chart-empty-state">
+              <circle cx="400" cy="85" r="22" fill="var(--surface-3)" stroke="var(--line)" stroke-width="1.5"/>
+              <path d="M 393 90 L 398 81 L 403 86 L 408 77" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <text x="400" y="126" text-anchor="middle" fill="var(--ink)" font-size="13" font-weight="700">No Multi-Year Test Series Found</text>
+              <text x="400" y="145" text-anchor="middle" fill="var(--muted)" font-size="11.5">No continuous monitoring records available for the selected station</text>
+            </g>
+          `;
           return;
         }
 
@@ -4948,13 +6503,24 @@
         });
 
         if (points.length < 2) {
-          historyChartSvg.innerHTML = `<text x="400" y="110" text-anchor="middle" fill="#8ca092" font-size="13">Fewer than 2 annual samples for parameter "${selectedParam}". Select another parameter above.</text>`;
+          historyChartSvg.innerHTML = `
+            <g class="chart-empty-state">
+              <circle cx="400" cy="85" r="22" fill="var(--surface-3)" stroke="var(--line)" stroke-width="1.5"/>
+              <path d="M 394 85 L 406 85" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"/>
+              <text x="400" y="126" text-anchor="middle" fill="var(--ink)" font-size="13" font-weight="700">Fewer Than 2 Annual Samples</text>
+              <text x="400" y="145" text-anchor="middle" fill="var(--muted)" font-size="11.5">Parameter "${selectedParam}" lacks longitudinal test records. Select another chemical parameter above.</text>
+            </g>
+          `;
           return;
         }
 
         points.sort((a, b) => a.year - b.year);
-        const maxVal = Math.max(...points.map(p => p.val));
-        const minVal = Math.min(0, Math.min(...points.map(p => p.val)));
+        const std = BIS_STANDARDS[selectedParam];
+        const valList = points.map(p => p.val);
+        if (std) valList.push(std.val);
+
+        const maxVal = Math.max(...valList);
+        const minVal = Math.min(0, Math.min(...valList));
         const valRange = (maxVal - minVal) * 1.2 || 1;
 
         const W = 760;
@@ -4971,11 +6537,23 @@
         const linePath = coords.map((c, i) => `${i === 0 ? 'M' : 'L'} ${c.x.toFixed(1)} ${c.y.toFixed(1)}`).join(' ');
         const areaPath = `${linePath} L ${coords[coords.length - 1].x.toFixed(1)} ${H - padY} L ${coords[0].x.toFixed(1)} ${H - padY} Z`;
 
+        // Horizontal dashed BIS Reference Line
+        let bisLineHtml = '';
+        if (std) {
+          const stdY = H - padY - ((std.val - minVal) / valRange) * (H - padY * 2);
+          if (stdY >= 15 && stdY <= H - 15) {
+            bisLineHtml = `
+              <line x1="${padX}" y1="${stdY.toFixed(1)}" x2="${W - padX}" y2="${stdY.toFixed(1)}" stroke="var(--amber)" stroke-dasharray="4,4" stroke-width="1.2" opacity="0.65"/>
+              <text x="${W - padX}" y="${(stdY - 4).toFixed(1)}" text-anchor="end" fill="var(--amber)" font-size="9.5" font-family="var(--font-mono)" opacity="0.9">${std.label}</text>
+            `;
+          }
+        }
+
         let circlesHtml = '';
         let xLabelsHtml = '';
         coords.forEach(c => {
           circlesHtml += `
-            <circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="6" fill="#41684c" stroke="#ffffff" stroke-width="2" class="chart-point" data-year="${c.p.year}" data-val="${c.p.val}" data-unit="${c.p.unit}" style="cursor:pointer;transition:transform .2s;"/>
+            <circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="6" fill="var(--green)" stroke="#ffffff" stroke-width="2" class="chart-point" data-year="${c.p.year}" data-val="${c.p.val}" data-unit="${c.p.unit}" style="cursor:pointer;transition:transform .2s;"/>
           `;
           xLabelsHtml += `
             <text x="${c.x.toFixed(1)}" y="${H - 5}" text-anchor="middle" fill="var(--ink-soft)" font-size="11" font-weight="600">${c.p.year}</text>
@@ -4985,36 +6563,81 @@
         historyChartSvg.innerHTML = `
           <defs>
             <linearGradient id="historyGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#41684c" stop-opacity="0.35"/>
-              <stop offset="100%" stop-color="#41684c" stop-opacity="0.02"/>
+              <stop offset="0%" stop-color="var(--green)" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="var(--green)" stop-opacity="0.02"/>
             </linearGradient>
           </defs>
           <line x1="${padX}" y1="${H - padY}" x2="${W - padX}" y2="${H - padY}" stroke="var(--line)" stroke-width="1.5"/>
+          ${bisLineHtml}
           <path d="${areaPath}" fill="url(#historyGrad)"/>
-          <path d="${linePath}" fill="none" stroke="#41684c" stroke-width="3" stroke-linecap="round"/>
+          <path d="${linePath}" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round" class="history-line" pathLength="1000"/>
           ${circlesHtml}
           ${xLabelsHtml}
           <text x="${padX}" y="15" fill="var(--green)" font-size="11" font-weight="700">${points[0].label} (${points[0].unit})</text>
         `;
 
         const chartWrap = document.getElementById('history-chart-wrap');
+        const showTooltip = (circle) => {
+          const rect = circle.getBoundingClientRect();
+          const wrapRect = chartWrap.getBoundingClientRect();
+          chartTooltip.style.display = 'block';
+          chartTooltip.style.left = `${rect.left - wrapRect.left + rect.width / 2}px`;
+          chartTooltip.style.top = `${rect.top - wrapRect.top}px`;
+          chartTooltip.innerHTML = `<strong>${circle.dataset.year}</strong>: ${circle.dataset.val} ${circle.dataset.unit}`;
+        };
+
         historyChartSvg.querySelectorAll('.chart-point').forEach(circle => {
-          circle.addEventListener('mouseenter', () => {
-            const rect = circle.getBoundingClientRect();
-            const wrapRect = chartWrap.getBoundingClientRect();
-            chartTooltip.style.display = 'block';
-            chartTooltip.style.left = `${rect.left - wrapRect.left + rect.width / 2}px`;
-            chartTooltip.style.top = `${rect.top - wrapRect.top}px`;
-            chartTooltip.innerHTML = `<strong>${circle.dataset.year}</strong>: ${circle.dataset.val} ${circle.dataset.unit}`;
-          });
-          circle.addEventListener('mouseleave', () => {
-            chartTooltip.style.display = 'none';
-          });
+          circle.addEventListener('mouseenter', () => showTooltip(circle));
+          circle.addEventListener('mouseleave', () => { chartTooltip.style.display = 'none'; });
+          circle.addEventListener('touchstart', (e) => {
+            e.stopPropagation();
+            showTooltip(circle);
+          }, { passive: true });
         });
+        document.addEventListener('touchstart', () => {
+          if (chartTooltip) chartTooltip.style.display = 'none';
+        }, { passive: true });
       }
 
-      historyStationSelect.addEventListener('change', drawHistoryChart);
-      historyParamSelect.addEventListener('change', drawHistoryChart);
+      // ========================================
+      // Panel Error States (Stage 6)
+      // ========================================
+      function showPanelError(panelEl, message) {
+        if (!panelEl) return;
+        const existing = panelEl.querySelector('.panel-error-state');
+        if (existing) existing.remove();
+
+        const banner = document.createElement('div');
+        banner.className = 'panel-error-state';
+        banner.innerHTML = `
+          <div class="panel-error-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <div class="panel-error-body">
+            <div class="panel-error-title">Data unavailable</div>
+            <p class="panel-error-desc">${message}</p>
+          </div>
+          <button type="button" class="panel-error-dismiss" title="Dismiss notice" aria-label="Dismiss">&times;</button>
+        `;
+        banner.querySelector('.panel-error-dismiss').addEventListener('click', () => banner.remove());
+
+        const head = panelEl.querySelector('.panel-head');
+        if (head && head.nextSibling) {
+          panelEl.insertBefore(banner, head.nextSibling);
+        } else {
+          panelEl.prepend(banner);
+        }
+      }
+
+      function clearPanelError(panelEl) {
+        if (!panelEl) return;
+        const existing = panelEl.querySelector('.panel-error-state');
+        if (existing) existing.remove();
+      }
 
       // ========================================
       // 6. Office Selection & Exploration
@@ -5038,6 +6661,26 @@
         let lat = coords?.lat || currentCoordinates.lat;
         let lon = coords?.lon || currentCoordinates.lon;
 
+        const airPanel = document.getElementById('air-panel');
+        const waterPanel = document.getElementById('water-panel');
+        const aqiSkeleton = document.getElementById('aqi-skeleton');
+        const aqiContent = document.getElementById('aqi-content');
+        const waterSkeleton = document.getElementById('water-skeleton');
+        const waterContent = document.getElementById('water-content');
+
+        // Clear existing errors and show skeleton screens (Stage 6)
+        clearPanelError(airPanel);
+        clearPanelError(waterPanel);
+
+        if (aqiSkeleton && aqiContent) {
+          aqiSkeleton.style.display = 'block';
+          aqiContent.style.display = 'none';
+        }
+        if (waterSkeleton && waterContent) {
+          waterSkeleton.style.display = 'block';
+          waterContent.style.display = 'none';
+        }
+
         try {
           const aqiQuery = new URLSearchParams({ state: stateName, city: district, lat, lon });
           const waterQuery = new URLSearchParams({ state: stateName, district, lat, lon });
@@ -5049,17 +6692,34 @@
 
           statusText.textContent = `Live data loaded for ${officeName}, ${district}.`;
 
-          if (aqiRes) renderAqi(aqiRes);
-          if (waterRes) {
+          if (aqiRes && aqiRes.current) {
+            renderAqi(aqiRes);
+          } else {
+            showPanelError(airPanel, `Air quality monitoring stations in ${district} are reporting no active telemetry. Retrying or selecting another area is recommended.`);
+          }
+
+          if (waterRes && waterRes.records && waterRes.records.length) {
             renderWater(waterRes);
             updateMap(lat, lon, `${officeName} (${pin})`, waterRes.records || []);
           } else {
             updateMap(lat, lon, `${officeName} (${pin})`, []);
+            showPanelError(waterPanel, `No authentic CGWB groundwater chemistry test records found for ${district}.`);
           }
 
           document.getElementById('air-water').scrollIntoView({ behavior: 'smooth', block: 'start' });
         } catch (err) {
           statusText.textContent = `Error loading observations: ${err.message}`;
+          showPanelError(airPanel, `Could not retrieve live air quality: ${err.message}`);
+          showPanelError(waterPanel, `Could not retrieve groundwater test records: ${err.message}`);
+        } finally {
+          if (aqiSkeleton && aqiContent) {
+            aqiSkeleton.style.display = 'none';
+            aqiContent.style.display = 'block';
+          }
+          if (waterSkeleton && waterContent) {
+            waterSkeleton.style.display = 'none';
+            waterContent.style.display = 'block';
+          }
         }
       }
 
@@ -5075,7 +6735,7 @@
         }
 
         searchBtn.disabled = true;
-        searchBtn.textContent = 'Searching...';
+        searchBtn.classList.add('loading');
         statusText.textContent = `Looking up postal records and OpenStreetMap coordinates for "${q}"...`;
         officeList.replaceChildren();
 
@@ -5086,8 +6746,6 @@
           if (!res.ok || !data.postOffices || !data.postOffices.length) {
             statusText.textContent = `No post offices found for "${q}". Please check spelling.`;
             notice.classList.remove('visible');
-            searchBtn.disabled = false;
-            searchBtn.textContent = 'Explore area';
             return;
           }
 
@@ -5134,6 +6792,7 @@
           statusText.textContent = `Lookup service error: ${err.message}`;
         } finally {
           searchBtn.disabled = false;
+          searchBtn.classList.remove('loading');
           searchBtn.innerHTML = 'Explore <span class="btn-icon-wrap"><svg width="12" height="12" viewBox="0 0 20 20" fill="none"><path d="M4 10h11m-4.5-4.5L15 10l-4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
         }
       }
@@ -5142,6 +6801,24 @@
         e.preventDefault();
         doSearch(input.value);
       });
+
+      // Magnetic button physics for .search-btn-pill (desktop only, hover-enabled)
+      if (searchBtn && window.matchMedia('(hover: hover)').matches) {
+        searchBtn.addEventListener('mousemove', (e) => {
+          const rect = searchBtn.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          const deltaX = (e.clientX - centerX) * 0.15;
+          const deltaY = (e.clientY - centerY) * 0.15;
+          searchBtn.style.transition = 'none';
+          searchBtn.style.transform = `translate(${deltaX.toFixed(2)}px, ${deltaY.toFixed(2)}px)`;
+        });
+
+        searchBtn.addEventListener('mouseleave', () => {
+          searchBtn.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+          searchBtn.style.transform = 'translate(0px, 0px)';
+        });
+      }
 
       document.querySelectorAll('[data-sample]').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -5153,15 +6830,19 @@
       // Initialize Water Quality Index (WQI) Checker with persisted or default values
       try {
         const savedWqi = localStorage.getItem('nf_wqi_inputs');
-        if (savedWqi) {
-          setWqiInputs(JSON.parse(savedWqi));
-        } else {
-          setWqiInputs(WQI_PRESETS.tap);
+        if (savedWqi && typeof setCityInputs === 'function') {
+          setCityInputs(JSON.parse(savedWqi));
+        } else if (typeof setCityInputs === 'function' && typeof WQI_PRESETS !== 'undefined') {
+          setCityInputs(WQI_PRESETS.tap);
         }
       } catch {
-        setWqiInputs(WQI_PRESETS.tap);
+        if (typeof setCityInputs === 'function' && typeof WQI_PRESETS !== 'undefined') {
+          try { setCityInputs(WQI_PRESETS.tap); } catch {}
+        }
       }
-      updateWqiDisplay();
+      try {
+        if (typeof updateWqiDisplay === 'function') updateWqiDisplay();
+      } catch {}
 
       // Restore saved AQI calculator state
       try {
@@ -5181,24 +6862,13 @@
 
       // Initialize OpenStreetMap and load persisted or default locality
       initMap();
+      const initialCoordsChip = document.getElementById('map-coords-chip');
+      if (initialCoordsChip) initialCoordsChip.textContent = '20.594° N, 78.963° E';
       const savedLoc = localStorage.getItem('nf_last_location') || '400001';
       input.value = savedLoc;
       setTimeout(() => {
         doSearch(savedLoc);
       }, 300);
-
-      // Scroll-reveal IntersectionObserver
-      const revealEls = document.querySelectorAll('.panel-bezel, .wqi-bezel, .cig-bezel-outer, .history-bezel, .standard-bezel, .oss-bezel');
-      revealEls.forEach(el => el.classList.add('reveal'));
-      const revealObs = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            revealObs.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-      revealEls.forEach(el => revealObs.observe(el));
 
       // GitHub star count fetch
       fetch('https://api.github.com/repos/GWPx7Pavitra/nearfield')
@@ -5212,6 +6882,87 @@
           }
         })
         .catch(() => {});
+
+      // Mobile Bottom Dock Scroll-Spy & Active State Tracking (Stage 1 & Quality Gate)
+      const dockItems = document.querySelectorAll('.dock-item');
+      if (dockItems.length) {
+        const sectionMap = [
+          { id: 'hero-section', dock: 'hero' },
+          { id: 'air-water', dock: 'air' },
+          { id: 'wqi-section', dock: 'wqi' },
+          { id: 'cigarette-section', dock: 'cig' },
+          { id: 'history-section', dock: 'history' }
+        ];
+
+        let isUserClicking = false;
+        let clickTimeout = null;
+
+        function setActiveDock(dockName) {
+          dockItems.forEach(item => {
+            const isActive = item.getAttribute('data-dock') === dockName;
+            item.classList.toggle('active', isActive);
+          });
+        }
+
+        function updateDockOnScroll() {
+          if (isUserClicking) return;
+
+          // Check if at bottom of page -> activate last item (history)
+          if ((window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 80)) {
+            setActiveDock('history');
+            return;
+          }
+
+          // Probe reading line at 35% from top of viewport
+          const probeY = window.innerHeight * 0.35;
+          let currentDock = 'hero';
+
+          for (let i = 0; i < sectionMap.length; i++) {
+            const el = document.getElementById(sectionMap[i].id);
+            if (!el) continue;
+            const rect = el.getBoundingClientRect();
+            if (rect.top <= probeY && rect.bottom >= probeY) {
+              currentDock = sectionMap[i].dock;
+              break;
+            } else if (rect.top <= probeY && rect.bottom > 0) {
+              currentDock = sectionMap[i].dock;
+            }
+          }
+
+          setActiveDock(currentDock);
+        }
+
+        window.addEventListener('scroll', updateDockOnScroll, { passive: true });
+        updateDockOnScroll();
+
+        // Instant active feedback on mobile dock tap + smooth scrolling
+        dockItems.forEach(item => {
+          const handleTap = () => {
+            const dockTarget = item.getAttribute('data-dock');
+            setActiveDock(dockTarget);
+
+            isUserClicking = true;
+            clearTimeout(clickTimeout);
+            clickTimeout = setTimeout(() => {
+              isUserClicking = false;
+              updateDockOnScroll();
+            }, 1200);
+          };
+
+          item.addEventListener('click', handleTap);
+          item.addEventListener('touchstart', handleTap, { passive: true });
+        });
+
+        // Focus search input on hero dock tap
+        const heroDockBtn = document.querySelector('[data-dock="hero"]');
+        if (heroDockBtn) {
+          heroDockBtn.addEventListener('click', () => {
+            setTimeout(() => {
+              if (input) input.focus();
+            }, 350);
+          });
+        }
+      }
 
     })();
   </script>

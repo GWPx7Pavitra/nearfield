@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "nearfield-preview",
+  "account_id": "92e7e30e12b0fed2d34c39dc8d339d6e",
   "compatibility_date": "2026-06-24",
   "main": "worker.js",
   "observability": {
