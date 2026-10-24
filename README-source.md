@@ -5,6 +5,7 @@ Nearfield connects Indian neighbourhoods with authentic, localized air quality a
 ## Overview
 
 - **`public/index.html`** — Interactive web application featuring:
+  - One clean public version with a GitHub Star link and no personal author promotions or edition switcher.
   - Direct PIN code and locality search.
   - Interactive Leaflet map with CartoDB Voyager tiles showing the selected post office and nearby CGWB borewells.
   - Real-time Air Quality panel with official Indian NAQI score, pollutant grid (PM₂.₅, PM₁₀, NO₂, SO₂, CO, O₃), and 48-hour trend sparkline.
@@ -16,6 +17,7 @@ Nearfield connects Indian neighbourhoods with authentic, localized air quality a
   - `/api/water` — Central Ground Water Board (CGWB) chemical sample records via NWIC/NWDP with smart district alias matching, distance calculations, and multi-year timelines.
   - `/api/status` — Health check and active routes.
 - **`wrangler.jsonc`** — Cloudflare Worker configuration with static assets binding.
+- **`public/_redirects`** — Redirects the former `/clean`, `/clean/`, and `/clean.html` URLs to the main application.
 
 ## Running Locally
 

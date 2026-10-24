@@ -1,0 +1,4 @@
+# Keep links to the former clean edition working with one canonical application.
+/clean / 301
+/clean/ / 301
+/clean.html / 301

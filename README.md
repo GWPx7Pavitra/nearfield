@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://nearfield-preview.three-parenthesis.workers.dev"><img src="https://img.shields.io/badge/Live%20Demo-Cloudflare%20Workers-0052FF?style=flat-square&logo=cloudflare" alt="Live Demo"></a>
+  <a href="https://nearfield-preview.campuszzone.workers.dev"><img src="https://img.shields.io/badge/Live%20Demo-Cloudflare%20Workers-0052FF?style=flat-square&logo=cloudflare" alt="Live Demo"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-41684c?style=flat-square" alt="License: MIT"></a>
   <a href="https://www.openstreetmap.org"><img src="https://img.shields.io/badge/Map-OpenStreetMap-7EBC6F?style=flat-square&logo=openstreetmap" alt="OpenStreetMap"></a>
   <a href="https://cpcb.nic.in"><img src="https://img.shields.io/badge/Air-CPCB%20NAQI-f9a825?style=flat-square" alt="CPCB NAQI"></a>
@@ -22,7 +22,7 @@
 ## 🌐 Public Live Site
 
 Nearfield is publicly deployed and live at:
-👉 **[https://nearfield-preview.three-parenthesis.workers.dev](https://nearfield-preview.three-parenthesis.workers.dev)**
+👉 **[https://nearfield-preview.campuszzone.workers.dev](https://nearfield-preview.campuszzone.workers.dev)**
 
 ---
 
@@ -94,7 +94,7 @@ Clone the repository and run with Wrangler:
 
 ```bash
 # Clone the repository
-git clone https://github.com/nearfield-india/nearfield.git
+git clone https://github.com/GWPx7Pavitra/nearfield.git
 cd nearfield
 
 # Start local edge development server
