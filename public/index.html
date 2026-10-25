@@ -270,46 +270,6 @@
       flex: none;
     }
 
-    /* GitHub Star Pill */
-    .github-star-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: var(--r-pill);
-      border: 1px solid var(--line);
-      background: var(--surface);
-      color: var(--ink);
-      font-size: 12px;
-      font-weight: 700;
-      box-shadow: var(--shadow-xs);
-      transition: all var(--dur-base) var(--ease-out-expo);
-    }
-    .github-star-pill:hover {
-      border-color: #f59e0b;
-      background: #fffbeb;
-      color: #92400e;
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-sm), 0 4px 12px rgba(245,158,11,.18);
-    }
-    [data-theme="dark"] .github-star-pill:hover {
-      background: rgba(245,158,11,.15);
-      color: #fcd34d;
-    }
-    .github-star-pill svg { fill: #f59e0b; }
-    .star-badge {
-      background: #fef3c7;
-      color: #92400e;
-      font-size: 10px;
-      font-weight: 800;
-      padding: 2px 6px;
-      border-radius: 6px;
-    }
-    [data-theme="dark"] .star-badge {
-      background: rgba(245,158,11,.25);
-      color: #fcd34d;
-    }
-
     /* Theme Toggle */
     .theme-toggle-btn {
       width: 38px;
@@ -2586,46 +2546,6 @@
       color: var(--ink-soft);
     }
 
-    /* ============ OSS BANNER ============ */
-    .oss-bezel {
-      margin: 48px 0 24px;
-      padding: 5px;
-      background: var(--surface-3);
-      border: 1px solid var(--line);
-      border-radius: calc(var(--r-xl) + 4px);
-      box-shadow: var(--shadow-sm);
-    }
-    .oss-card {
-      background: var(--surface);
-      border-radius: var(--r-xl);
-      padding: 28px 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-    .oss-left { display: flex; align-items: center; gap: 16px; }
-    .oss-logo { width: 48px; height: 48px; border-radius: 14px; flex: none; box-shadow: var(--shadow-sm); }
-    .oss-info h3 { font: 800 17px var(--font-display); letter-spacing: -0.02em; margin-bottom: 4px; }
-    .oss-info p  { font-size: 12px; color: var(--ink-soft); line-height: 1.55; }
-    .oss-info p a { color: var(--green); font-weight: 700; }
-    .oss-links { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .oss-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 9px 16px;
-      border-radius: 12px;
-      font-size: 12.5px;
-      font-weight: 700;
-      transition: all var(--dur-base) var(--ease-out-expo);
-    }
-    .oss-btn.primary { background: var(--ink); color: var(--bg); border: 1px solid var(--ink); }
-    .oss-btn.primary:hover { background: var(--green); border-color: var(--green); transform: translateY(-1px); }
-    .oss-btn.secondary { background: var(--surface-2); color: var(--ink); border: 1px solid var(--line); }
-    .oss-btn.secondary:hover { border-color: var(--green); background: var(--mint); }
-
     /* ============ FOOTER ============ */
     footer {
       padding: 28px 0 40px;
@@ -2928,7 +2848,6 @@
       .cigarette-body { grid-template-columns: 1fr; gap: 24px; }
       .cig-projections { grid-template-columns: repeat(2, 1fr); gap: 10px; }
       .standards-grid { grid-template-columns: 1fr; gap: 14px; }
-      .oss-card { flex-direction: column; align-items: flex-start; padding: 22px; gap: 16px; }
       .nav-links { display: none; }
 
       /* Mobile Bottom Dock */
@@ -3098,10 +3017,6 @@
       }
       .brand-name {
         font-size: 14px;
-      }
-      .github-star-pill {
-        padding: 5px 9px;
-        font-size: 11px;
       }
       .theme-toggle-btn {
         width: 36px;
@@ -3424,21 +3339,7 @@
         padding: 10px;
       }
 
-      /* OSS & Footer */
-      .oss-card {
-        padding: 20px 16px;
-      }
-      .oss-links {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-      .oss-btn {
-        width: 100%;
-        justify-content: center;
-        min-height: 42px;
-      }
+      /* Footer */
       footer {
         padding: 24px 0 32px;
       }
@@ -3450,11 +3351,6 @@
     }
 
     @media (max-width: 480px) {
-      /* Nav Island Mobile: show ONLY brand logo + brand name + theme toggle */
-      .github-star-pill {
-        display: none !important;
-      }
-
       /* AQI Radial Gauge Collapse */
       .aqi-gauge-wrap {
         grid-template-columns: 1fr;
@@ -3577,11 +3473,6 @@
         <a href="#standards-section">Standards</a>
       </nav>
       <div class="nav-right">
-        <a class="github-star-pill" href="https://github.com/GWPx7Pavitra/nearfield" target="_blank" rel="noreferrer" title="Star Nearfield on GitHub">
-          <svg width="13" height="13" viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25z"/></svg>
-          <span>Star</span>
-          <span class="star-badge" id="gh-star-count">★</span>
-        </a>
         <button type="button" class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle theme">
           <svg id="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
           <svg id="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -4506,24 +4397,6 @@
       </div>
     </section>
 
-    <!-- OSS Banner -->
-    <div class="oss-bezel reveal">
-      <div class="oss-card">
-        <div class="oss-left">
-          <img class="oss-logo" src="/logo.svg" alt="Nearfield" width="48" height="48">
-          <div class="oss-info">
-            <h3>near<span style="color:var(--green);">field</span> · Open Source</h3>
-            <p>Free, open-source hyperlocal air quality and groundwater monitoring for India. Zero tracking, zero telemetry. Open source under the MIT License.</p>
-          </div>
-        </div>
-        <div class="oss-links">
-          <a class="oss-btn primary" href="https://github.com/GWPx7Pavitra/nearfield" target="_blank" rel="noreferrer">
-            <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25z"/></svg>
-            Star on GitHub
-          </a>
-        </div>
-      </div>
-    </div>
   </main>
 
   <!-- Mobile Bottom Dock (App-Style Quick Jump) -->
@@ -4558,10 +4431,9 @@
       <p class="footer-tagline">Nearfield is a free, open-source tool for environmental transparency. Zero tracking, zero telemetry. Data from official CPCB, CGWB, and OpenStreetMap sources.</p>
       <div class="footer-row">
         <div class="footer-copy">
-          <strong>near<span style="color:var(--green);">field</span></strong> · Free and open-source under the MIT License.
+          Free and open-source under the MIT License.
         </div>
         <div class="footer-links">
-          <a href="https://github.com/GWPx7Pavitra/nearfield" target="_blank" rel="noreferrer">GitHub Repo</a>
           <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a>
           <a href="https://nwdp.nwic.gov.in/dataset/ground-water-quality-manual-chemical-parameters-cgwb-f-gfg" target="_blank" rel="noreferrer">CGWB/NWDP</a>
           <a href="https://open-meteo.com/en/docs/air-quality-api" target="_blank" rel="noreferrer">Open-Meteo</a>
@@ -6792,19 +6664,6 @@
       setTimeout(() => {
         doSearch(savedLoc);
       }, 300);
-
-      // GitHub star count fetch
-      fetch('https://api.github.com/repos/GWPx7Pavitra/nearfield')
-        .then(r => r.ok ? r.json() : null)
-        .then(data => {
-          if (data && data.stargazers_count !== undefined) {
-            const el = document.getElementById('gh-star-count');
-            if (el) el.textContent = data.stargazers_count >= 1000
-              ? (data.stargazers_count / 1000).toFixed(1) + 'k'
-              : data.stargazers_count;
-          }
-        })
-        .catch(() => {});
 
       // Mobile Bottom Dock Scroll-Spy & Active State Tracking (Stage 1 & Quality Gate)
       const dockItems = document.querySelectorAll('.dock-item');

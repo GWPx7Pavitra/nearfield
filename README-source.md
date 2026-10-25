@@ -5,7 +5,7 @@ Nearfield connects Indian neighbourhoods with authentic, localized air quality a
 ## Overview
 
 - **`public/index.html`** — Interactive web application featuring:
-  - One clean public version with a GitHub Star link and no personal author promotions or edition switcher.
+  - One clean public version without personal promotions, repository links, star counters, or an edition switcher.
   - Direct PIN code and locality search.
   - Interactive Leaflet map with CartoDB Voyager tiles showing the selected post office and nearby CGWB borewells.
   - Real-time Air Quality panel with official Indian NAQI score, pollutant grid (PM₂.₅, PM₁₀, NO₂, SO₂, CO, O₃), and 48-hour trend sparkline.
